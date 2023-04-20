@@ -2,5 +2,5 @@
 /Document/NUC123_Series_BSP_CMSIS_V3.01.003/
 /Application/Project/Listings/
 /Application/Project/Objects/
-/Application/*.uvgui.*
-/Application/*.uvopt
+/Application/Project/*.uvgui.*
+/Application/Project/*.uvopt

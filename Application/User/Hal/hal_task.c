@@ -1,5 +1,5 @@
 /********************************************************
-* @file       main.c
+* @file       hal_task.c
 * @author     szhj13
 * @version    V1.0
 * @date       2023-04-18
@@ -10,23 +10,24 @@
 **********************************************************/
 
 /* Includes ---------------------------------------------*/
-#include "hal_nuc123.h"
-#include "drv_task.h"
+#include "hal_task.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
+hal_isr_callback_t hal_task_isr_callback = NULL;
 
-
-int main(void )
+void Hal_Task_Regist_Isr_Callback(hal_isr_callback_t callback )
 {
-    Hardware_Init();
-
-    Drv_Task_Init();
-    
-	while(1)
-	{
-        Drv_Task_Run();
-	}
+    hal_task_isr_callback = callback;
 }
+
+void Hal_Task_Isr_Handler(void )
+{
+    if(hal_task_isr_callback != NULL)
+    {
+        hal_task_isr_callback();
+    }
+}
+

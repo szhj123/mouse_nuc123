@@ -72,7 +72,9 @@ void Clk_Init(void )
 
 void Systick_Init(void )
 {
-    SysTick->LOAD = 72000;
+    SystemCoreClockUpdate();
+    
+    SysTick->LOAD = SystemCoreClock/1000;
     SysTick->VAL  = (0x00);
     SysTick->CTRL |= (1 << 2) | (1 << 1) | (1 << 0);
 }

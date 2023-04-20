@@ -1,5 +1,5 @@
 /********************************************************
-* @file       main.c
+* @file       hal_interrupt.c
 * @author     szhj13
 * @version    V1.0
 * @date       2023-04-18
@@ -11,22 +11,15 @@
 
 /* Includes ---------------------------------------------*/
 #include "hal_nuc123.h"
-#include "drv_task.h"
+#include "hal_task.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
 
-
-int main(void )
+void SysTick_Handler(void )
 {
-    Hardware_Init();
-
-    Drv_Task_Init();
-    
-	while(1)
-	{
-        Drv_Task_Run();
-	}
+    Hal_Task_Isr_Handler();
 }
+

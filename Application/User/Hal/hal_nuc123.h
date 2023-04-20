@@ -2,6 +2,9 @@
 #define _HAL_NUC123_H
 
 #include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include "NUC123.h"
 #include "clk.h"
 #include "gpio.h"
