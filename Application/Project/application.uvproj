@@ -364,8 +364,8 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
-            <uGnu>0</uGnu>
+            <uC99>1</uC99>
+            <uGnu>1</uGnu>
             <useXO>0</useXO>
             <v6Lang>3</v6Lang>
             <v6LangP>3</v6LangP>
@@ -452,6 +452,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\StdDriver\src\gpio.c</FilePath>
             </File>
+            <File>
+              <FileName>pdma.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\StdDriver\src\pdma.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -462,6 +467,16 @@
               <FileType>1</FileType>
               <FilePath>..\User\App\main.c</FilePath>
             </File>
+            <File>
+              <FileName>app_lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\App\app_lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_light.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\App\app_light.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -471,6 +486,31 @@
               <FileName>drv_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Drv\drv_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_spi_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_spi_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_light.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_light.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_usb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_usb.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -491,6 +531,31 @@
               <FileName>hal_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Hal\hal_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_spi_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_spi_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_light.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_light.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_usb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_usb.c</FilePath>
             </File>
           </Files>
         </Group>

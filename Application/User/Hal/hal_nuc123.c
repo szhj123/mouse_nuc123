@@ -66,6 +66,9 @@ void Clk_Init(void )
     /* Enable FMC ISP functions */
     FMC->ISPCON |=  FMC_ISPCON_ISPEN_Msk | FMC_ISPCON_APUEN_Msk | FMC_ISPCON_LDUEN_Msk | FMC_ISPCON_CFGUEN_Msk;
 
+    /* Enable peripheral clock */
+    CLK->AHBCLK |= CLK_AHBCLK_PDMA_EN_Msk;
+
     SystemCoreClockUpdate();
 
 }
@@ -224,11 +227,11 @@ void Spi0_Init(void )
     SPI0->CNTRL2 |= SPI_CNTRL2_BCn_Msk;
 
     SPI0->DIVIDER = (SPI0->DIVIDER & (~SPI_DIVIDER_DIVIDER_Msk)) | 2; //SPI0_CLK = 144Mhz / 3 = 48Mhz
-}
+ }
 
 void Spi2_Init(void )
 {
-    CLK->CLKSEL1 = CLK->CLKSEL1 & (~CLK_CLKSEL1_SPI2_S_Msk) | (0 << CLK_CLKSEL1_SPI2_S_Pos);
+    CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_SPI2_S_Msk)) | (0 << CLK_CLKSEL1_SPI2_S_Pos);
 
     /* Setup SPI2 multi-function pins */
     SYS->GPD_MFP = SYS_GPD_MFP_PD0_SPI2_SS0 | SYS_GPD_MFP_PD1_SPI2_CLK | SYS_GPD_MFP_PD2_SPI2_MISO0 | SYS_GPD_MFP_PD3_SPI2_MOSI0;
@@ -263,7 +266,7 @@ void Spi2_Init(void )
 
     SPI2->CNTRL2 |= SPI_CNTRL2_BCn_Msk;
 
-    SPI2->DIVIDER = (SPI2->DIVIDER & (~SPI_DIVIDER_DIVIDER_Msk)) | 2; //SPI2_CLK = 144Mhz / 3 = 48Mhz
+    SPI2->DIVIDER = (SPI2->DIVIDER & (~SPI_DIVIDER_DIVIDER_Msk)) | 1; //SPI2_CLK = 144Mhz / 3 = 48Mhz
 }
 
 
@@ -287,6 +290,8 @@ void Pwm_Init(void )
     PWMA->CSR = (PWMA->CSR & ~PWM_CSR_CSR2_Msk) | (4 << PWM_CSR_CSR2_Pos);
 
     PWMA->PCR |= PWM_PCR_CH0MOD_Msk | PWM_PCR_CH1MOD_Msk | PWM_PCR_CH2MOD_Msk ;
+
+    PWMA->PCR |= PWM_PCR_CH0INV_Msk | PWM_PCR_CH1INV_Msk | PWM_PCR_CH2INV_Msk;
     PWMA->PCR |= PWM_PCR_CH0PINV_Msk | PWM_PCR_CH1PINV_Msk | PWM_PCR_CH2PINV_Msk;
 
     PWMA->CNR0 = 0xff; //PWM period is 1kHZ
@@ -301,8 +306,8 @@ void Pwm_Init(void )
     PWMA->POE |= PWM_POE_PWM0_Msk | PWM_POE_PWM1_Msk | PWM_POE_PWM2_Msk;
 
     PWMA->PCR |= PWM_PCR_CH0EN_Msk | PWM_PCR_CH1EN_Msk | PWM_PCR_CH2EN_Msk;
-
 }
+
 
 
 

@@ -19,41 +19,9 @@ static void Drv_Task_Isr_Handler(void );
 /* Private variables ------------------------------------*/
 task_ctrl_blcok_t *taskHead = NULL;
 
-static void test1(void *arg )
-{
-    if((uint32_t )arg == (uint32_t)5)
-    {
-        arg = arg;
-    }
-}
-
-static void test2(void *arg )
-{
-    if((uint32_t )arg == (uint32_t)5)
-    {
-        arg = arg;
-    }
-}
-
-static void test3(void *arg )
-{
-    if((uint32_t )arg == (uint32_t)5)
-    {
-        arg = arg;
-    }
-}
-
-
-
 void Drv_Task_Init(void )
 {
     Hal_Task_Regist_Isr_Callback(Drv_Task_Isr_Handler);
-    
-    Drv_Task_Regist_Period(test1, 100, 100, (void *)5);
-
-    Drv_Task_Regist_Oneshot(test2, 100, (void *)5);
-
-    Drv_Task_Regist_Period(test3, 100, 100, (void *)5);
 }
 
 task_ctrl_blcok_t *Drv_Task_Regist(void (*handler)(void *), uint16_t ticks, uint16_t period, void *arg )
