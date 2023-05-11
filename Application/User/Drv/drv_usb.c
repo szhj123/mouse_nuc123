@@ -193,7 +193,7 @@ static void Drv_Usb_Get_Descriptor(void )
         {
             usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, gu8DeviceDescriptor[0]);
             Drv_Usb_Mem_Copy_In(u8Ep0Ptr, gu8DeviceDescriptor, usbCtrl.dataLen);
-            Hal_Usb_Set_In_Out_Rdy();
+            Hal_Usb_Set_In_Out_Rdy(EP0);
             break;
         }
         case USB_DESC_CONFIG:
