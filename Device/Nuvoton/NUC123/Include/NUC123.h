@@ -1910,7 +1910,7 @@ typedef struct
  * | :----: | :----:   | :---- |
  * |[7:0]   |I2CLK     |I2C clock divided Register
  * |        |          |The I2C clock rate bits: Data Baud Rate of I2C = (system clock) / (4x (I2CLK+1)).
- * |        |          |Note: The minimum value of I2CLK is 4.
+ * |        |          |Note: The Minimum value of I2CLK is 4.
  * @var I2C_T::I2CTOC
  * Offset: 0x14  I2C Time-out Counter Register
  * ---------------------------------------------------------------------------------------------------
@@ -4544,7 +4544,7 @@ typedef struct
  * |        |          |1 = Transmitted data output signal is changed on the falling edge of SPI bus clock.
  * |[7:3]   |TX_BIT_LEN|Transmit Bit Length
  * |        |          |This field specifies how many bits can be transmitted / received in one transaction.
- * |        |          |The minimum bit length is 8 bits and can up to 32 bits.
+ * |        |          |The Minimum bit length is 8 bits and can up to 32 bits.
  * |        |          |TX_BIT_LEN = 0x08 ... 8 bits.
  * |        |          |TX_BIT_LEN = 0x09 ... 9 bits.
  * |        |          |......
@@ -4570,7 +4570,7 @@ typedef struct
  * |        |          |......
  * |        |          |SP_CYCLE = 0xE ... 14.5 SPI bus clock cycle.
  * |        |          |SP_CYCLE = 0xF ... 15.5 SPI bus clock cycle.
- * |        |          |If the variable clock function is enabled and the transmit FIFO buffer is not empty, the minimum period of suspend
+ * |        |          |If the variable clock function is enabled and the transmit FIFO buffer is not empty, the Minimum period of suspend
  * |        |          |interval between the successive transactions is (6.5 + SP_CYCLE) * SPI bus clock cycle.
  * |[16]    |IF        |Unit Transfer Interrupt Flag
  * |        |          |0 = No transaction has been finished since this bit was cleared to 0.

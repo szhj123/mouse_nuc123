@@ -223,8 +223,8 @@ const uint8_t HID_KeyboardReportDescriptor[] =
 
 const uint8_t gu8DeviceDescriptor[] =
 {
-    0x12,               /* bLength */
-    0x01,               /* bDescriptorType */
+    LEN_DEVICE,         /* bLength */
+    DESC_DEVICE,        /* bDescriptorType */
     0x10, 0x01,         /* bcdUSB */
     0x00,               /* bDeviceClass */
     0x00,               /* bDeviceSubClass */
@@ -244,8 +244,8 @@ const uint8_t gu8DeviceDescriptor[] =
 /*!<USB Configure Descriptor */
 const uint8_t gu8ConfigDescriptor[] =
 {
-    0x09,               /* bLength */
-    0x02,               /* bDescriptorType */
+    LEN_CONFIG,         /* bLength */
+    DESC_CONFIG,        /* bDescriptorType */
                         /* wTotalLength */
     USB_CFG_LEN & 0x00FF,
     (USB_CFG_LEN & 0xFF00) >> 8,
@@ -257,8 +257,8 @@ const uint8_t gu8ConfigDescriptor[] =
     USBD_MAX_POWER,     /* MaxPower */
 
     /* I/F descr: HID - Mouse */
-    0x09,               /* bLength */
-    0x04,               /* bDescriptorType */
+    LEN_INTERFACE,      /* bLength */
+    DESC_INTERFACE,     /* bDescriptorType */
     0x00,               /* bInterfaceNumber */
     0x00,               /* bAlternateSetting */
     0x01,               /* bNumEndpoints */
@@ -268,30 +268,30 @@ const uint8_t gu8ConfigDescriptor[] =
     0x00,               /* iInterface */
 
     /* HID Descriptor */
-    0x09,               /* Size of this descriptor in UINT8s. */
-    0x21,               /* HID descriptor type. */
+    LEN_HID,            /* Size of this descriptor in UINT8s. */
+    DESC_HID,           /* HID descriptor type. */
     0x10, 0x01,         /* HID Class Spec. release number. */
     0x00,               /* H/W target country. */
     0x01,               /* Number of HID class descriptors to follow. */
-    0x22,               /* Descriptor type. */
+    DESC_HID_RPT,       /* Descriptor type. */
     /* Total length of report descriptor. */
     sizeof(HID_MouseReportDescriptor) & 0x00FF,
     (sizeof(HID_MouseReportDescriptor) & 0xFF00) >> 8,
 
     /* EP Descriptor: interrupt in. */
-    0x07,               /* bLength */
-    0x05,               /* bDescriptorType */
+    LEN_ENDPOINT,       /* bLength */
+    DESC_ENDPOINT,      /* bDescriptorType */
                         /* bEndpointAddress */
-    (HID_MOUSE_EP_NUM | USB_EP_INPUT), 
-    USB_EP_INT,         /* bmAttributes */
+    (HID_MOUSE_EP_NUM | EP_INPUT), 
+    EP_INT,             /* bmAttributes */
                         /* wMaxPacketSize */
     (USB_EP2_BUF_LEN & 0x00FF),
     (USB_EP2_BUF_LEN & 0xFF00) >> 8,
     HID_DEFAULT_INT_IN_INTERVAL,     /* bInterval */
 
     /* I/F descr: HID - Keyboard */
-    0x09,               /* bLength */
-    0x04,               /* bDescriptorType */
+    LEN_INTERFACE,      /* bLength */
+    DESC_INTERFACE,     /* bDescriptorType */
     0x01,               /* bInterfaceNumber */
     0x00,               /* bAlternateSetting */
     0x02,               /* bNumEndpoints */
@@ -301,22 +301,22 @@ const uint8_t gu8ConfigDescriptor[] =
     0x00,               /* iInterface */
 
     /* HID Descriptor */
-    0x09,               /* Size of this descriptor in UINT8s. */
-    0x21,               /* HID descriptor type. */
+    LEN_HID,            /* Size of this descriptor in UINT8s. */
+    DESC_HID,           /* HID descriptor type. */
     0x10, 0x01,         /* HID Class Spec. release number. */
     0x00,               /* H/W target country. */
     0x01,               /* Number of HID class descriptors to follow. */
-    0x22,               /* Descriptor type. */
+    DESC_HID_RPT,       /* Descriptor type. */
     /* Total length of report descriptor. */
     sizeof(HID_KeyboardReportDescriptor) & 0x00FF,
     (sizeof(HID_KeyboardReportDescriptor) & 0xFF00) >> 8,
 
     /* EP Descriptor: interrupt in. */
-    0x07,               /* bLength */
-    0x05,               /* bDescriptorType */
+    LEN_ENDPOINT,       /* bLength */
+    DESC_ENDPOINT,      /* bDescriptorType */
                         /* bEndpointAddress */
-    (HID_KB_EP_NUM | USB_EP_INPUT), 
-    USB_EP_INT,         /* bmAttributes */
+    (HID_KB_EP_NUM | EP_INPUT), 
+    EP_INT,             /* bmAttributes */
                         /* wMaxPacketSize */
     USB_EP3_BUF_LEN & 0x00FF,
     (USB_EP3_BUF_LEN & 0xFF00) >> 8,
@@ -324,9 +324,9 @@ const uint8_t gu8ConfigDescriptor[] =
     HID_DEFAULT_INT_IN_INTERVAL,     
 
     /* EP Descriptor: interrupt in. */
-    0x07,               /* bLength */
-    0x05,               /* bDescriptorType */
-    (HID_PIC_EP_NUM | USB_EP_OUTPUT), /* bEndpointAddress */
+    LEN_ENDPOINT,       /* bLength */
+    DESC_ENDPOINT,     /* bDescriptorType */
+    (HID_PIC_EP_NUM | EP_OUTPUT), /* bEndpointAddress */
     EP_INT,             /* bmAttributes */
                         /* wMaxPacketSize */
     USB_EP4_BUF_LEN & 0x00FF,

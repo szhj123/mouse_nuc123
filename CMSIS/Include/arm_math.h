@@ -6433,7 +6433,7 @@ void arm_rfft_fast_f32(
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
    * @param[out] result     is output pointer
-   * @param[in]  index      is the array index of the minimum value in the input buffer.
+   * @param[in]  index      is the array index of the Minimum value in the input buffer.
    */
   void arm_min_q7(
   q7_t * pSrc,
@@ -6447,7 +6447,7 @@ void arm_rfft_fast_f32(
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
    * @param[out] pResult    is output pointer
-   * @param[in]  pIndex     is the array index of the minimum value in the input buffer.
+   * @param[in]  pIndex     is the array index of the Minimum value in the input buffer.
    */
   void arm_min_q15(
   q15_t * pSrc,
@@ -6461,7 +6461,7 @@ void arm_rfft_fast_f32(
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
    * @param[out] pResult    is output pointer
-   * @param[out] pIndex     is the array index of the minimum value in the input buffer.
+   * @param[out] pIndex     is the array index of the Minimum value in the input buffer.
    */
   void arm_min_q31(
   q31_t * pSrc,
@@ -6475,7 +6475,7 @@ void arm_rfft_fast_f32(
    * @param[in]  pSrc       is input pointer
    * @param[in]  blockSize  is the number of samples to process
    * @param[out] pResult    is output pointer
-   * @param[out] pIndex     is the array index of the minimum value in the input buffer.
+   * @param[out] pIndex     is the array index of the Minimum value in the input buffer.
    */
   void arm_min_f32(
   float32_t * pSrc,

@@ -1,6 +1,8 @@
 #ifndef _DRV_USB_DESCRIPTOR_H
 #define _DRV_USB_DESCRIPTOR_H
 
+#include "hal_nuc123.h"
+
 /* Define the vendor id and product id */
 #define USBD_VID                              0x0416
 #define USBD_PID                              0x5020
@@ -17,15 +19,7 @@
 #define RPT_ID_DPI                            0x66
 
 
-#define USB_CFG_LEN
-
-#define USB_EP_INPUT                          0x80
-#define USB_EP_OUTPUT                         0x00
-
-/*!<USB Endpoint Type */
-#define USB_EP_ISO                            0x01
-#define USB_EP_BULK                           0x02
-#define USB_EP_INT                            0x03
+#define USB_CFG_LEN                           (LEN_CONFIG+LEN_INTERFACE*2+LEN_HID*2+LEN_ENDPOINT*3)
 
 /* Define the EP number */
 #define HID_MOUSE_EP_NUM                      0x01

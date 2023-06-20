@@ -182,7 +182,7 @@ extern const S_USBD_INFO_T gsInfo;
 
 
 /**
-  * @brief      Compare two input numbers and return minimum one
+  * @brief      Compare two input numbers and return Minimum one
   *
   * @param[in]  a   First number to be compared
   * @param[in]  b   Second number to be compared

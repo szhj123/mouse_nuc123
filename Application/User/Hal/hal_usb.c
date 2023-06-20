@@ -15,6 +15,7 @@
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
+static void Hal_Usb_Ep_Config(void );
 /* Private variables ------------------------------------*/
 usb_isr_callback_t *usb_callback = NULL;
 
@@ -26,31 +27,23 @@ void Hal_Usb_Init(void )
     USBD->ATTR |= USBD_ATTR_BYTEM_Msk | USBD_ATTR_PWRDN_Msk  | USBD_ATTR_DPPU_EN_Msk |\
                   USBD_ATTR_PHY_EN_Msk;
 
-    USBD->INTEN |= USBD_INTEN_WAKEUP_EN_Msk | USBD_INTEN_WAKEUP_IE_Msk | USBD_INTEN_FLDET_IE_Msk |\
-                   USBD_INTEN_USB_IE_Msk | USBD_INTEN_BUS_IE_Msk;
-                   
+    USBD->INTEN |= USBD_INTEN_WAKEUP_EN_Msk;
+
     USBD->ATTR |= USBD_ATTR_USB_EN_Msk;
-                   
+
     USBD->DRVSE0 |= USBD_DRVSE0_DRVSE0_Msk;
 
-    USBD->FADDR = 0x0;
-
-    USBD->STBUFSEG = 0;
+    Hal_Usb_Ep_Config();
 
     USBD->INTSTS |= USBD_INTSTS_SETUP_Msk | USBD_INTSTS_WAKEUP_STS_Msk | USBD_INTSTS_FLDET_STS_Msk |\
-                    USBD_INTSTS_USB_STS_Msk | USBD_INTSTS_BUS_STS_Msk;
+                    USBD_INTSTS_BUS_STS_Msk | USBD_INTSTS_USB_STS_Msk;
+
+    USBD->INTEN |= USBD_INTEN_WAKEUP_IE_Msk | USBD_INTEN_FLDET_IE_Msk | USBD_INTEN_USB_IE_Msk | USBD_INTEN_BUS_IE_Msk;
+
 
     USBD->DRVSE0 &= ~USBD_DRVSE0_DRVSE0_Msk;
 
-    NVIC_SetPriority(USBD_IRQn, 1);
-    
     NVIC_EnableIRQ(USBD_IRQn);
-}
-
-void Hal_Usb_Clr_Stall(void )
-{
-    USBD->EP[0].CFGP |= USBD_CFGP_SSTALL_Msk;
-    USBD->EP[1].CFGP |= USBD_CFGP_SSTALL_Msk;
 }
 
 void Hal_Usb_Regist_Isr_Hanlder(usb_isr_callback_t *pCallback )
@@ -60,7 +53,9 @@ void Hal_Usb_Regist_Isr_Hanlder(usb_isr_callback_t *pCallback )
 
 void Hal_Usb_Ep_Config(void )
 {
-    USBD->STBUFSEG = 0;
+    USBD->FADDR = 0x00;
+
+    USBD->STBUFSEG = 0x00;
 
     USBD->EP[0].CFG |= USBD_CFG_CSTALL_Msk;
     USBD->EP[0].CFG = (USBD->EP[0].CFG & ~USBD_CFG_STATE_Msk) | (EP_STATE_IN << USBD_CFG_STATE_Pos);
@@ -89,9 +84,16 @@ void Hal_Usb_Bus_Handler(uint32_t u32BusSts )
 {
     if(u32BusSts  & USBD_ATTR_USBRST_Msk)
     {
-        USBD->FADDR = 0x0;
+        USBD->ATTR |= USBD_ATTR_BYTEM_Msk | USBD_ATTR_PWRDN_Msk  | USBD_ATTR_DPPU_EN_Msk |\
+                      USBD_ATTR_PHY_EN_Msk;
 
-        Hal_Usb_Ep_Config();
+        USBD->INTEN |= USBD_INTEN_WAKEUP_EN_Msk;
+
+        USBD->ATTR |= USBD_ATTR_USB_EN_Msk;
+
+        USBD->FADDR = 0x00;
+
+        USBD->STBUFSEG = 0x00;
 
         usb_callback->usb_rst_callback();
     }
@@ -173,4 +175,48 @@ void Hal_Usb_Isr_Handler(void )
         }
     }
 }
+
+void Hal_Usb_Set_Dev_Addr(uint8_t devAddr )
+{
+    USBD->FADDR = devAddr;
+}
+
+uint32_t Hal_Usb_Get_Setup_Buf_Addr(void )
+{
+    return (USBD_BUF_BASE + USBD->STBUFSEG);
+}
+
+uint32_t Hal_Usb_Get_Ep_Buf_Addr(uint8_t epNum )
+{
+    return (USBD_BUF_BASE + USBD->EP[epNum].BUFSEG);
+}
+
+void Hal_Usb_Set_Dsq_Sync(uint8_t epNum, uint8_t dsqSyncFlag )
+{
+    if(dsqSyncFlag)
+    {
+        USBD->EP[epNum].CFG |= USBD_CFG_DSQ_SYNC_Msk;
+    }
+    else
+    {
+        USBD->EP[epNum].CFG &= ~USBD_CFG_DSQ_SYNC_Msk;
+    }
+}
+
+void Hal_Usb_ClrRdy(uint8_t epNum )
+{
+    USBD->EP[epNum].CFGP |= USBD_CFGP_CLRRDY_Msk;
+}
+
+void Hal_Usb_ClrStall(uint8_t epNum )
+{
+    USBD->EP[epNum].CFGP |= USBD_CFGP_SSTALL_Msk;
+}
+
+
+void Hal_Usb_InOut_Ready(uint8_t epNum, uint16_t length )
+{
+    USBD->EP[epNum].MXPLD = length;
+}
+
 

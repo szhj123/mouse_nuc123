@@ -512,6 +512,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Drv\drv_usb.c</FilePath>
             </File>
+            <File>
+              <FileName>drv_usb_descriptor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_usb_descriptor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

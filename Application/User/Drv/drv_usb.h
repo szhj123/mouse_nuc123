@@ -3,33 +3,13 @@
 
 #include "hal_usb.h"
 
-#define USB_REQ_STANDARD        0x00
-#define USB_REQ_CLASS           0x20
-#define USB_REQ_VENDOR          0x40
-
-#define USB_GET_STATUS          0x00
-#define USB_CLEAR_FEATURE       0x01
-#define USB_SET_FEATURE         0x03
-#define USB_SET_ADDRESS         0x05
-#define USB_GET_DESCRIPTOR      0x06
-#define USB_SET_DESCRIPTOR      0x07
-#define USB_GET_CONFIGURATION   0x08
-#define USB_SET_CONFIGURATION   0x09
-#define USB_GET_INTERFACE       0x0a
-#define USB_SET_INTERFACE       0x0b
-#define USB_SYNCH_FRAME         0x0c
-
-
-#define USB_DESC_DEVICE         0x01
-#define USB_DESC_CONFIG         0x02
-#define USB_DESC_STRING         0x03
-#define USB_DESC_INTERFACE      0x04
-#define USB_DESC_ENDPOINT       0x05
-
-
-/*!<USB HID Descriptor Type */
-#define USB_DESC_HID            0x21
-#define USB_DESC_HID_RPT        0x22
+typedef enum _ep0_intp_state_t
+{
+    DATA_OUT = 0,
+    DATA_IN,
+    SET_ADDR,
+    SET_CONFIG
+}ep0_intp_state_t;
 
 
 
@@ -44,6 +24,8 @@ typedef struct _usb_ctrl_block_t
     volatile uint8_t wLength_l;
     volatile uint8_t wLength_h;
 
+    ep0_intp_state_t ep0IntpState;
+             uint8_t devAddr;
              uint8_t configVal;
              uint8_t dsqSync;
 
@@ -55,6 +37,27 @@ typedef struct _usb_ctrl_block_t
 }usb_ctrl_block_t;
 
 void Drv_Usb_Init(void );
+void Drv_Usb_Rst_Handler(void );
+void Drv_Usb_Suspend_Handler(void );
+void Drv_Usb_Resume_Handler(void );
+void Drv_Usb_Fldet_Handler(void );
+void Drv_Usb_Setup_Handler(void );
+void Drv_Usb_Ep0_Handler(void );
+void Drv_Usb_Ep1_Handler(void );
+void Drv_Usb_Ep2_Handler(void );
+void Drv_Usb_Ep3_Handler(void );
+
+void Drv_Usb_Req_Standard(void );
+void Drv_Usb_Req_Class(void );
+void Drv_Usb_Req_Vendor(void );
+
+void Drv_Usb_Set_Address(void );
+void Drv_Usb_Get_Descriptor(void );
+
+void Drv_Usb_Data_InReady(uint8_t *epPtr, uint8_t *descPtr );
+
+void Drv_Usb_Memcpy(uint8_t *pDst, uint8_t *pSrc, uint16_t length );
+
 
 
 #endif 
