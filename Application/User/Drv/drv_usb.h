@@ -7,8 +7,7 @@ typedef enum _ep0_intp_state_t
 {
     DATA_OUT = 0,
     DATA_IN,
-    SET_ADDR,
-    SET_CONFIG
+    SET_ADDR
 }ep0_intp_state_t;
 
 
@@ -53,6 +52,7 @@ void Drv_Usb_Req_Vendor(void );
 
 void Drv_Usb_Set_Address(void );
 void Drv_Usb_Get_Descriptor(void );
+void Drv_Usb_Set_Config(void );
 
 void Drv_Usb_Data_InReady(uint8_t *epPtr, uint8_t *descPtr );
 

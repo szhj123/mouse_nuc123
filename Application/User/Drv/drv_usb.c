@@ -141,10 +141,6 @@ void Drv_Usb_Ep0_Handler(void )
             
             break;
         }
-        case SET_CONFIG:
-        {
-            break;
-        }
         default: break;
     }
 }
@@ -180,6 +176,7 @@ void Drv_Usb_Req_Standard(void )
         }
         case SET_CONFIGURATION:
         {
+            Drv_Usb_Set_Config();
             break;
         }
     }
@@ -234,7 +231,7 @@ void Drv_Usb_Get_Descriptor(void )
         {
             usbCtrl.pData = (uint8_t *)&gu8ConfigDescriptor[0];
             
-            usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, gu8ConfigDescriptor[0]);
+            usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, (uint16_t )gu8ConfigDescriptor[3]<<8|gu8ConfigDescriptor[2]);
 
             Drv_Usb_Data_InReady(u8Ep0Ptr, usbCtrl.pData);
             
@@ -242,6 +239,50 @@ void Drv_Usb_Get_Descriptor(void )
         }
         case DESC_STRING:
         {
+            if(usbCtrl.wValue_l == 0x00)
+            {
+                usbCtrl.pData = (uint8_t *)&gu8StringLang[0];
+                           
+                usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, gu8StringLang[0]);
+            }
+            else if(usbCtrl.wValue_l == 0x01)
+            {
+                usbCtrl.pData = (uint8_t *)&gu8VendorStringDesc[0];
+                           
+                usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, gu8VendorStringDesc[0]);
+            }
+            else if(usbCtrl.wValue_l == 0x02)
+            {
+                usbCtrl.pData = (uint8_t *)&gu8ProductStringDesc[0];
+                           
+                usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, gu8ProductStringDesc[0]);
+            }
+            else 
+            {
+                usbCtrl.pData = (uint8_t *)&gu8StringSerial[0];
+                           
+                usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, gu8StringSerial[0]);
+            }
+
+            Drv_Usb_Data_InReady(u8Ep0Ptr, usbCtrl.pData);
+            break;
+        }
+        case DESC_HID_RPT:
+        {
+            if(usbCtrl.wIndex_l == 0x00)
+            {
+                usbCtrl.pData = (uint8_t *)&HID_MouseReportDescriptor[0];
+
+                usbCtrl.dataLen  = Minimum(usbCtrl.dataLen, HID_MOUSE_RPT_LEN);
+            }
+            else if(usbCtrl.wIndex_l == 0x01)
+            {
+                usbCtrl.pData = (uint8_t *)&HID_KeyboardReportDescriptor[0];
+
+                usbCtrl.dataLen = Minimum(usbCtrl.dataLen, HID_KEY_RPT_LEN);
+            }
+
+            Drv_Usb_Data_InReady(u8Ep0Ptr, usbCtrl.pData);
             break;
         }
         default:
@@ -250,6 +291,15 @@ void Drv_Usb_Get_Descriptor(void )
             Hal_Usb_ClrStall(EP1);
         }
     }
+}
+
+void Drv_Usb_Set_Config(void )
+{
+    usbCtrl.configVal = usbCtrl.wValue_l;
+
+    Hal_Usb_Set_Dsq_Sync(EP0, 1);
+
+    Hal_Usb_InOut_Ready(EP0, 0);
 }
 
 void Drv_Usb_Data_InReady(uint8_t *epPtr, uint8_t *descPtr )

@@ -219,6 +219,9 @@ const uint8_t HID_KeyboardReportDescriptor[] =
     /* End Collection */
 };
 
+uint16_t HID_MOUSE_RPT_LEN = sizeof(HID_MouseReportDescriptor)/sizeof(uint8_t ) ;
+uint16_t HID_KEY_RPT_LEN = sizeof(HID_KeyboardReportDescriptor)/sizeof(uint8_t ) ;
+
 
 
 const uint8_t gu8DeviceDescriptor[] =
@@ -335,6 +338,14 @@ const uint8_t gu8ConfigDescriptor[] =
     HID_DEFAULT_INT_IN_INTERVAL    
 };
 
+/*!<USB Language String Descriptor */
+const uint8_t gu8StringLang[] =
+{
+    4,              /* bLength */
+    0x03,    /* bDescriptorType */
+    0x09, 0x04
+};
+
 /*!<USB Vendor String Descriptor */
 const uint8_t gu8VendorStringDesc[] =
 {
@@ -346,16 +357,16 @@ const uint8_t gu8VendorStringDesc[] =
 /*!<USB Product String Descriptor */
 const uint8_t gu8ProductStringDesc[] =
 {
-    24,
+    30,
     0x03,
-    'N', 0, 'u', 0, 'M', 0, 'i', 0, 'c', 0, 'r', 0, 'o', 0, ' ', 0, 'H', 0, 'I', 0, 'D', 0
+    'J', 0, '5', 0, '0', 0, '0', 0, ' ', 0, 'U', 0, 'S', 0, 'B', 0, ' ', 0, 'M', 0, 'o', 0, 'u', 0, 's', 0, 'e', 0
 };
 
 const uint8_t gu8StringSerial[] =
 {
     26,             // bLength
     0x03,    // bDescriptorType
-    'A', 0, '0', 0, '2', 0, '0', 0, '1', 0, '5', 0, '0', 0, '8', 0, '2', 0, '4', 0, '0', 0, '1', 0
+    'A', 0, '0', 0, '2', 0, '0', 0, '2', 0, '3', 0, '0', 0, '6', 0, '2', 0, '4', 0, '0', 0, '1', 0
 };
 
 

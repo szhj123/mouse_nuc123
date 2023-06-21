@@ -49,7 +49,8 @@ extern const uint8_t gu8VendorStringDesc[];
 extern const uint8_t gu8ProductStringDesc[];
 extern const uint8_t gu8StringSerial[];
 
-
+extern uint16_t HID_MOUSE_RPT_LEN;
+extern uint16_t HID_KEY_RPT_LEN;
 
 #endif 
 
