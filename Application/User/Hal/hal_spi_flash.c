@@ -29,6 +29,8 @@ void Hal_Spi_Flash_Init(void )
 inline void Hal_Spi_Flash_Cs_Enable(void )
 {
     PB->DOUT &= ~(1 << 10);
+
+    PC->DOUT |= (1 << 0);
 }
 
 inline void Hal_Spi_Flash_Cs_Disable(void )

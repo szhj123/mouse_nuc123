@@ -17,17 +17,12 @@
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
-uint8_t testFramMs;
 
 void App_Lcd_Init(void )
 {
     Drv_Lcd_Init();    
-
-    testFramMs = 0;
-
-    App_Lcd_Clr(BLUE);
     
-    App_Lcd_Clr(RED);
+    App_Lcd_Clr(BLUE);
 }
 
 void App_Lcd_Clr(uint16_t color )

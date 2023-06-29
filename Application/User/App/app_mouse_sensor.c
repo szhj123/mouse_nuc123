@@ -1,5 +1,5 @@
 /********************************************************
-* @file       drv_light.c
+* @file       app_mouse_sensor.c
 * @author     szhj13
 * @version    V1.0
 * @date       2023-04-18
@@ -10,45 +10,34 @@
 **********************************************************/
 
 /* Includes ---------------------------------------------*/
-#include "drv_light.h"
+#include "app_mouse_sensor.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
+static void App_Sensor_Handler(void *arg );
 /* Private variables ------------------------------------*/
+mSensor_ctrl_block_t mSensorCtrl;
 
-void Drv_Light_Init(void )
+void App_Sensor_Init(void )
 {
-    Hal_Light_Init();
+    uint8_t cnt = 10;
 
-    Hal_Light_Pwm_Duty_Set(0, 0, 0);
+    do{
+        mSensorCtrl.productID = Drv_Sensor_Get_Product_ID();
+        
+    }while(mSensorCtrl.productID == 0 && cnt--);
+
+    if(mSensorCtrl.productID == P3325_ID)
+    {
+        Drv_Sensor_P3325_Init(&mSensorCtrl.deltaX, &mSensorCtrl.deltaY);
+    }
+
+    Drv_Task_Regist_Period(App_Sensor_Handler, 0, 1, NULL);
 }
 
-void Drv_Light_All_Off(void )
+static void App_Sensor_Handler(void *arg )
 {
-    Hal_Light_All_Off();
-}
-
-void Drv_Light_All_On(uint8_t rVal, uint8_t gVal, uint8_t bVal )
-{
-    Hal_Light_Pwm_Duty_Set(rVal, gVal, bVal);
     
-    Hal_Light_All_On();
 }
-
-void Drv_Light_Single_On(light_ctrl_block_t *light )
-{
-    Drv_Light_All_Off();
-
-    Hal_Light_Pwm_Duty_Set(light->rVal, light->gVal, light->bVal);
-
-    Hal_Light_On(light->port, light->pin);
-}
-
-void Drv_Light_Single_Off(light_ctrl_block_t *light )
-{
-    Hal_Light_Off(light->port, light->pin);
-}
-
-
 

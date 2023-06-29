@@ -477,6 +477,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\App\app_light.c</FilePath>
             </File>
+            <File>
+              <FileName>app_mouse_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\App\app_mouse_sensor.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -516,6 +521,11 @@
               <FileName>drv_usb_descriptor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Drv\drv_usb_descriptor.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_mouse_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_mouse_sensor.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -561,6 +571,11 @@
               <FileName>hal_usb.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Hal\hal_usb.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_mouse_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_mouse_sensor.c</FilePath>
             </File>
           </Files>
         </Group>

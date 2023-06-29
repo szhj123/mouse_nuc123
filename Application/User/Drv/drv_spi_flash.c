@@ -200,6 +200,5 @@ void Drv_Spi_Flash_Read(uint32_t addr, uint8_t *buf, uint32_t length )
 
 
     Hal_Spi_Flash_Cs_Disable();
-
 }
 

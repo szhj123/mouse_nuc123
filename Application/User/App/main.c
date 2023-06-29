@@ -16,6 +16,7 @@
 #include "drv_spi_flash.h"
 #include "drv_usb.h"
 
+#include "app_mouse_sensor.h"
 #include "app_lcd.h"
 #include "app_light.h"
 /* Private typedef --------------------------------------*/
@@ -36,6 +37,8 @@ int main(void )
     Drv_Spi_Flash_Init();
 
     Drv_Usb_Init();
+
+    App_Sensor_Init();
 
     App_Lcd_Init();
 

@@ -21,11 +21,9 @@
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
-extern uint8_t testFramMs;
 
 void SysTick_Handler(void )
 {
-    testFramMs++;
     Hal_Task_Isr_Handler();
 }
 

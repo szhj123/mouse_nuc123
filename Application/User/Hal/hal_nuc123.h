@@ -6,11 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "NUC123.h"
-#include "clk.h"
-#include "gpio.h"
-#include "timer.h"
-#include "pdma.h"
-#include "usbd.h"
+
 
 typedef void (*hal_isr_callback_t)(void );
 

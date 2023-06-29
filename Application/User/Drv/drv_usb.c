@@ -141,7 +141,12 @@ void Drv_Usb_Ep0_Handler(void )
             
             break;
         }
-        default: break;
+        default: 
+        {
+            Hal_Usb_ClrStall(EP0);
+            Hal_Usb_ClrStall(EP1);
+            break;
+        }
     }
 }
 
@@ -179,18 +184,43 @@ void Drv_Usb_Req_Standard(void )
             Drv_Usb_Set_Config();
             break;
         }
+        default: 
+        {
+            Hal_Usb_ClrStall(EP0);
+            Hal_Usb_ClrStall(EP1);
+            break;
+        }
     }
 }
 
 void Drv_Usb_Req_Class(void )
 {
-    
+    switch(usbCtrl.bRequest)
+    {
+        case SET_IDLE:
+        {
+            Hal_Usb_Set_Dsq_Sync(EP0, 1);
+
+            Hal_Usb_InOut_Ready(EP0, 0);
+            
+            break;
+        }
+        default: 
+        {
+            Hal_Usb_ClrStall(EP0);
+            Hal_Usb_ClrStall(EP1);
+            break;
+        }
+    }
 }
 
 void Drv_Usb_Req_Vendor(void )
 {
     
 }
+
+
+
 
 void Drv_Usb_Set_Address(void )
 {

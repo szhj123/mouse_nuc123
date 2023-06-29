@@ -5,7 +5,7 @@
 
 #define FLASH_WRITE_ENABLE              0x06
 #define FLASH_READ                      0x03
-#define FLASH_PAGE_PROGRAM                0x02
+#define FLASH_PAGE_PROGRAM              0x02
 #define FLASH_STATUS_READ               0x05
 #define FLASH_STATUS_WRITE              0x01
 #define FLASH_CHIP_ERASE                0xc7
@@ -13,7 +13,7 @@
 #define FLASH_BLOCK_32K_ERASE           0x52
 #define FLASH_BLOCK_64K_ERASE           0xd8
 
-#define SPI_FLASH_PAGE_SIZE             256                
+#define SPI_FLASH_PAGE_SIZE             256      
 
 
 void Drv_Spi_Flash_Init(void );
