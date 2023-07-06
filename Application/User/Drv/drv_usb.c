@@ -205,6 +205,10 @@ void Drv_Usb_Req_Class(void )
             
             break;
         }
+        case SET_REPORT:
+        {
+            
+        }
         default: 
         {
             Hal_Usb_ClrStall(EP0);

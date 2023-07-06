@@ -17,4 +17,98 @@
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
 
+void Drv_Flash_Erase(uint32_t flashAddr, uint32_t flashSize )
+{
+    uint32_t i;
+    uint32_t pageCnt;
+
+    if((flashSize % PAGE_SIZE) != 0)
+    {
+        pageCnt = flashSize/PAGE_SIZE + 1;
+    }
+    else
+    {
+        pageCnt = flashSize/PAGE_SIZE;
+    }
+
+    for(i=0;i<pageCnt;i++)
+    {
+        FMC_Erase(flashAddr);
+
+        flashAddr += PAGE_SIZE;
+    }
+}
+
+void Drv_Flash_Read(uint32_t flashAddr, uint8_t *buf, uint16_t length )
+{
+    u32Data_t tmpData;
+    uint16_t i;
+
+    for(i=0;i<length/4;i++)
+    {
+       tmpData.u32Data = FMC_Read(flashAddr + i* 4);
+
+       buf[i*4+0] = tmpData.byte_t.byte0;
+       buf[i*4+1] = tmpData.byte_t.byte1;
+       buf[i*4+2] = tmpData.byte_t.byte2;
+       buf[i*4+3] = tmpData.byte_t.byte3;
+    }
+
+    if((length % 4) != 0)
+    {
+        tmpData.u32Data = FMC_Read(flashAddr + i* 4);
+        
+        switch(length % 4)
+        {
+            case 1: buf[i*4+0] = tmpData.byte_t.byte0; 
+                    break;
+            case 2: buf[i*4+0] = tmpData.byte_t.byte0;
+                    buf[i*4+1] = tmpData.byte_t.byte1;
+                    break;
+            case 3: buf[i*4+0] = tmpData.byte_t.byte0;
+                    buf[i*4+1] = tmpData.byte_t.byte1;
+                    buf[i*4+2] = tmpData.byte_t.byte2;
+                    break;
+            default: break;
+        }
+    }
+}
+
+void Drv_Flash_Write(uint32_t flashAddr, uint8_t *buf, uint16_t length )
+{
+    u32Data_t tmpData;
+    uint16_t i;
+
+    for(i=0;i<length/4;i++)
+    {
+        tmpData.byte_t.byte0 = buf[i*4+0];
+        tmpData.byte_t.byte1 = buf[i*4+1];
+        tmpData.byte_t.byte2 = buf[i*4+2];
+        tmpData.byte_t.byte3 = buf[i*4+3];
+
+        FMC_Write(flashAddr+i*4, tmpData.u32Data);
+    }
+
+    if((length % 4) != 0)
+    {
+        tmpData.u32Data = FMC_Read(flashAddr + i* 4);
+
+        switch(length%4)
+        {
+            case 1: tmpData.byte_t.byte0 = buf[i*4+0]; 
+                    break;
+            case 2: tmpData.byte_t.byte0 = buf[i*4+0];
+                    tmpData.byte_t.byte1 = buf[i*4+1];
+                    break;
+            case 3: tmpData.byte_t.byte0 = buf[i*4+0];
+                    tmpData.byte_t.byte1 = buf[i*4+1];
+                    tmpData.byte_t.byte2 = buf[i*4+2];
+                    break;
+            default: break;
+        }
+
+        FMC_Write(flashAddr+i*4, tmpData.u32Data);
+    }
+}
+
 

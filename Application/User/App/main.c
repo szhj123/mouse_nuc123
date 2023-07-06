@@ -16,6 +16,7 @@
 #include "drv_spi_flash.h"
 #include "drv_usb.h"
 
+#include "app_mouse_protocol.h"
 #include "app_mouse_sensor.h"
 #include "app_lcd.h"
 #include "app_light.h"
@@ -24,7 +25,6 @@
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
-
 
 int main(void )
 {
@@ -37,6 +37,8 @@ int main(void )
     Drv_Spi_Flash_Init();
 
     Drv_Usb_Init();
+
+    App_Mouse_Para_Init();
 
     App_Sensor_Init();
 
