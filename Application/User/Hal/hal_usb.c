@@ -219,4 +219,8 @@ void Hal_Usb_InOut_Ready(uint8_t epNum, uint16_t length )
     USBD->EP[epNum].MXPLD = length;
 }
 
+uint8_t Hal_Usb_Get_Ep_InOut_Size(uint8_t epNum )
+{
+    return USBD->EP[epNum].MXPLD;
+}
 

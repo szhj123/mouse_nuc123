@@ -44,6 +44,7 @@ uint32_t Hal_Usb_Get_Ep_Buf_Addr(uint8_t epNum );
 void Hal_Usb_ClrRdy(uint8_t epNum );
 void Hal_Usb_ClrStall(uint8_t epNum );
 void Hal_Usb_InOut_Ready(uint8_t epNum, uint16_t length );
+uint8_t Hal_Usb_Get_Ep_InOut_Size(uint8_t epNum );
 
 #endif 
 

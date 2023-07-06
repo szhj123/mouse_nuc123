@@ -35,7 +35,7 @@ typedef struct _usb_ctrl_block_t
              uint8_t configVal;
              uint8_t dsqSync;
 
-             uint8_t *pData;
+             uint8_t *dataPtr;
              uint16_t dataLen;
              
              uint8_t suspendFlag;
