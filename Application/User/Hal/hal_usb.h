@@ -33,6 +33,7 @@ typedef struct _usb_isr_callback_t
     void (*usb_ep3_callbacK)(void );
 }usb_isr_callback_t;
 
+
 void Hal_Usb_Init(void );
 void Hal_Usb_Regist_Isr_Hanlder(usb_isr_callback_t *pCallback );
 void Hal_Usb_Isr_Handler(void );

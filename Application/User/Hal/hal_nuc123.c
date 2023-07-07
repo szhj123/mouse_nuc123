@@ -200,6 +200,28 @@ void Timer1_Init(void )
     TIMER1->TCSR |= TIMER_TCSR_CEN_Msk;
 }
 
+void Timer2_Init(void )
+{
+    CLK->CLKSEL1 = (CLK->CLKSEL1 & ~CLK_CLKSEL1_TMR2_S_Msk) | CLK_CLKSEL1_TMR2_S_HXT;
+
+    CLK->APBCLK |= CLK_APBCLK_TMR2_EN_Msk;
+
+    TIMER2->TCSR = (TIMER2->TCSR & ~TIMER_TCSR_PRESCALE_Msk) | ((12 -1) << TIMER_TCSR_PRESCALE_Pos);
+
+    TIMER2->TCSR = (TIMER2->TCSR & ~TIMER_TCSR_MODE_Msk) | (1 << TIMER_TCSR_MODE_Pos);
+
+    TIMER2->TCMPR = 1000;
+
+    TIMER2->TISR |= TIMER_TISR_TIF_Msk;
+
+    TIMER2->TCSR |= TIMER_TCSR_IE_Msk;
+
+    NVIC_EnableIRQ(TMR2_IRQn);
+
+    TIMER2->TCSR |= TIMER_TCSR_CEN_Msk;
+}
+
+
 void Spi0_Init(void )
 {
     CLK->CLKSEL1 = CLK->CLKSEL1 & (~CLK_CLKSEL1_SPI0_S_Msk) | (0 << CLK_CLKSEL1_SPI0_S_Pos);

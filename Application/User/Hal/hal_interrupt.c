@@ -34,6 +34,13 @@ void TMR0_IRQHandler(void )
     Hal_Timer_Isr_Handler();
 }
 
+void TMR1_IRQHandler(void )
+{
+    TIMER1->TISR |= TIMER_TISR_TIF_Msk;
+
+}
+
+
 void PDMA_IRQHandler(void)
 {
     uint32_t status = PDMA_GET_INT_STATUS();

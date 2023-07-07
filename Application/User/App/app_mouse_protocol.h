@@ -112,6 +112,22 @@ typedef struct _mLdr_pack_t
     uint8_t reserve2[6];
 }mLdr_pack_t;
 
+#pragma pack(1)
+typedef struct _mKey_mode_pack_t
+{
+    uint8_t rptID;
+    uint8_t modeDateFlag;
+    uint8_t keyMode;
+    uint8_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t min;
+    uint8_t sec;
+    uint8_t weekDay;
+}mKey_mode_pack_t;
+#pragma pack()
+
 typedef struct _mLight_data_t
 {
     uint8_t brightness;
@@ -153,7 +169,7 @@ typedef struct _pic_pack_t
     uint8_t picDataBuf[60];
 }pic_pack_t;
 
-typedef struct _mouse_ctrl_block_t
+typedef struct _mouse_para_t
 {
     mKey_mode_t keyMode;
     mKey_value_t keyModeOffice[15];
@@ -170,11 +186,13 @@ typedef struct _mouse_ctrl_block_t
     uint8_t picShowMask_h;
     uint8_t picIndex;
     mLight_data_t mLightBuf[10];
-}mouse_ctrl_block_t;
+}mouse_para_t;
 
 void App_Mouse_Para_Init(void );
 void App_Mouse_Para_Save(void );
 
+
+void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len );
 
 #endif 
 

@@ -42,6 +42,8 @@ void Systick_Init(void );
 void Gpio_Init(void );
 void Gpio_Intp_Init(void );
 void Timer0_Init(void );
+void Timer1_Init(void );
+void Timer2_Init(void );
 void Pwm_Init(void );
 void Spi0_Init(void );
 void Spi2_Init(void );

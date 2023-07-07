@@ -17,9 +17,11 @@
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
-usb_ctrl_block_t usbCtrl;
+static usb_ctrl_block_t usbCtrl;
 
-usb_isr_callback_t usbIsrCallback = 
+static usb_msg_callback_t *usbMsgCallback;
+
+static usb_isr_callback_t usbIsrCallback = 
 {
     .usb_rst_callback = Drv_Usb_Rst_Handler,
     .usb_suspend_callback = Drv_Usb_Suspend_Handler,
@@ -35,8 +37,10 @@ usb_isr_callback_t usbIsrCallback =
 static uint8_t usbEpBuf[USB_EP1_BUF_LEN] = {0};
 
 
-void Drv_Usb_Init(void )
+void Drv_Usb_Init(usb_msg_callback_t *callback )
 {
+    usbMsgCallback = callback;
+    
     Hal_Usb_Init();
 
     Hal_Usb_Regist_Isr_Hanlder(&usbIsrCallback);
@@ -169,6 +173,8 @@ void Drv_Usb_Ep1_Handler(void )
 
         if(usbCtrl.dataLen == 0)
         {
+            usbMsgCallback->usb_msg_set_report_callback(usbEpBuf, sizeof(usbEpBuf));
+            
             Hal_Usb_Set_Dsq_Sync(EP0, 1);
 
             Hal_Usb_InOut_Ready(EP0, 0);
