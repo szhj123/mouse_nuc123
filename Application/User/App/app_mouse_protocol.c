@@ -13,6 +13,7 @@
 #include "app_mouse_protocol.h"
 #include "app_calendar.h"
 #include "app_usb.h"
+#include "app_light.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -285,8 +286,81 @@ void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len )
 
 void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len )
 {
-    buf[0] = RPT_ID_KEY_MODE;
-    buf[1] = (uint8_t )mousePara.keyMode;
+    mKey_mode_pack_t *keyModePack = (mKey_mode_pack_t *)buf;
+    
+    keyModePack->rptID = RPT_ID_KEY_MODE;
+    keyModePack->modeDateFlag = 1;
+    keyModePack->keyMode = (uint8_t )mousePara.keyMode;
+}
+
+void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
+{
+    uint8_t i;
+    mLdr_pack_t *ldrPack = (mLdr_pack_t *)buf;
+
+    mousePara.mRate = (mRate_t )ldrPack->mRate;
+    mousePara.mSensor = (mSensor_t )ldrPack->mSensor;
+    mousePara.mLightMode = (mLight_mode_t )ldrPack->mLightMode;
+    mousePara.dpiIndex = ldrPack->dpiIndex;
+    mousePara.dpiTotalNum = ldrPack->dpiTotalNum;
+    
+    for(i=0;i<16;i++)
+    {
+        mousePara.dpiValBuf[i] = ldrPack->dpiValBuf[i];
+    }
+
+    for(i=0;i<8;i++)
+    {
+        mousePara.dpiColorBuf[i] = ldrPack->dpiColorBuf[i];
+    }
+
+    mousePara.picShowMask_l = ldrPack->picShowMask_l;
+    mousePara.picShowMask_h = ldrPack->picShowMask_h;
+    mousePara.picIndex = ldrPack->picIndex;
+
+    App_Mouse_Para_Save();
+
+    switch(mousePara.mLightMode)
+    {
+        case LIGHT_MODE_OFF: App_Light_Off(); break;
+        case LIGHT_MODE_COLOR_STREAM: App_Light_Color_Streamer(mousePara.mLightBuf[1]); break;
+        case LIGHT_MODE_SOLID: App_Light_Solid(mousePara.mLightBuf[2]); break;
+        default: break;
+    }
+}
+
+void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len )
+{
+    uint8_t i;
+    mLdr_pack_t *ldrPack = (mLdr_pack_t *)buf;
+    
+    ldrPack->rptID = RPT_ID_LDR;
+    ldrPack->mRate = mousePara.mRate;
+    ldrPack->mSensor = mousePara.mSensor;
+    ldrPack->mLightMode = mousePara.mLightMode;
+    ldrPack->dpiIndex = mousePara.dpiIndex;
+    ldrPack->dpiTotalNum = mousePara.dpiTotalNum;
+
+    for(i=0;i<16;i++)
+    {
+        ldrPack->dpiValBuf[i] = mousePara.dpiValBuf[i];
+    }
+
+    for(i=0;i<8;i++)
+    {
+        ldrPack->dpiColorBuf[i] = mousePara.dpiColorBuf[i];
+    }
+
+    ldrPack->picShowMask_l = mousePara.picShowMask_l;
+    ldrPack->picShowMask_h = mousePara.picShowMask_h;
+    ldrPack->picIndex = mousePara.picIndex;
+}
+
+void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len )
+{
+    mLight_pack_t *lightPack = (mLight_pack_t *)buf;
+    
+    mousePara.mLightBuf[lightPack->lightMode] = lightPack->lightData;
 }
 
 

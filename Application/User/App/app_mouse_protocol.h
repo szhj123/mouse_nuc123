@@ -138,6 +138,8 @@ typedef struct _mLight_data_t
     uint8_t brightness;
     uint8_t speed;
     uint8_t direction;
+    uint8_t randomColor;
+    uint8_t colorNun;
     mColor_t lightColorBuf[7];
 }mLight_data_t;
 
@@ -146,7 +148,7 @@ typedef struct _mLight_pack_t
     uint8_t rptID;
     uint8_t lightMode;
     mLight_data_t lightData;
-    uint8_t reserve[38];
+    uint8_t reserve[36];
 }mLight_pack_t;
 
 typedef struct _mMacro_Val_t
@@ -199,6 +201,9 @@ void App_Mouse_Para_Save(void );
 
 void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len );
+void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len );
+void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len );
+void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len );
 
 #endif 
 

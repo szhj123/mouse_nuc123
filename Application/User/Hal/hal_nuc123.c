@@ -253,8 +253,8 @@ void Spi0_Init(void )
 
 void Spi2_Init(void )
 {
-    CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_SPI2_S_Msk)) | (0 << CLK_CLKSEL1_SPI2_S_Pos);
-
+    CLK->CLKSEL1 = CLK->CLKSEL1 & (~CLK_CLKSEL1_SPI2_S_Msk) | (0 << CLK_CLKSEL1_SPI2_S_Pos);
+    
     /* Setup SPI2 multi-function pins */
     SYS->GPD_MFP = SYS_GPD_MFP_PD0_SPI2_SS0 | SYS_GPD_MFP_PD1_SPI2_CLK | SYS_GPD_MFP_PD2_SPI2_MISO0 | SYS_GPD_MFP_PD3_SPI2_MOSI0;
     SYS->ALT_MFP1 = SYS_ALT_MFP1_PD0_SPI2_SS0 | SYS_ALT_MFP1_PD1_SPI2_CLK | SYS_ALT_MFP1_PD2_SPI2_MISO0 | SYS_ALT_MFP1_PD3_SPI2_MOSI0;
@@ -269,13 +269,13 @@ void Spi2_Init(void )
 
     SPI2->CNTRL &= ~SPI_CNTRL_LSB_Msk;
 
-    #if 1
+#if 1
 
     SPI2->SSR = SPI2->SSR & ~(SPI_SSR_SS_LVL_Msk | SPI_SSR_AUTOSS_Msk);
 
     SPI2->SSR &= ~(1 << 0);
 
-    #else
+#else
 
     SPI0->SSR |= SPI_SSR_AUTOSS_Msk;
 
@@ -284,11 +284,11 @@ void Spi2_Init(void )
     SPI2->SSR |= (1 << 0);
 
 
-    #endif 
+#endif 
 
     SPI2->CNTRL2 |= SPI_CNTRL2_BCn_Msk;
 
-    SPI2->DIVIDER = (SPI2->DIVIDER & (~SPI_DIVIDER_DIVIDER_Msk)) | 1; //SPI2_CLK = 144Mhz / 3 = 48Mhz
+    SPI2->DIVIDER = (SPI2->DIVIDER & (~SPI_DIVIDER_DIVIDER_Msk)) | 2; //SPI2_CLK = 144Mhz / 3 = 48Mhz
 }
 
 

@@ -41,10 +41,19 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
     
     switch(reportID)
     {
+        case RPT_ID_LDR:
+        {
+            App_Mouse_Set_Light_Dpi_Report(buf, len);
+            break;
+        }
         case RPT_ID_KEY_MODE:
         {
             App_Mouse_Set_Key_Mode(buf, len);
-            
+            break;
+        }
+        case RPT_ID_LGT_EFECT:
+        {
+            App_Mouse_Set_Light_Effect(buf, len);
             break;
         }
         default: break;
@@ -57,10 +66,14 @@ static void App_Usb_Get_Report(uint8_t *buf, uint8_t len )
 
     switch(reportID)
     {
+        case RPT_ID_LDR:
+        {
+            App_Mouse_Get_Light_Dpi_Report(buf, len);
+            break;
+        }
         case RPT_ID_KEY_MODE:
         {
             App_Mouse_Get_Key_Mode(buf, len);
-            
             break;
         }
         default: break;

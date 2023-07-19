@@ -147,7 +147,7 @@ void Drv_Lcd_Init(void )
     Drv_Lcd_Wr_Data(0x00);
     Drv_Lcd_Wr_Data(0xef);
 
-    Drv_Lcd_Wr_Cmd(0x28);
+    Drv_Lcd_Wr_Cmd(0x29);
 
     Drv_Lcd_Wr_Cmd(0x2C);
 }
@@ -156,6 +156,7 @@ void Drv_Lcd_Clear(uint16_t color )
 {
     uint32_t i;
     uint32_t totalLength = LCD_W * LCD_H * 2;
+    
     
     Drv_Lcd_Set_Address(0, 0, 239, 239);
     
@@ -180,6 +181,7 @@ void Drv_Lcd_Clear(uint16_t color )
     }
     
     Hal_Lcd_Spi_Cs_Disable();
+
 }
 
 static void Drv_Lcd_Spi_Tx_Callback(void )
