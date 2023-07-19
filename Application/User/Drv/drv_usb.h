@@ -10,11 +10,11 @@
 #define SET_IDLE                 0x0a
 #define SET_PROTOCOL             0x0b
 
-typedef struct _usb_msg_callback_t
+typedef struct _usb_report_callback_t
 {
-    void (*usb_msg_set_report_callback)(uint8_t *buf, uint8_t len );
-    void (*usb_msg_get_report_callback)(uint8_t *buf, uint8_t len );
-}usb_msg_callback_t;
+    void (*usb_set_report_callback)(uint8_t *buf, uint8_t len );
+    void (*usb_get_report_callback)(uint8_t *buf, uint8_t len );
+}usb_report_callback_t;
 
 
 typedef enum _ep0_intp_state_t
@@ -49,7 +49,7 @@ typedef struct _usb_ctrl_block_t
              uint8_t resumeFlag;
 }usb_ctrl_block_t;
 
-void Drv_Usb_Init(usb_msg_callback_t *callback );
+void Drv_Usb_Init(usb_report_callback_t *callback );
 void Drv_Usb_Rst_Handler(void );
 void Drv_Usb_Suspend_Handler(void );
 void Drv_Usb_Resume_Handler(void );

@@ -497,6 +497,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\App\app_usb.c</FilePath>
             </File>
+            <File>
+              <FileName>app_calendar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\App\app_calendar.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -552,6 +557,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Drv\drv_event.c</FilePath>
             </File>
+            <File>
+              <FileName>drv_calendar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_calendar.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -601,6 +611,11 @@
               <FileName>hal_mouse_sensor.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Hal\hal_mouse_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_calendar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_calendar.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -147,7 +147,7 @@ void Drv_Lcd_Init(void )
     Drv_Lcd_Wr_Data(0x00);
     Drv_Lcd_Wr_Data(0xef);
 
-    Drv_Lcd_Wr_Cmd(0x29);
+    Drv_Lcd_Wr_Cmd(0x28);
 
     Drv_Lcd_Wr_Cmd(0x2C);
 }

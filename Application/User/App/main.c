@@ -17,6 +17,7 @@
 #include "drv_usb.h"
 
 #include "app_event.h"
+#include "app_calendar.h"
 #include "app_mouse_protocol.h"
 #include "app_mouse_sensor.h"
 #include "app_lcd.h"
@@ -49,6 +50,8 @@ int main(void )
     App_Light_Init();
 
     App_Usb_Init();
+
+    App_Calendar_Init();
     
 	while(1)
 	{

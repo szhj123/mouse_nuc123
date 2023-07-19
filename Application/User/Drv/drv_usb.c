@@ -19,7 +19,7 @@
 /* Private variables ------------------------------------*/
 static usb_ctrl_block_t usbCtrl;
 
-static usb_msg_callback_t *usbMsgCallback;
+static usb_report_callback_t *usbReportCallback;
 
 static usb_isr_callback_t usbIsrCallback = 
 {
@@ -37,9 +37,9 @@ static usb_isr_callback_t usbIsrCallback =
 static uint8_t usbEpBuf[USB_EP1_BUF_LEN] = {0};
 
 
-void Drv_Usb_Init(usb_msg_callback_t *callback )
+void Drv_Usb_Init(usb_report_callback_t *callback )
 {
-    usbMsgCallback = callback;
+    usbReportCallback = callback;
     
     Hal_Usb_Init();
 
@@ -173,7 +173,7 @@ void Drv_Usb_Ep1_Handler(void )
 
         if(usbCtrl.dataLen == 0)
         {
-            usbMsgCallback->usb_msg_set_report_callback(usbEpBuf, sizeof(usbEpBuf));
+            usbReportCallback->usb_set_report_callback(usbEpBuf, sizeof(usbEpBuf));
             
             Hal_Usb_Set_Dsq_Sync(EP0, 1);
 
@@ -233,6 +233,34 @@ void Drv_Usb_Req_Class(void )
             Hal_Usb_Set_Dsq_Sync(EP0, 1);
 
             Hal_Usb_InOut_Ready(EP0, 0);
+            
+            break;
+        }
+        case GET_REPORT:
+        {
+            uint8_t i;
+            uint8_t *u8Ep0Ptr = (uint8_t *)Hal_Usb_Get_Ep_Buf_Addr(EP0);
+            
+            usbCtrl.dataLen = (uint16_t )usbCtrl.wLength_h << 8 | usbCtrl.wLength_l;
+
+            usbCtrl.dataLen = Minimum(usbCtrl.dataLen, USB_EP0_BUF_LEN);
+
+            usbCtrl.dataPtr = (uint8_t *)&usbEpBuf[0];
+
+            for(i=0;i<sizeof(usbEpBuf);i++)
+            {
+                usbEpBuf[i] = 0x0;
+            }
+
+            usbEpBuf[0] = usbCtrl.wValue_l;
+
+            usbReportCallback->usb_get_report_callback(usbCtrl.dataPtr, usbCtrl.dataLen);
+
+            usbCtrl.dsqSync = 1;
+
+            Hal_Usb_Set_Dsq_Sync(EP0, usbCtrl.dsqSync);
+
+            Drv_Usb_Data_InReady(u8Ep0Ptr, usbCtrl.dataPtr);
             
             break;
         }

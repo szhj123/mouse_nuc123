@@ -112,12 +112,8 @@ typedef struct _mLdr_pack_t
     uint8_t reserve2[6];
 }mLdr_pack_t;
 
-#pragma pack(1)
-typedef struct _mKey_mode_pack_t
+typedef struct _date_t
 {
-    uint8_t rptID;
-    uint8_t modeDateFlag;
-    uint8_t keyMode;
     uint8_t year;
     uint8_t month;
     uint8_t day;
@@ -125,6 +121,15 @@ typedef struct _mKey_mode_pack_t
     uint8_t min;
     uint8_t sec;
     uint8_t weekDay;
+}date_t;
+
+#pragma pack(1)
+typedef struct _mKey_mode_pack_t
+{
+    uint8_t rptID;
+    uint8_t modeDateFlag;
+    uint8_t keyMode;
+    date_t  date;
 }mKey_mode_pack_t;
 #pragma pack()
 
@@ -193,6 +198,7 @@ void App_Mouse_Para_Save(void );
 
 
 void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len );
+void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len );
 
 #endif 
 

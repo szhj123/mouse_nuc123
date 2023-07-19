@@ -16,9 +16,20 @@
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
+hal_isr_callback_t hal_calendar_isr_callback = NULL;
 
-void Hal_Calendar_Init(void )
+void Hal_Calendar_Init(hal_isr_callback_t callback )
 {
+    Timer1_Init();
     
+    hal_calendar_isr_callback = callback;
+}
+
+void Hal_Calendar_Isr_Handler(void )
+{
+    if(hal_calendar_isr_callback != NULL)
+    {
+        hal_calendar_isr_callback();
+    }
 }
 

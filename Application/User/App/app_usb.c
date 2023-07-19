@@ -12,39 +12,60 @@
 /* Includes ---------------------------------------------*/
 #include "app_usb.h"
 #include "app_event.h"
+#include "app_mouse_protocol.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
-static void App_Usb_Msg_Set_Report(uint8_t *buf, uint8_t len );
-static void App_Usb_Msg_Get_Report(uint8_t *buf, uint8_t len );
+static void App_Usb_Set_Report(uint8_t *buf, uint8_t len );
+static void App_Usb_Get_Report(uint8_t *buf, uint8_t len );
 static void App_Usb_Handler(void *arg );
 /* Private variables ------------------------------------*/
-static usb_msg_callback_t usbMsgCallback = 
+static usb_report_callback_t usbReportCallback = 
 {
-    .usb_msg_set_report_callback = App_Usb_Msg_Set_Report,
-    .usb_msg_get_report_callback = App_Usb_Msg_Get_Report
+    .usb_set_report_callback = App_Usb_Set_Report,
+    .usb_get_report_callback = App_Usb_Get_Report
 };
 
 
 void App_Usb_Init(void )
 {
-    Drv_Usb_Init(&usbMsgCallback);
+    Drv_Usb_Init(&usbReportCallback);
 
     Drv_Task_Regist_Period(App_Usb_Handler, 0, 1, NULL);
 }
 
-static void App_Usb_Msg_Set_Report(uint8_t *buf, uint8_t len )
+static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
 {
-    Drv_Msg_Put(APP_EVENT_USB_SET_REPORT, buf, len);
+    uint8_t reportID = buf[0];
+    
+    switch(reportID)
+    {
+        case RPT_ID_KEY_MODE:
+        {
+            App_Mouse_Set_Key_Mode(buf, len);
+            
+            break;
+        }
+        default: break;
+    }
 }
 
-static void App_Usb_Msg_Get_Report(uint8_t *buf, uint8_t len )
+static void App_Usb_Get_Report(uint8_t *buf, uint8_t len )
 {
-    Drv_Msg_Put(APP_EVENT_USB_GET_REPORT, buf, len);
+    uint8_t reportID = buf[0];
+
+    switch(reportID)
+    {
+        case RPT_ID_KEY_MODE:
+        {
+            App_Mouse_Get_Key_Mode(buf, len);
+            
+            break;
+        }
+        default: break;
+    }
 }
-
-
 
 static void App_Usb_Handler(void *arg )
 {

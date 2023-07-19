@@ -11,6 +11,8 @@
 
 /* Includes ---------------------------------------------*/
 #include "app_mouse_protocol.h"
+#include "app_calendar.h"
+#include "app_usb.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -21,7 +23,8 @@ static void App_Mouse_Mode_Game_init(void );
 static void App_Mouse_Dpi_Color_Init(void );
 static void App_Mouse_Light_Init(void );
 /* Private variables ------------------------------------*/
-mouse_para_t mousePara;
+static mouse_para_t mousePara;
+static mKey_value_t keyModeBuf[15];
 
 void App_Mouse_Para_Init(void )
 {
@@ -250,18 +253,42 @@ static void App_Mouse_Light_Init(void )
 
 void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len )
 {
-    mKey_mode_pack_t *mKeyMode = (mKey_mode_pack_t *)buf;
-
-    if(mKeyMode->modeDateFlag & 0x01)
+    uint8_t i;
+    uint8_t modeDataFlag = buf[1];
+    
+    if(modeDataFlag & 0x01)
     {
-        mousePara.keyMode = mKeyMode->keyMode;
+        mousePara.keyMode = (mKey_mode_t )buf[2];
+
+        for(i=0;i<15;i++)
+        {
+            if(mousePara.keyMode == KEY_MODE_OFFICE)
+            {
+                keyModeBuf[i] = mousePara.keyModeOffice[i];
+            }
+            else if(mousePara.keyMode == KEY_MODE_MULTIMEDIA)
+            {
+                keyModeBuf[i] = mousePara.keyModeMultimedia[i];
+            }
+            else if(mousePara.keyMode == KEY_MODE_GAME)
+            {
+                keyModeBuf[i] = mousePara.keyModeGame[i];
+            }
+        }
     }
     else
     {
-        
+        App_Calendar_Set_Date(&buf[3], sizeof(date_t));
     }
     
 }
+
+void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len )
+{
+    buf[0] = RPT_ID_KEY_MODE;
+    buf[1] = (uint8_t )mousePara.keyMode;
+}
+
 
 void App_Mouse_Para_Save(void )
 {

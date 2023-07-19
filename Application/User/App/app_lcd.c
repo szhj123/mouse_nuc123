@@ -22,7 +22,7 @@ void App_Lcd_Init(void )
 {
     Drv_Lcd_Init();    
     
-    App_Lcd_Clr(BLUE);
+    App_Lcd_Clr(RED);
 }
 
 void App_Lcd_Clr(uint16_t color )

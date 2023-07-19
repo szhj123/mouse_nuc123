@@ -17,7 +17,7 @@
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
 
-void Drv_Calendar_Init(void )
+void Drv_Calendar_Init(hal_isr_callback_t callback )
 {
-    Hal_Calendar_Init();
+    Hal_Calendar_Init(callback);
 }

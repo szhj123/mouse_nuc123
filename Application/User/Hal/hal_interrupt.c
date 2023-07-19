@@ -16,6 +16,7 @@
 #include "hal_spi_flash.h"
 #include "hal_lcd.h"
 #include "hal_usb.h"
+#include "hal_calendar.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -36,8 +37,9 @@ void TMR0_IRQHandler(void )
 
 void TMR1_IRQHandler(void )
 {
+    Hal_Calendar_Isr_Handler();
+    
     TIMER1->TISR |= TIMER_TISR_TIF_Msk;
-
 }
 
 

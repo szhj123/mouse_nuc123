@@ -37,14 +37,7 @@ static void App_Event_Handler(void *arg )
     {
         case APP_EVENT_USB_SET_REPORT:
         {
-            switch(msg.msgBuf[0])
-            {
-                case RPT_ID_KEY_MODE:
-                {
-                    App_Mouse_Set_Key_Mode(msg.msgBuf, msg.msgLen);
-                    break;
-                }
-            }
+            
             break;
         }
         case APP_EVENT_USB_GET_REPORT:
