@@ -304,8 +304,8 @@ void Pwm_Init(void )
     /* Setup SPI2 multi-function pins */
     SYS->GPA_MFP = SYS_GPA_MFP_PA12_PWM0 | SYS_GPA_MFP_PA13_PWM1 | SYS_GPA_MFP_PA14_PWM2;
 
-    PWMA->PPR = (PWMA->PPR & ~PWM_PPR_CP01_Msk) | ((300-1) << PWM_PPR_CP01_Pos);//72000khz / 600 = 120khz
-    PWMA->PPR = (PWMA->PPR & ~PWM_PPR_CP23_Msk) | ((300-1) << PWM_PPR_CP23_Pos);
+    PWMA->PPR = (PWMA->PPR & ~PWM_PPR_CP01_Msk) | ((282-1) << PWM_PPR_CP01_Pos);//72000khz / 600 = 120khz
+    PWMA->PPR = (PWMA->PPR & ~PWM_PPR_CP23_Msk) | ((282-1) << PWM_PPR_CP23_Pos);
 
     PWMA->CSR = (PWMA->CSR & ~PWM_CSR_CSR0_Msk) | (4 << PWM_CSR_CSR0_Pos);//pwm_clk = 120khz / 1 = 120khz
     PWMA->CSR = (PWMA->CSR & ~PWM_CSR_CSR1_Msk) | (4 << PWM_CSR_CSR1_Pos);

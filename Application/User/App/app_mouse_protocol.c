@@ -202,7 +202,7 @@ static void App_Mouse_Mode_Game_init(void )
     mousePara.keyModeGame[7].val_h = 0;
 }
 
-void App_Mouse_Set_Default_Color(uint8_t index, mColor_t *mColor )
+void App_Mouse_Set_Default_Color(uint8_t index, color_t *mColor )
 {
     switch(index)
     {
@@ -222,7 +222,7 @@ static void App_Mouse_Dpi_Color_Init(void )
 {
     uint8_t i;
 
-    mColor_t mColor;
+    color_t mColor;
     
     for(i=0;i<mousePara.dpiTotalNum;i++)
     {
@@ -235,7 +235,7 @@ static void App_Mouse_Dpi_Color_Init(void )
 static void App_Mouse_Light_Init(void )
 {
     uint8_t i,j;
-    mColor_t mColor;
+    color_t mColor;
 
     for(i=0;i<sizeof(mousePara.mLightBuf)/sizeof(mLight_data_t);i++)
     {
@@ -325,6 +325,10 @@ void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
         case LIGHT_MODE_OFF: App_Light_Off(); break;
         case LIGHT_MODE_COLOR_STREAM: App_Light_Color_Streamer(mousePara.mLightBuf[1]); break;
         case LIGHT_MODE_SOLID: App_Light_Solid(mousePara.mLightBuf[2]); break;
+        case LIGHT_MODE_BREATH: App_Light_Breath(mousePara.mLightBuf[3]); break;
+        case LIGHT_MODE_NEON: App_Light_Neon(mousePara.mLightBuf[4]); break;
+        case LIGHT_MODE_BLINK: App_Light_Blink(mousePara.mLightBuf[5]); break;
+        case LIGHT_MODE_TRAILER: App_Light_Trailer(mousePara.mLightBuf[6]); break;
         default: break;
     }
 }
@@ -364,10 +368,19 @@ void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len )
 }
 
 
+void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, color_t *color )
+{
+    color->red = mousePara.mLightBuf[(uint8_t )lightMode].lightColorBuf[colorIndex].red;
+    color->green = mousePara.mLightBuf[(uint8_t )lightMode].lightColorBuf[colorIndex].green;
+    color->blue = mousePara.mLightBuf[(uint8_t )lightMode].lightColorBuf[colorIndex].blue;
+    
+}
+
 void App_Mouse_Para_Save(void )
 {
     Drv_Flash_Erase(MOUSE_PARA_START_ADDR, MOUSE_PARA_SIZE);
 
     Drv_Flash_Write(MOUSE_PARA_START_ADDR, (uint8_t *)&mousePara, sizeof(mouse_para_t));
 }
+
 

@@ -36,16 +36,16 @@ void Drv_Light_All_On(uint8_t rVal, uint8_t gVal, uint8_t bVal )
     Hal_Light_All_On();
 }
 
-void Drv_Light_Single_On(light_ctrl_block_t *light )
+void Drv_Light_Single_On(light_t *light )
 {
     Drv_Light_All_Off();
 
-    Hal_Light_Pwm_Duty_Set(light->rVal, light->gVal, light->bVal);
+    Hal_Light_Pwm_Duty_Set(light->red, light->green, light->blue);
 
     Hal_Light_On(light->port, light->pin);
 }
 
-void Drv_Light_Single_Off(light_ctrl_block_t *light )
+void Drv_Light_Single_Off(light_t *light )
 {
     Hal_Light_Off(light->port, light->pin);
 }

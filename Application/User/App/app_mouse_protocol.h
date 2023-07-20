@@ -4,12 +4,12 @@
 #include "drv_flash.h"
 #include "hal_nuc123.h"
 
-typedef struct _mColor_t
+typedef struct _color_t
 {
     uint8_t red;
     uint8_t green;
     uint8_t blue;
-}mColor_t;
+}color_t;
 
 typedef enum _mKey_mode_t
 {
@@ -104,7 +104,7 @@ typedef struct _mLdr_pack_t
     uint8_t dpiIndex;
     uint8_t dpiTotalNum;
     uint8_t dpiValBuf[16];
-    mColor_t dpiColorBuf[8];
+    color_t dpiColorBuf[8];
     uint8_t reserve1[8];
     uint8_t picShowMask_l;
     uint8_t picShowMask_h;
@@ -139,8 +139,8 @@ typedef struct _mLight_data_t
     uint8_t speed;
     uint8_t direction;
     uint8_t randomColor;
-    uint8_t colorNun;
-    mColor_t lightColorBuf[7];
+    uint8_t colorNum;
+    color_t lightColorBuf[7];
 }mLight_data_t;
 
 typedef struct _mLight_pack_t
@@ -188,7 +188,7 @@ typedef struct _mouse_para_t
     uint8_t dpiIndex;
     uint8_t dpiTotalNum;
     uint8_t dpiValBuf[16];
-    mColor_t dpiColorBuf[8];
+    color_t dpiColorBuf[8];
     uint8_t picShowMask_l;
     uint8_t picShowMask_h;
     uint8_t picIndex;
@@ -204,6 +204,7 @@ void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len );
 void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len );
 void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len );
+void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, color_t *color );
 
 #endif 
 
