@@ -210,7 +210,7 @@ void Timer2_Init(void )
 
     TIMER2->TCSR = (TIMER2->TCSR & ~TIMER_TCSR_MODE_Msk) | (1 << TIMER_TCSR_MODE_Pos);
 
-    TIMER2->TCMPR = 1000;
+    TIMER2->TCMPR = 100;
 
     TIMER2->TISR |= TIMER_TISR_TIF_Msk;
 
@@ -218,7 +218,7 @@ void Timer2_Init(void )
 
     NVIC_EnableIRQ(TMR2_IRQn);
 
-    TIMER2->TCSR |= TIMER_TCSR_CEN_Msk;
+    //TIMER2->TCSR |= TIMER_TCSR_CEN_Msk;
 }
 
 

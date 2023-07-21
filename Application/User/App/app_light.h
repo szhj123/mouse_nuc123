@@ -28,6 +28,8 @@ typedef struct _light_ctrl_block_t
     uint8_t  colorNum;
     uint8_t  direction;
     uint8_t  lightIndex;
+    uint8_t  lightNum;
+    uint8_t  trailerShowStep;
 }light_ctrl_block_t;
 
 
@@ -38,7 +40,9 @@ void App_Light_Solid(mLight_data_t lightData );
 void App_Light_Breath(mLight_data_t lightData );
 void App_Light_Neon(mLight_data_t lightData );
 void App_Light_Blink(mLight_data_t lightData );
-void App_Light_Trailer(mLight_data_t lightData );
+void App_Light_MonoChrome_Trailer(mLight_data_t lightData );
+void App_Light_Response(mLight_data_t lightData );
+void App_Light_Colourful_Trailer(mLight_data_t lightData );
 
 #endif 
 

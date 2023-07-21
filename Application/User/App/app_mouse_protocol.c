@@ -328,7 +328,9 @@ void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
         case LIGHT_MODE_BREATH: App_Light_Breath(mousePara.mLightBuf[3]); break;
         case LIGHT_MODE_NEON: App_Light_Neon(mousePara.mLightBuf[4]); break;
         case LIGHT_MODE_BLINK: App_Light_Blink(mousePara.mLightBuf[5]); break;
-        case LIGHT_MODE_TRAILER: App_Light_Trailer(mousePara.mLightBuf[6]); break;
+        case LIGHT_MODE_MONOCHROME_TRAILER: App_Light_MonoChrome_Trailer(mousePara.mLightBuf[6]); break;
+        case LIGHT_MODE_RESPONSE: App_Light_Response(mousePara.mLightBuf[7]); break;
+        case LIGHT_MODE_COLOURFUL_TRAILER: App_Light_Colourful_Trailer(mousePara.mLightBuf[8]); break;
         default: break;
     }
 }
