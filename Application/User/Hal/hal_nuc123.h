@@ -9,6 +9,40 @@
 
 typedef void (*hal_isr_callback_t)(void );
 
+typedef enum _port_t
+{
+    PORTA = 0,
+    PORTB,
+    PORTC,
+    PORTD,
+    PORTE,
+    PORTF,
+    PORT_NULL
+}port_t;
+
+
+typedef enum _pin_t
+{
+    PIN0 = 0,
+    PIN1,
+    PIN2,
+    PIN3,
+    PIN4,
+    PIN5,
+    PIN6,
+    PIN7,
+    PIN8,
+    PIN9,
+    PIN10,
+    PIN11,
+    PIN12,
+    PIN13,
+    PIN14,
+    PIN15,
+    PIN_NULL
+}pin_t;
+
+
 typedef union _u32Data_t
 {
     uint32_t u32Data;
