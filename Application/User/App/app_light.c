@@ -76,9 +76,7 @@ void App_Light_Off(void )
 }
 
 void App_Light_Color_Streamer(mLight_data_t lightData )
-{
-    uint8_t i;
-    
+{   
     lightCtrl.direction = lightData.direction;
     
     switch(lightData.speed)

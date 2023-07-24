@@ -22,6 +22,7 @@
 #include "app_mouse_sensor.h"
 #include "app_lcd.h"
 #include "app_light.h"
+#include "app_key.h"
 #include "app_usb.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
@@ -48,6 +49,8 @@ int main(void )
     App_Lcd_Init();
 
     App_Light_Init();
+
+    App_Key_Init();
 
     App_Usb_Init();
 

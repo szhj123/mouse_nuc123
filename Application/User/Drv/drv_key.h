@@ -4,6 +4,7 @@
 #include "drv_timer.h"
 #include "hal_key.h"
 
+typedef void (*key_msg_put_callabck_t)(uint8_t *, uint8_t );
 
 #define KEY_DOWN                0x1000
 #define KEY_LONG                0x2000
@@ -45,6 +46,7 @@ typedef struct _key_t
 }key_t;
 
 void Drv_Key_Init(void );
+void Drv_Key_Regist_MsgPut_Callback(key_msg_put_callabck_t callback );
 
 #endif 
 

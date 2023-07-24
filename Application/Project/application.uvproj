@@ -502,6 +502,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\App\app_calendar.c</FilePath>
             </File>
+            <File>
+              <FileName>app_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\App\app_key.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -562,6 +567,11 @@
               <FileType>1</FileType>
               <FilePath>..\User\Drv\drv_calendar.c</FilePath>
             </File>
+            <File>
+              <FileName>drv_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_key.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -616,6 +626,11 @@
               <FileName>hal_calendar.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Hal\hal_calendar.c</FilePath>
+            </File>
+            <File>
+              <FileName>hal_key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Hal\hal_key.c</FilePath>
             </File>
           </Files>
         </Group>

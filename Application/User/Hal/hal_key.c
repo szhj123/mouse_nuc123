@@ -39,3 +39,47 @@ void Hal_Key_Init(void )
     PC->PMD = (PC->PMD & ~GPIO_PMD_PMD4_Msk) | (0 << GPIO_PMD_PMD4_Pos);
 }
 
+
+GPIO_T * Hal_Key_Get_Port(port_t portx )
+{
+    if(portx == PORTA)
+    {
+        return (GPIO_T *)PA_BASE;
+    }
+    else if(portx == PORTB)
+    {
+        return (GPIO_T *)PB_BASE;
+    }
+    else if(portx == PORTC)
+    {
+        return (GPIO_T *)PC_BASE;
+    }
+    else if(portx == PORTD)
+    {
+        return (GPIO_T *)PD_BASE;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+
+uint8_t Hal_Key_Get_Gpio(port_t portx, pin_t pin )
+{
+    uint8_t retVal;
+    
+    GPIO_T *port = Hal_Key_Get_Port(portx);
+
+    if(port->PIN & (1<<(uint8_t )pin))
+    {
+        retVal = 1;
+    }
+    else
+    {
+        retVal = 0;
+    }
+
+    return retVal;
+}
+

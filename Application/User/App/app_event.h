@@ -7,8 +7,8 @@
 
 typedef enum _app_event_t
 {
-    APP_EVENT_USB_SET_REPORT = 0,
-    APP_EVENT_USB_GET_REPORT
+    APP_EVENT_KEY,
+    APP_EVENT_NULL   
 }app_event_t;
 
 void App_Event_Init(void );

@@ -35,12 +35,7 @@ static void App_Event_Handler(void *arg )
 
     switch((app_event_t )msg.msgID)
     {
-        case APP_EVENT_USB_SET_REPORT:
-        {
-            
-            break;
-        }
-        case APP_EVENT_USB_GET_REPORT:
+        case APP_EVENT_KEY:
         {
             break;
         }

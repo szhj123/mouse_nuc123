@@ -16,6 +16,7 @@
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 static void Drv_Key_Handler(void *arg );
+static void Drv_Key_Detect(key_t *key );
 /* Private variables ------------------------------------*/
 static key_t keyBuf[] = 
 {
@@ -84,6 +85,8 @@ static key_t keyBuf[] =
     },
 };
 
+key_msg_put_callabck_t keyMsgPutCallbck = NULL;
+
 
 void Drv_Key_Init(void )
 {
@@ -92,8 +95,61 @@ void Drv_Key_Init(void )
     Drv_Timer_Regist_Period(Drv_Key_Handler, 0, 1, NULL);
 }
 
+void Drv_Key_Regist_MsgPut_Callback(key_msg_put_callabck_t callback )
+{
+    keyMsgPutCallbck = callback;
+}
+
 static void Drv_Key_Handler(void *arg )
 {
-    uint8
+    uint8_t i;
+
+    for(i=0;i<sizeof(keyBuf)/sizeof(key_t);i++)
+    {
+        Drv_Key_Detect(&keyBuf[i]);
+    }
+}
+
+uint16_t Drv_Key_Get_Name(key_t *key )
+{
+    uint16_t retName = KEY_NULL;
+    
+    if(key->port2 != PORT_NULL && key->port1 != PORT_NULL)
+    {
+        if(!Hal_Key_Get_Gpio(key->port1, key->pin1) && !Hal_Key_Get_Gpio(key->port2, key->pin2))
+        {
+            retName = key->keyName;
+        }
+    }
+    else if(key->port1 != NULL) 
+    {
+        if(!Hal_Key_Get_Gpio(key->port1, key->pin1))
+        {
+            retName = key->keyName;
+        }
+    }
+
+    return retName;    
+}
+
+static void Drv_Key_Detect(key_t *key )
+{
+    uint16_t keyName = KEY_NULL;
+    
+    if(key->delayCnt < 0xffff)
+    {
+        key->delayCnt++;
+    }
+
+    keyName = Drv_Key_Get_Name(key);
+
+    switch(key->keyStat)
+    {
+        case KEY_STAT_INIT:
+        {
+            break;
+        }
+        default: break;
+    }
 }
 
