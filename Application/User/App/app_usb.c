@@ -28,6 +28,9 @@ static usb_report_callback_t usbReportCallback =
 };
 
 
+usb_para_t usbPara;
+
+
 void App_Usb_Init(void )
 {
     Drv_Usb_Init(&usbReportCallback);
@@ -80,8 +83,67 @@ static void App_Usb_Get_Report(uint8_t *buf, uint8_t len )
     }
 }
 
+void App_Usb_Mouse_Press_Handler(mKey_t mKey )
+{
+    usbPara.mDataBuf[0].u8Data = RPT_ID_MOUSE;
+    
+    switch(mKey.func)
+    {
+        case FUNC_MOUSE_LEFT: usbPara.mDataBuf[1].bit_t.bit0 = 1;break;
+        case FUNC_MOUSE_RIGHT: usbPara.mDataBuf[1].bit_t.bit1 = 1; break;
+        case FUNC_MOUSE_MIDDLE: usbPara.mDataBuf[1].bit_t.bit2 = 1; break;
+        case FUNC_MOUSE_FORWARD: usbPara.mDataBuf[1].bit_t.bit3 = 1; break;
+        case FUNC_MOUSE_BACKWARD: usbPara.mDataBuf[1].bit_t.bit4 = 1; break;
+        default: break;
+    }
+    
+    usbPara.mDataBuf[6].u8Data = 0;
+
+    usbPara.mDataUpdateFlag = 1;
+}
+
+void App_Usb_Mouse_Relase_Handler(mKey_t mKey )
+{
+    usbPara.mDataBuf[0].u8Data = RPT_ID_MOUSE;
+    
+    switch(mKey.func)
+    {
+        case FUNC_MOUSE_LEFT: usbPara.mDataBuf[1].bit_t.bit0 = 0;break;
+        case FUNC_MOUSE_RIGHT: usbPara.mDataBuf[1].bit_t.bit1 = 0; break;
+        case FUNC_MOUSE_MIDDLE: usbPara.mDataBuf[1].bit_t.bit2 = 0; break;
+        case FUNC_MOUSE_FORWARD: usbPara.mDataBuf[1].bit_t.bit3 = 0; break;
+        case FUNC_MOUSE_BACKWARD: usbPara.mDataBuf[1].bit_t.bit4 = 0; break;
+        default: break;
+    }
+
+    usbPara.mDataBuf[6].u8Data = 0;
+
+    usbPara.mDataUpdateFlag = 1;
+}
+
+void App_Usb_Mouse_Wheel_Handler(mouse_wheel_direction mWheelDirection )
+{
+    usbPara.mDataBuf[0].u8Data = RPT_ID_MOUSE;
+
+    if(mWheelDirection == MOUSE_WHEEL_UP)
+    {
+        usbPara.mDataBuf[6].u8Data = 0x01;
+    }
+    else if(mWheelDirection == MOUSE_WHEEL_DOWM)
+    {
+        usbPara.mDataBuf[6].u8Data = 0xff;
+    }
+
+    usbPara.mDataUpdateFlag = 1;
+}
+
 static void App_Usb_Handler(void *arg )
 {
-    
+    if(usbPara.mDataUpdateFlag)
+    {
+        Drv_Usb_Ep_In(EP2, (uint8_t *)usbPara.mDataBuf, sizeof(usbPara.mDataBuf));
+
+        usbPara.mDataUpdateFlag = 0;
+    }
 }
 

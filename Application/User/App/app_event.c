@@ -12,6 +12,7 @@
 /* Includes ---------------------------------------------*/
 #include "app_event.h"
 #include "app_mouse_protocol.h"
+#include "app_key.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -37,6 +38,8 @@ static void App_Event_Handler(void *arg )
     {
         case APP_EVENT_KEY:
         {
+            App_Key_Handler(msg.msgBuf, msg.msgLen);
+            
             break;
         }
         default: break;

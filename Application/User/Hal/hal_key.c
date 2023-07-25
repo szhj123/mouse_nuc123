@@ -37,6 +37,11 @@ void Hal_Key_Init(void )
     PA->PMD = (PA->PMD & ~GPIO_PMD_PMD15_Msk) | (0 << GPIO_PMD_PMD15_Pos);
     PB->PMD = (PB->PMD & ~GPIO_PMD_PMD9_Msk) | (0 << GPIO_PMD_PMD9_Pos);
     PC->PMD = (PC->PMD & ~GPIO_PMD_PMD4_Msk) | (0 << GPIO_PMD_PMD4_Pos);
+
+    //wheel1, PF2: input, mouse wheel1 
+    //wheel2, PF3: input, mouse wheel2
+    PF->PMD = (PF->PMD & ~GPIO_PMD_PMD3_Msk) | (0 << GPIO_PMD_PMD3_Pos);
+    PF->PMD = (PF->PMD & ~GPIO_PMD_PMD2_Msk) | (0 << GPIO_PMD_PMD2_Pos);
 }
 
 

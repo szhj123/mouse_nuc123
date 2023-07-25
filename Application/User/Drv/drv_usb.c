@@ -420,6 +420,17 @@ void Drv_Usb_Set_Config(void )
     Hal_Usb_InOut_Ready(EP0, 0);
 }
 
+void Drv_Usb_Ep_In(uint8_t ep, uint8_t *buf, uint8_t len )
+{
+    uint8_t *u8EpPtr = (uint8_t *)Hal_Usb_Get_Ep_Buf_Addr(ep);
+
+    Drv_Usb_Memcpy(u8EpPtr, buf, len);
+
+    Hal_Usb_Set_Dsq_Sync(ep, 1);
+
+    Hal_Usb_InOut_Ready(ep, len);
+}
+
 void Drv_Usb_Data_InReady(uint8_t *epPtr, uint8_t *descPtr )
 {
     if(usbCtrl.dataLen > USB_EP0_BUF_LEN)

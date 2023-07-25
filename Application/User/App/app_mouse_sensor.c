@@ -11,6 +11,7 @@
 
 /* Includes ---------------------------------------------*/
 #include "app_mouse_sensor.h"
+#include "app_mouse_protocol.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -34,6 +35,18 @@ void App_Sensor_Init(void )
     }
 
     Drv_Task_Regist_Period(App_Sensor_Handler, 0, 1, NULL);
+}
+
+void App_Sensor_Set_Detect_Time(mRate_t mRate )
+{
+    switch(mRate)
+    {
+        case RATE_125HZ: mSensorCtrl.delayTime = 1000/125; break;
+        case RATE_250HZ: mSensorCtrl.delayTime = 1000/250; break;
+        case RATE_500HZ: mSensorCtrl.delayTime = 1000/500; break;
+        case RATE_1000HZ: mSensorCtrl.delayTime = 1000/1000;break;
+        default: mSensorCtrl.delayTime = 1000/500;break;
+    }
 }
 
 static void App_Sensor_Handler(void *arg )

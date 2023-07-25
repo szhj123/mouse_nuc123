@@ -78,19 +78,19 @@ typedef enum _mLight_mode_t
     LIGHT_MODE_COLOURFUL_TRAILER
 }mLight_mode_t;
 
-typedef struct _mKey_value_t
+typedef struct _mKey_t
 {
     mKey_name_t name;
     uint8_t func;
     uint8_t val_l;
     uint8_t val_h;
-}mKey_value_t;
+}mKey_t;
 
 typedef struct _mKey_pack_t
 {
     uint8_t rptID;
     mKey_mode_t keyMode;
-    mKey_value_t keyVal[15];
+    mKey_t keyVal[15];
     uint8_t reserve[2];
 }mKey_pack_t;
 
@@ -179,9 +179,9 @@ typedef struct _pic_pack_t
 typedef struct _mouse_para_t
 {
     mKey_mode_t keyMode;
-    mKey_value_t keyModeOffice[15];
-    mKey_value_t keyModeMultimedia[15];
-    mKey_value_t keyModeGame[15];
+    mKey_t keyModeOffice[15];
+    mKey_t keyModeMultimedia[15];
+    mKey_t keyModeGame[15];
     mRate_t mRate;
     mSensor_t mSensor;
     mLight_mode_t mLightMode;
@@ -205,6 +205,9 @@ void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len );
 void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, color_t *color );
+void App_Mouse_Get_Key(uint8_t keyIndex, mKey_t *mKey );
+void App_Mouse_Set_Key_Mode_Buf(mKey_mode_t keyMode );
+void App_Mouse_Set_Light_Mode(mLight_mode_t lightMode );
 
 #endif 
 

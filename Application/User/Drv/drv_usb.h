@@ -64,6 +64,9 @@ void Drv_Usb_Req_Standard(void );
 void Drv_Usb_Req_Class(void );
 void Drv_Usb_Req_Vendor(void );
 
+void Drv_Usb_Ep_In(uint8_t ep, uint8_t *buf, uint8_t len );
+
+
 void Drv_Usb_Set_Address(void );
 void Drv_Usb_Get_Descriptor(void );
 void Drv_Usb_Set_Config(void );

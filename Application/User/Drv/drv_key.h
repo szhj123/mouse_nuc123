@@ -11,6 +11,9 @@ typedef void (*key_msg_put_callabck_t)(uint8_t *, uint8_t );
 #define KEY_CONT                0x4000
 #define KEY_UP                  0x8000
 
+#define WHEEL_DONW              0x1000
+#define WHEEL_UP                0x8000
+
 #define KEY_1                   0x0001
 #define KEY_2                   0x0002
 #define KEY_3                   0x0003
@@ -20,6 +23,7 @@ typedef void (*key_msg_put_callabck_t)(uint8_t *, uint8_t );
 #define KEY_7                   0x0007
 #define KEY_8                   0x0008
 #define KEY_9                   0x0009
+#define KEY_10                  0x000a
 
 #define KEY_NULL                0x0000
 
@@ -42,6 +46,7 @@ typedef struct _key_t
 
     key_stat_t keyStat;
     uint16_t keyName;
+    uint16_t keyNameSave;
     uint16_t delayCnt;
 }key_t;
 
