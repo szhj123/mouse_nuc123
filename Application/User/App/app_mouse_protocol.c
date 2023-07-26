@@ -13,6 +13,7 @@
 #include "app_mouse_protocol.h"
 #include "app_calendar.h"
 #include "app_usb.h"
+#include "app_mouse_sensor.h"
 #include "app_light.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
@@ -66,12 +67,14 @@ void App_Mouse_Para_Init(void )
 
         App_Mouse_Para_Save();
     }
-    else
-    {
-        App_Mouse_Set_Key_Mode_Buf(mousePara.keyMode);
 
-        App_Mouse_Set_Light_Mode(mousePara.mLightMode);
-    }
+    App_Sensor_Set_Detect_Time(mousePara.mRate);
+
+    App_Sensor_Set_Dpi(mousePara.dpiIndex);
+    
+    App_Mouse_Set_Key_Mode_Buf(mousePara.keyMode);
+
+    App_Mouse_Set_Light_Mode(mousePara.mLightMode);
 }
 
 static void App_Mouse_Mode_Office_init(void )
@@ -304,6 +307,28 @@ void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len )
     keyModePack->keyMode = (uint8_t )mousePara.keyMode;
 }
 
+void App_Mouse_Set_Key_Mode_Value(uint8_t *buf, uint8_t len )
+{
+    uint8_t i;
+    mKey_pack_t *mKeyPack = (mKey_pack_t *)buf;
+
+    for(i=0;i<15;i++)
+    {
+        if(mKeyPack->keyMode == KEY_MODE_OFFICE)
+        {
+            mousePara.keyModeOffice[i] = mKeyPack->keyVal[i];    
+        }
+        else if(mKeyPack->keyMode == KEY_MODE_MULTIMEDIA)
+        {
+            mousePara.keyModeMultimedia[i] = mKeyPack->keyVal[i];
+        }
+        else if(mKeyPack->keyMode == KEY_MODE_GAME)
+        {
+            mousePara.keyModeGame[i] = mKeyPack->keyVal[i];
+        }
+    }
+}
+
 void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
 {
     uint8_t i;
@@ -330,6 +355,8 @@ void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
     mousePara.picIndex = ldrPack->picIndex;
 
     App_Mouse_Para_Save();
+
+    App_Sensor_Set_Detect_Time(mousePara.mRate);
 
     App_Mouse_Set_Light_Mode(mousePara.mLightMode);
 }
@@ -396,6 +423,31 @@ void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, colo
 void App_Mouse_Get_Key(uint8_t keyIndex, mKey_t *mKey )
 {
     *mKey = keyModeBuf[keyIndex];
+}
+
+uint8_t App_Mouse_Get_Dpi_Val(uint8_t dpiIndex )
+{    
+    return mousePara.dpiValBuf[dpiIndex-1];
+}
+
+uint8_t App_Mouse_Get_Dpi_Index(void )
+{
+    return mousePara.dpiIndex;
+}
+
+uint8_t App_Mouse_Get_Dpi_Total_Num(void )
+{
+    return mousePara.dpiTotalNum;
+}
+
+void App_Mouse_Set_Dpi_Index(uint8_t dpiIndex )
+{
+    mousePara.dpiIndex = dpiIndex;
+}
+
+void App_Mouse_Get_Dpi_Color(uint8_t dpiIndex, color_t *dpiColor )
+{
+    *dpiColor = mousePara.dpiColorBuf[dpiIndex];
 }
 
 void App_Mouse_Para_Save(void )

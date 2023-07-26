@@ -134,7 +134,7 @@ uint16_t Drv_Key_Get_Name(key_t *key )
             retName = key->keyName;
         }
     }
-    else if(key->port1 != NULL) 
+    else if(key->port1 != PORT_NULL) 
     {
         if(!Hal_Key_Get_Gpio(key->port1, key->pin1))
         {

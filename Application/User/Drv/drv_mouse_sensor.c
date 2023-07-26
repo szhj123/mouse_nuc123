@@ -93,6 +93,16 @@ uint8_t Drv_Sensor_Get_Product_ID(void )
     return retVal;
 }
 
+void Drv_Sensor_Set_Dpi(uint8_t dpiVal )
+{
+    Drv_Sensor_Write(0x1b, dpiVal);
+}
+
+void Drv_Sensor_Get_Burst_Motion(uint8_t *buf, uint8_t len )
+{
+    Drv_Sensor_Multiple_Read(0x16, buf, len );
+}
+
 void Drv_Sensor_Write(uint8_t addr, uint8_t val )
 {
     uint8_t i;
@@ -192,6 +202,59 @@ uint8_t Drv_Sensor_Single_Read(uint8_t addr )
     Hal_Sensor_Cs_Disable();
 
     return retVal;
+}
+
+void Drv_Sensor_Multiple_Read(uint8_t addr, uint8_t *buf, uint8_t len )
+{
+    uint8_t i,j;
+    uint8_t retVal = 0x0;
+
+    Hal_Sensor_Pin_Reuse();
+    
+    Hal_Sensor_Cs_Enable();
+
+    addr &= 0x7f;
+
+    for(i=0;i<8;i++)
+    {
+        if(addr & 0x80)
+        {
+            M_SENSOR_SDA_H;
+        }
+        else
+        {
+            M_SENSOR_SDA_L;
+        }
+
+        M_SENSOR_SCL_L;
+        Drv_Sensor_Delay(1);
+        M_SENSOR_SCL_H;
+        Drv_Sensor_Delay(1);
+
+        addr <<= 1;
+    }
+
+    for(j=0;j<len;j++)
+    {
+        for(i=0;i<8;i++)
+        {
+            retVal <<= 1;
+
+            M_SENSOR_SCL_L;
+            Drv_Sensor_Delay(1);
+            M_SENSOR_SCL_H;
+            Drv_Sensor_Delay(1);
+
+            if(M_SENSOR_SDA_PIN)
+            {
+                retVal |= 0x01;
+            }
+        }
+
+        buf[j] = retVal;
+    }
+    
+    Hal_Sensor_Cs_Disable();
 }
 
 void Drv_Sensor_Delay(uint16_t delayCnt )

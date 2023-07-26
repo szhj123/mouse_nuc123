@@ -13,9 +13,9 @@ typedef struct _color_t
 
 typedef enum _mKey_mode_t
 {
-    KEY_MODE_OFFICE = 0x01,
-    KEY_MODE_MULTIMEDIA = 0x02,
-    KEY_MODE_GAME = 0x03
+    KEY_MODE_OFFICE = 0x00,
+    KEY_MODE_MULTIMEDIA = 0x01,
+    KEY_MODE_GAME = 0x02
 }mKey_mode_t;
 
 typedef enum _mKey_name_t
@@ -48,6 +48,14 @@ typedef enum _keyboard_func_t
     FUNC_KEYBOARD_R_ALT = 0x40,
     FUNC_KEYBOARD_R_WIN = 0x80
 }keyboard_func_t;
+
+typedef enum _dpi_func_t
+{
+    FUNC_DPI_LOOP = 0x0,
+    FUNC_DPI_INC,
+    FUNC_DPI_DEC,
+    FUNC_DPI_LOCK
+}dpi_func_t;
 
 typedef enum _mSensor_t
 {
@@ -201,6 +209,7 @@ void App_Mouse_Para_Save(void );
 
 void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len );
+void App_Mouse_Set_Key_Mode_Value(uint8_t *buf, uint8_t len );
 void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len );
 void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len );
@@ -208,6 +217,12 @@ void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, colo
 void App_Mouse_Get_Key(uint8_t keyIndex, mKey_t *mKey );
 void App_Mouse_Set_Key_Mode_Buf(mKey_mode_t keyMode );
 void App_Mouse_Set_Light_Mode(mLight_mode_t lightMode );
+uint8_t App_Mouse_Get_Dpi_Val(uint8_t dpiIndex );
+uint8_t App_Mouse_Get_Dpi_Total_Num(void );
+uint8_t App_Mouse_Get_Dpi_Index(void );
+void App_Mouse_Set_Dpi_Index(uint8_t dpiIndex );
+void App_Mouse_Get_Dpi_Color(uint8_t dpiIndex, color_t *dpiColor );
+
 
 #endif 
 

@@ -13,6 +13,8 @@
 #include "app_key.h"
 #include "app_event.h"
 #include "app_usb.h"
+#include "app_light.h"
+#include "app_mouse_sensor.h"
 #include "app_mouse_protocol.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
@@ -22,9 +24,9 @@ static void App_Key_MsgPut(uint8_t *msgBuf, uint8_t msgLen );
 static void App_Key_Press_Handler(mKey_t mKey );
 static void App_Key_Relase_Handler(mKey_t mkey );
 
+static void App_Key_Dpi_Press_Handler(mKey_t mKey );
 static void App_Key_Keyboard_Press_Handler(mKey_t mKey );
 static void App_Key_Multimedia_Press_Handler(mKey_t mKey );
-static void App_Key_Dpi_Press_Handler(mKey_t mKey );
 static void App_Key_Macro_Press_Handler(mKey_t mKey );
 static void App_Key_Other_Press_Handler(mKey_t mKey );
 
@@ -65,9 +67,9 @@ void App_Key_Handler(uint8_t *buf, uint8_t len )
             case KEY_4 | KEY_DOWN: App_Mouse_Get_Key(3, &mKey);break;
             case KEY_5 | KEY_DOWN: App_Mouse_Get_Key(4, &mKey);break;
             case KEY_6 | KEY_DOWN: App_Mouse_Get_Key(5, &mKey);break;
-            case KEY_7 | KEY_DOWN: App_Mouse_Get_Key(7, &mKey);break;
-            case KEY_8 | KEY_DOWN: App_Mouse_Get_Key(8, &mKey);break;
-            case KEY_9 | KEY_DOWN: App_Mouse_Get_Key(9, &mKey);break;
+            case KEY_7 | KEY_DOWN: App_Mouse_Get_Key(6, &mKey);break;
+            case KEY_8 | KEY_DOWN: App_Mouse_Get_Key(7, &mKey);break;
+            case KEY_9 | KEY_DOWN: App_Mouse_Get_Key(8, &mKey);break;
             default: break;
         }
 
@@ -83,9 +85,9 @@ void App_Key_Handler(uint8_t *buf, uint8_t len )
             case KEY_4 | KEY_UP: App_Mouse_Get_Key(3, &mKey);break;
             case KEY_5 | KEY_UP: App_Mouse_Get_Key(4, &mKey);break;
             case KEY_6 | KEY_UP: App_Mouse_Get_Key(5, &mKey);break;
-            case KEY_7 | KEY_UP: App_Mouse_Get_Key(7, &mKey);break;
-            case KEY_8 | KEY_UP: App_Mouse_Get_Key(8, &mKey);break;
-            case KEY_9 | KEY_UP: App_Mouse_Get_Key(9, &mKey);break;
+            case KEY_7 | KEY_UP: App_Mouse_Get_Key(6, &mKey);break;
+            case KEY_8 | KEY_UP: App_Mouse_Get_Key(7, &mKey);break;
+            case KEY_9 | KEY_UP: App_Mouse_Get_Key(8, &mKey);break;
             default: break;
         }
 
@@ -130,6 +132,44 @@ static void App_Key_Relase_Handler(mKey_t mKey )
     }
 }
 
+static void App_Key_Dpi_Press_Handler(mKey_t mKey )
+{
+    uint8_t dpiIndex = App_Mouse_Get_Dpi_Index();
+    
+    if(mKey.func == (uint8_t )FUNC_DPI_LOOP)
+    {
+        if(dpiIndex < App_Mouse_Get_Dpi_Total_Num())
+        {
+            dpiIndex++;
+        }
+        else
+        {
+            dpiIndex = 1;
+        }
+    }
+    else if(mKey.func == (uint8_t )FUNC_DPI_INC)
+    {
+        if(dpiIndex < App_Mouse_Get_Dpi_Total_Num())
+        {
+            dpiIndex++;
+        }
+    }
+    else if(mKey.func == (uint8_t )FUNC_DPI_DEC)
+    {
+        if(dpiIndex > 1)
+        {
+            dpiIndex--;
+        }
+    }
+    
+    App_Mouse_Set_Dpi_Index(dpiIndex);
+
+    App_Sensor_Set_Dpi(dpiIndex);
+
+    App_Light_Set_Dpi_Color(dpiIndex-1);
+
+    App_Usb_Mouse_Dpi_Input(0x01, dpiIndex);
+}
 
 
 static void App_Key_Keyboard_Press_Handler(mKey_t mKey )
@@ -142,10 +182,6 @@ static void App_Key_Multimedia_Press_Handler(mKey_t mKey )
     
 }
 
-static void App_Key_Dpi_Press_Handler(mKey_t mKey )
-{
-    
-}
 
 static void App_Key_Macro_Press_Handler(mKey_t mKey )
 {

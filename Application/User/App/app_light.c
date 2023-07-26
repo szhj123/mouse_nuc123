@@ -51,7 +51,8 @@ static light_t  lightBuf[] =
 
 static light_ctrl_block_t lightCtrl;
 static app_light_callback_t app_light_callback = NULL;
-
+static app_light_callback_t app_light_callback_save = NULL;
+static uint8_t lightTimer = TIMER_NULL; 
 
 void App_Light_Init(void )
 {
@@ -908,5 +909,30 @@ void App_Light_Colourful_Trailer(mLight_data_t lightData )
     lightCtrl.trailerShowStep = 0;
 
     app_light_callback = App_Light_MonoChrome_Trailer_Callback;
+}
+
+static void App_Light_Set_Dpi_Color_Callback(void *arg )
+{
+    app_light_callback = app_light_callback_save;
+}
+
+void App_Light_Set_Dpi_Color(uint8_t dpiColorIndex )
+{
+    color_t dpiColor;
+
+    App_Mouse_Get_Dpi_Color(dpiColorIndex, &dpiColor);
+
+    if(app_light_callback != NULL)
+    {
+        app_light_callback_save = app_light_callback;
+
+        app_light_callback = NULL;
+    }
+    
+    Drv_Light_All_On(dpiColor.red, dpiColor.green, dpiColor.blue);
+
+    Drv_Timer_Delete(lightTimer);
+    
+    lightTimer = Drv_Timer_Regist_Oneshot(App_Light_Set_Dpi_Color_Callback, 1000, NULL);
 }
 

@@ -4,6 +4,7 @@
 #include "app_mouse_protocol.h"
 #include "drv_light.h"
 #include "drv_task.h"
+#include "drv_timer.h"
 
 typedef void (*app_light_callback_t)(void );
 
@@ -43,6 +44,7 @@ void App_Light_Blink(mLight_data_t lightData );
 void App_Light_MonoChrome_Trailer(mLight_data_t lightData );
 void App_Light_Response(mLight_data_t lightData );
 void App_Light_Colourful_Trailer(mLight_data_t lightData );
+void App_Light_Set_Dpi_Color(uint8_t dpiColorIndex );
 
 #endif 
 

@@ -11,7 +11,7 @@
 
 /* Includes ---------------------------------------------*/
 #include "app_mouse_sensor.h"
-#include "app_mouse_protocol.h"
+#include "app_usb.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -49,8 +49,69 @@ void App_Sensor_Set_Detect_Time(mRate_t mRate )
     }
 }
 
+void App_Sensor_Set_Dpi(uint8_t dpiIndex )
+{
+    uint8_t dpiVal = App_Mouse_Get_Dpi_Val(dpiIndex);
+    
+    if(dpiVal != 0x80)
+    {
+        Drv_Sensor_Set_Dpi(dpiVal & 0x7f);
+
+        if(dpiVal & 0x80)
+        {
+            mSensorCtrl.deltaXYDoubleFlag = 1;
+        }
+        else
+        {
+            mSensorCtrl.deltaXYDoubleFlag = 0;
+        }
+    }
+}
+
 static void App_Sensor_Handler(void *arg )
 {
+    uint8_t burstMotionBuf[6] = {0};
     
+    if(++mSensorCtrl.delayCnt >= mSensorCtrl.delayTime)
+    {
+        Drv_Sensor_Get_Burst_Motion(burstMotionBuf, sizeof(burstMotionBuf));
+
+        if(burstMotionBuf[0] & 0x80)
+        {
+            if(burstMotionBuf[1] == 0x0)
+            {
+                Drv_Sensor_P3325_Init(&mSensorCtrl.deltaX, &mSensorCtrl.deltaY);
+            }
+            else
+            {
+                mSensorCtrl.deltaX = (int16_t )burstMotionBuf[3] << 8 | burstMotionBuf[2];
+                mSensorCtrl.deltaY = (int16_t )burstMotionBuf[5] << 8 | burstMotionBuf[4];
+                
+                if(mSensorCtrl.deltaXYDoubleFlag)
+                {
+                    mSensorCtrl.deltaX *= 2;
+                    mSensorCtrl.deltaY *= 2;
+                }
+
+                #if 1
+                if(mSensorCtrl.deltaX == 0x8000)
+        	        mSensorCtrl.deltaX = 0x8001;
+
+                if(mSensorCtrl.deltaX == 0x7fff)
+                    mSensorCtrl.deltaX = 0x0001;
+
+        	    if(mSensorCtrl.deltaY == 0x8000)
+        	        mSensorCtrl.deltaY = 0x8001;
+
+                if(mSensorCtrl.deltaY == 0x7fff)
+                    mSensorCtrl.deltaY = 0x0001;
+                #endif 
+
+                App_Usb_Mouse_Motion_Handler(mSensorCtrl.deltaX, mSensorCtrl.deltaY);
+            }
+        }
+        
+        mSensorCtrl.delayCnt = 0;
+    }
 }
 
