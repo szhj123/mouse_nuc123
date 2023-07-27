@@ -46,7 +46,7 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
     {
         case RPT_ID_KEY_REUSE:
         {
-            App_Mouse_Set_Key_Mode_Value(buf, len);
+            App_Mouse_Set_Key_Reuse(buf, len);            
             break;
         }
         case RPT_ID_LDR:
@@ -61,7 +61,7 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
         }
         case RPT_ID_LGT_EFECT:
         {
-            App_Mouse_Set_Light_Effect(buf, len);
+            App_Mouse_Set_Light_Data(buf, len);
             break;
         }
         default: break;
@@ -88,19 +88,11 @@ static void App_Usb_Get_Report(uint8_t *buf, uint8_t len )
     }
 }
 
-void App_Usb_Mouse_Press_Handler(mKey_t mKey )
+void App_Usb_Mouse_Press_Handler(uint8_t mKeyVal )
 {
     usbPara.mDataBuf[0].u8Data = RPT_ID_MOUSE;
     
-    switch(mKey.func)
-    {
-        case FUNC_MOUSE_LEFT: usbPara.mDataBuf[1].bit_t.bit0 = 1;break;
-        case FUNC_MOUSE_RIGHT: usbPara.mDataBuf[1].bit_t.bit1 = 1; break;
-        case FUNC_MOUSE_MIDDLE: usbPara.mDataBuf[1].bit_t.bit2 = 1; break;
-        case FUNC_MOUSE_FORWARD: usbPara.mDataBuf[1].bit_t.bit3 = 1; break;
-        case FUNC_MOUSE_BACKWARD: usbPara.mDataBuf[1].bit_t.bit4 = 1; break;
-        default: break;
-    }
+    usbPara.mDataBuf[1].u8Data = mKeyVal;
 
     usbPara.mDataBuf[2].u8Data = 0;
     usbPara.mDataBuf[3].u8Data = 0;
@@ -113,29 +105,70 @@ void App_Usb_Mouse_Press_Handler(mKey_t mKey )
     usbPara.mDataUpdateFlag = 1;
 }
 
-void App_Usb_Mouse_Relase_Handler(mKey_t mKey )
+void App_Usb_Keyboard_Press_Handler(uint8_t rptID, uint8_t *buf, uint8_t len )
 {
-    usbPara.mDataBuf[0].u8Data = RPT_ID_MOUSE;
-    
-    switch(mKey.func)
+    uint8_t i;
+
+    for(i=0;i<sizeof(usbPara.kDataBuf);i++)
     {
-        case FUNC_MOUSE_LEFT: usbPara.mDataBuf[1].bit_t.bit0 = 0;break;
-        case FUNC_MOUSE_RIGHT: usbPara.mDataBuf[1].bit_t.bit1 = 0; break;
-        case FUNC_MOUSE_MIDDLE: usbPara.mDataBuf[1].bit_t.bit2 = 0; break;
-        case FUNC_MOUSE_FORWARD: usbPara.mDataBuf[1].bit_t.bit3 = 0; break;
-        case FUNC_MOUSE_BACKWARD: usbPara.mDataBuf[1].bit_t.bit4 = 0; break;
-        default: break;
+        usbPara.kDataBuf[i].u8Data = 0x0;
+    }
+    
+    usbPara.kDataBuf[0].u8Data = rptID;
+
+    for(i=0;i<len;i++)
+    {
+        usbPara.kDataBuf[i+1].u8Data = buf[i];
     }
 
+    if(rptID == RPT_ID_KEYBOARD)
+    {
+        usbPara.kDataLen = 8;
+    }
+    else if(rptID == RPT_ID_CONSUMER)
+    {
+        usbPara.kDataLen = 4;
+    }
+    
+    usbPara.kDataUpdateFlag = 1;
+}
+
+void App_Usb_Mouse_Relase_Handler(uint8_t mKeyVal )
+{
+    usbPara.mDataBuf[0].u8Data = RPT_ID_MOUSE;
+    usbPara.mDataBuf[1].u8Data = mKeyVal;
+    usbPara.mDataBuf[2].u8Data = 0;
     usbPara.mDataBuf[3].u8Data = 0;
     usbPara.mDataBuf[4].u8Data = 0;
     usbPara.mDataBuf[5].u8Data = 0;
-    usbPara.mDataBuf[6].u8Data = 0;
     usbPara.mDataBuf[6].u8Data = 0;
 
     usbPara.mDataLen = 7;
 
     usbPara.mDataUpdateFlag = 1;
+}
+
+void App_Usb_Keyboard_Release_Handler(uint8_t rptID )
+{
+    uint8_t i;
+
+    for(i=0;i<sizeof(usbPara.kDataBuf);i++)
+    {
+        usbPara.kDataBuf[i].u8Data = 0x0;
+    }
+    
+    usbPara.kDataBuf[0].u8Data = RPT_ID_KEYBOARD;
+
+    if(rptID == RPT_ID_KEYBOARD)
+    {
+        usbPara.kDataLen = 8;
+    }
+    else if(rptID == RPT_ID_CONSUMER)
+    {
+        usbPara.kDataLen = 4;
+    }
+    
+    usbPara.kDataUpdateFlag = 1;
 }
 
 void App_Usb_Mouse_Wheel_Handler(mouse_wheel_direction mWheelDirection )
@@ -177,7 +210,7 @@ void App_Usb_Mouse_Motion_Handler(int16_t x, int16_t y )
     usbPara.mDataUpdateFlag = 1;
 }
 
-void App_Usb_Mouse_Dpi_Input(uint8_t evtID, uint8_t evtVal )
+void App_Usb_Mouse_Evt_Input(uint8_t evtID, uint8_t evtVal )
 {
     usbPara.kDataBuf[0].u8Data = RPT_ID_DPI;
     usbPara.kDataBuf[1].u8Data = evtID;

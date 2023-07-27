@@ -6,6 +6,9 @@
 #include "drv_task.h"
 #include "drv_timer.h"
 
+#define LIGHT_OFF                0
+#define LIGHT_ON                 (!LIGHT_OFF)
+
 typedef void (*app_light_callback_t)(void );
 
 typedef enum _neon_color_state_t
@@ -31,6 +34,7 @@ typedef struct _light_ctrl_block_t
     uint8_t  lightIndex;
     uint8_t  lightNum;
     uint8_t  trailerShowStep;
+    uint8_t  lightOffFlag;
 }light_ctrl_block_t;
 
 
@@ -44,6 +48,10 @@ void App_Light_Blink(mLight_data_t lightData );
 void App_Light_MonoChrome_Trailer(mLight_data_t lightData );
 void App_Light_Response(mLight_data_t lightData );
 void App_Light_Colourful_Trailer(mLight_data_t lightData );
+
+void App_Light_Set_Off_Flag(uint8_t flag );
+uint8_t App_Light_Get_Off_Flag(void );
+void App_Light_Set_Light_Effect(mLight_mode_t lightMode);
 void App_Light_Set_Dpi_Color(uint8_t dpiColorIndex );
 
 #endif 

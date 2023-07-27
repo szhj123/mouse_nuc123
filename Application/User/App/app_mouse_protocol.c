@@ -26,7 +26,7 @@ static void App_Mouse_Dpi_Color_Init(void );
 static void App_Mouse_Light_Init(void );
 /* Private variables ------------------------------------*/
 static mouse_para_t mousePara;
-static mKey_t keyModeBuf[15];
+static mKey_t KeyModeData[15];
 
 void App_Mouse_Para_Init(void )
 {   
@@ -72,9 +72,9 @@ void App_Mouse_Para_Init(void )
 
     App_Sensor_Set_Dpi(mousePara.dpiIndex);
     
-    App_Mouse_Set_Key_Mode_Buf(mousePara.keyMode);
+    App_Mouse_Set_Key_Mode_Data(mousePara.keyMode);
 
-    App_Mouse_Set_Light_Mode(mousePara.mLightMode);
+    App_Light_Set_Light_Effect(mousePara.mLightMode);
 }
 
 static void App_Mouse_Mode_Office_init(void )
@@ -246,17 +246,17 @@ static void App_Mouse_Light_Init(void )
     uint8_t i,j;
     color_t mColor;
 
-    for(i=0;i<sizeof(mousePara.mLightBuf)/sizeof(mLight_data_t);i++)
+    for(i=0;i<sizeof(mousePara.mLightData)/sizeof(mLight_data_t);i++)
     {
-        mousePara.mLightBuf[i].brightness = 2;
-        mousePara.mLightBuf[i].speed = 1;
-        mousePara.mLightBuf[i].direction = 1;
+        mousePara.mLightData[i].brightness = 2;
+        mousePara.mLightData[i].speed = 1;
+        mousePara.mLightData[i].direction = 1;
 
         for(j=0;j<7;j++)
         {
             App_Mouse_Set_Default_Color(j, &mColor);
 
-            mousePara.mLightBuf[i].lightColorBuf[j] = mColor;
+            mousePara.mLightData[i].lightColorBuf[j] = mColor;
         }
     }
 }
@@ -269,7 +269,7 @@ void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len )
     {
         mousePara.keyMode = (mKey_mode_t )buf[2];
 
-        App_Mouse_Set_Key_Mode_Buf(mousePara.keyMode);
+        App_Mouse_Set_Key_Mode_Data(mousePara.keyMode);
     }
     else
     {
@@ -277,7 +277,7 @@ void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len )
     }
 }
 
-void App_Mouse_Set_Key_Mode_Buf(mKey_mode_t keyMode )
+void App_Mouse_Set_Key_Mode_Data(mKey_mode_t keyMode )
 {
     uint8_t i;
     
@@ -285,15 +285,15 @@ void App_Mouse_Set_Key_Mode_Buf(mKey_mode_t keyMode )
     {
         if(keyMode == KEY_MODE_OFFICE)
         {
-            keyModeBuf[i] = mousePara.keyModeOffice[i];
+            KeyModeData[i] = mousePara.keyModeOffice[i];
         }
         else if(keyMode == KEY_MODE_MULTIMEDIA)
         {
-            keyModeBuf[i] = mousePara.keyModeMultimedia[i];
+            KeyModeData[i] = mousePara.keyModeMultimedia[i];
         }
         else if(keyMode == KEY_MODE_GAME)
         {
-            keyModeBuf[i] = mousePara.keyModeGame[i];
+            KeyModeData[i] = mousePara.keyModeGame[i];
         }
     }
 }
@@ -304,25 +304,25 @@ void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len )
     
     keyModePack->rptID = RPT_ID_KEY_MODE;
     keyModePack->modeDateFlag = 1;
-    keyModePack->keyMode = (uint8_t )mousePara.keyMode;
+    keyModePack->keyMode = (uint8_t )App_Mouse_Get_Cur_Key_Mode();
 }
 
-void App_Mouse_Set_Key_Mode_Value(uint8_t *buf, uint8_t len )
+void App_Mouse_Set_Key_Reuse(uint8_t *buf, uint8_t len )
 {
     uint8_t i;
     mKey_pack_t *mKeyPack = (mKey_pack_t *)buf;
 
     for(i=0;i<15;i++)
     {
-        if(mKeyPack->keyMode == KEY_MODE_OFFICE)
+        if((mKeyPack->keyMode+1) == KEY_MODE_OFFICE)
         {
             mousePara.keyModeOffice[i] = mKeyPack->keyVal[i];    
         }
-        else if(mKeyPack->keyMode == KEY_MODE_MULTIMEDIA)
+        else if((mKeyPack->keyMode+1) == KEY_MODE_MULTIMEDIA)
         {
             mousePara.keyModeMultimedia[i] = mKeyPack->keyVal[i];
         }
-        else if(mKeyPack->keyMode == KEY_MODE_GAME)
+        else if((mKeyPack->keyMode+1) == KEY_MODE_GAME)
         {
             mousePara.keyModeGame[i] = mKeyPack->keyVal[i];
         }
@@ -358,24 +358,17 @@ void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
 
     App_Sensor_Set_Detect_Time(mousePara.mRate);
 
-    App_Mouse_Set_Light_Mode(mousePara.mLightMode);
+    App_Light_Set_Light_Effect(mousePara.mLightMode);
 }
 
 void App_Mouse_Set_Light_Mode(mLight_mode_t lightMode )
+{   
+    mousePara.mLightMode = lightMode;
+}
+
+mLight_mode_t App_Mouse_Get_Light_Mode(void )
 {
-    switch(lightMode)
-    {
-        case LIGHT_MODE_OFF: App_Light_Off(); break;
-        case LIGHT_MODE_COLOR_STREAM: App_Light_Color_Streamer(mousePara.mLightBuf[1]); break;
-        case LIGHT_MODE_SOLID: App_Light_Solid(mousePara.mLightBuf[2]); break;
-        case LIGHT_MODE_BREATH: App_Light_Breath(mousePara.mLightBuf[3]); break;
-        case LIGHT_MODE_NEON: App_Light_Neon(mousePara.mLightBuf[4]); break;
-        case LIGHT_MODE_BLINK: App_Light_Blink(mousePara.mLightBuf[5]); break;
-        case LIGHT_MODE_MONOCHROME_TRAILER: App_Light_MonoChrome_Trailer(mousePara.mLightBuf[6]); break;
-        case LIGHT_MODE_RESPONSE: App_Light_Response(mousePara.mLightBuf[7]); break;
-        case LIGHT_MODE_COLOURFUL_TRAILER: App_Light_Colourful_Trailer(mousePara.mLightBuf[8]); break;
-        default: break;
-    }
+    return mousePara.mLightMode;
 }
 
 void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len )
@@ -405,24 +398,28 @@ void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len )
     ldrPack->picIndex = mousePara.picIndex;
 }
 
-void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len )
+void App_Mouse_Set_Light_Data(uint8_t *buf, uint8_t len )
 {
     mLight_pack_t *lightPack = (mLight_pack_t *)buf;
     
-    mousePara.mLightBuf[lightPack->lightMode] = lightPack->lightData;
+    mousePara.mLightData[lightPack->lightMode] = lightPack->lightData;
 }
-
 
 void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, color_t *color )
 {
-    color->red = mousePara.mLightBuf[(uint8_t )lightMode].lightColorBuf[colorIndex].red;
-    color->green = mousePara.mLightBuf[(uint8_t )lightMode].lightColorBuf[colorIndex].green;
-    color->blue = mousePara.mLightBuf[(uint8_t )lightMode].lightColorBuf[colorIndex].blue;
+    color->red = mousePara.mLightData[(uint8_t )lightMode].lightColorBuf[colorIndex].red;
+    color->green = mousePara.mLightData[(uint8_t )lightMode].lightColorBuf[colorIndex].green;
+    color->blue = mousePara.mLightData[(uint8_t )lightMode].lightColorBuf[colorIndex].blue;
 }
 
-void App_Mouse_Get_Key(uint8_t keyIndex, mKey_t *mKey )
+void App_Mouse_Get_Key_Data(uint8_t keyIndex, mKey_t *mKey )
 {
-    *mKey = keyModeBuf[keyIndex];
+    *mKey = KeyModeData[keyIndex];
+}
+
+void App_Mouse_Get_Light_Data(mLight_mode_t lightMode, mLight_data_t *lightData )
+{
+    *lightData = mousePara.mLightData[(uint8_t )lightMode];
 }
 
 uint8_t App_Mouse_Get_Dpi_Val(uint8_t dpiIndex )
@@ -448,6 +445,30 @@ void App_Mouse_Set_Dpi_Index(uint8_t dpiIndex )
 void App_Mouse_Get_Dpi_Color(uint8_t dpiIndex, color_t *dpiColor )
 {
     *dpiColor = mousePara.dpiColorBuf[dpiIndex];
+}
+
+mKey_mode_t App_Mouse_Get_Cur_Key_Mode(void )
+{
+    return mousePara.keyMode;
+}
+
+void App_Mouse_Set_Cur_Key_Mode(mKey_mode_t keyMode )
+{
+    mousePara.keyMode = keyMode;
+
+    App_Mouse_Para_Save();
+}
+
+mRate_t App_Mouse_Get_Rate(void )
+{
+    return mousePara.mRate;
+}
+
+void App_Mouse_Set_Rate(mRate_t rate )
+{
+    mousePara.mRate = rate;
+
+    App_Mouse_Para_Save();
 }
 
 void App_Mouse_Para_Save(void )

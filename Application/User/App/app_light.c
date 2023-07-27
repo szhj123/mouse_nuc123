@@ -51,7 +51,6 @@ static light_t  lightBuf[] =
 
 static light_ctrl_block_t lightCtrl;
 static app_light_callback_t app_light_callback = NULL;
-static app_light_callback_t app_light_callback_save = NULL;
 static uint8_t lightTimer = TIMER_NULL; 
 
 void App_Light_Init(void )
@@ -876,9 +875,39 @@ static void App_Light_MonoChrome_Trailer_Callback(void )
     }
 }
 
+static void App_Light_Response_Callback(void *arg )
+{
+    Drv_Light_All_Off();
+}
+
 void App_Light_Response(mLight_data_t lightData )
 {
+    uint16_t delayTime;
     
+    color_t color = lightData.lightColorBuf[lightCtrl.colorIndex];
+
+    switch(lightData.speed)
+    {
+        case 1: delayTime = 2000; break;
+        case 2: delayTime = 1500; break;
+        case 3: delayTime = 1000; break;
+        case 4: delayTime = 500; break;
+        default: delayTime = 1000; break;
+    }
+    
+    Drv_Light_All_On(color.red, color.green, color.blue);
+
+    lightCtrl.colorIndex++;
+
+    if(lightCtrl.colorIndex >= lightData.colorNum)
+    {
+        lightCtrl.colorIndex = 0;
+    }
+
+    Drv_Timer_Delete(lightTimer);
+    
+    lightTimer = Drv_Timer_Regist_Oneshot(App_Light_Response_Callback, delayTime, NULL);
+        
 }
 
 void App_Light_Colourful_Trailer(mLight_data_t lightData )
@@ -911,9 +940,100 @@ void App_Light_Colourful_Trailer(mLight_data_t lightData )
     app_light_callback = App_Light_MonoChrome_Trailer_Callback;
 }
 
+void App_Light_Set_Light_Effect(mLight_mode_t lightMode)
+{
+    mLight_data_t lightData;
+    
+    if(lightMode == LIGHT_MODE_OFF)
+    {
+        lightCtrl.lightOffFlag = LIGHT_OFF;
+    }
+    else
+    {
+        lightCtrl.lightOffFlag = LIGHT_ON;
+    }
+
+    switch(lightMode)
+    {
+        case LIGHT_MODE_OFF: App_Light_Off(); break;
+        case LIGHT_MODE_COLOR_STREAM: 
+        {
+            App_Mouse_Get_Light_Data(LIGHT_MODE_COLOR_STREAM, &lightData);
+            
+            App_Light_Color_Streamer(lightData); 
+            break;
+        }
+        case LIGHT_MODE_SOLID: 
+        {
+             App_Mouse_Get_Light_Data(LIGHT_MODE_SOLID, &lightData);
+             
+             App_Light_Solid(lightData); 
+             break;
+        }
+        case LIGHT_MODE_BREATH: 
+        {
+            App_Mouse_Get_Light_Data(LIGHT_MODE_BREATH, &lightData);
+            
+            App_Light_Breath(lightData); 
+            break;
+        }
+        case LIGHT_MODE_NEON: 
+        {
+            App_Mouse_Get_Light_Data(LIGHT_MODE_NEON, &lightData);
+            
+            App_Light_Neon(lightData); 
+            break;
+        }
+        case LIGHT_MODE_BLINK: 
+        {
+            App_Mouse_Get_Light_Data(LIGHT_MODE_BLINK, &lightData);
+            
+            App_Light_Blink(lightData); 
+            break;
+        }
+        case LIGHT_MODE_MONOCHROME_TRAILER: 
+        {
+            App_Mouse_Get_Light_Data(LIGHT_MODE_MONOCHROME_TRAILER, &lightData);
+            
+            App_Light_MonoChrome_Trailer(lightData); 
+            break;
+        }
+        case LIGHT_MODE_RESPONSE: 
+        {            
+            lightCtrl.colorIndex = 0;
+            
+            app_light_callback = NULL;
+
+            Drv_Light_All_Off();
+            
+            break;
+        }
+        case LIGHT_MODE_COLOURFUL_TRAILER: 
+        {
+            App_Mouse_Get_Light_Data(LIGHT_MODE_COLOURFUL_TRAILER, &lightData);
+            
+            App_Light_Colourful_Trailer(lightData); 
+            break;
+        }
+        default: break;
+    }
+}
+
+void App_Light_Set_Off_Flag(uint8_t flag )
+{
+    lightCtrl.lightOffFlag = flag;
+}
+
+uint8_t App_Light_Get_Off_Flag(void )
+{
+    return lightCtrl.lightOffFlag;    
+}
+
 static void App_Light_Set_Dpi_Color_Callback(void *arg )
 {
-    app_light_callback = app_light_callback_save;
+    mLight_mode_t lightMode = App_Mouse_Get_Light_Mode();
+    
+    App_Light_Set_Light_Effect(lightMode);
 }
 
 void App_Light_Set_Dpi_Color(uint8_t dpiColorIndex )
@@ -922,12 +1042,7 @@ void App_Light_Set_Dpi_Color(uint8_t dpiColorIndex )
 
     App_Mouse_Get_Dpi_Color(dpiColorIndex, &dpiColor);
 
-    if(app_light_callback != NULL)
-    {
-        app_light_callback_save = app_light_callback;
-
-        app_light_callback = NULL;
-    }
+    app_light_callback = NULL;
     
     Drv_Light_All_On(dpiColor.red, dpiColor.green, dpiColor.blue);
 

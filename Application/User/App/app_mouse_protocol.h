@@ -13,9 +13,9 @@ typedef struct _color_t
 
 typedef enum _mKey_mode_t
 {
-    KEY_MODE_OFFICE = 0x00,
-    KEY_MODE_MULTIMEDIA = 0x01,
-    KEY_MODE_GAME = 0x02
+    KEY_MODE_OFFICE = 0x01,
+    KEY_MODE_MULTIMEDIA = 0x02,
+    KEY_MODE_GAME = 0x03
 }mKey_mode_t;
 
 typedef enum _mKey_name_t
@@ -56,6 +56,15 @@ typedef enum _dpi_func_t
     FUNC_DPI_DEC,
     FUNC_DPI_LOCK
 }dpi_func_t;
+
+typedef enum _other_func_t
+{
+    FUNC_LIGHT_SWITCH = 1,
+    FUNC_LIGHT_ON_OFF, 
+    FUNC_KEY_MODE_SWITCH,
+    FUNC_KEY_FIRE,
+    FUNC_RATE_SWITCH
+}other_func_t;
 
 typedef enum _mSensor_t
 {
@@ -200,7 +209,7 @@ typedef struct _mouse_para_t
     uint8_t picShowMask_l;
     uint8_t picShowMask_h;
     uint8_t picIndex;
-    mLight_data_t mLightBuf[10];
+    mLight_data_t mLightData[10];
 }mouse_para_t;
 
 void App_Mouse_Para_Init(void );
@@ -209,19 +218,35 @@ void App_Mouse_Para_Save(void );
 
 void App_Mouse_Set_Key_Mode(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Key_Mode(uint8_t *buf, uint8_t len );
-void App_Mouse_Set_Key_Mode_Value(uint8_t *buf, uint8_t len );
+
+void App_Mouse_Set_Key_Reuse(uint8_t *buf, uint8_t len );
+
 void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len );
 void App_Mouse_Get_Light_Dpi_Report(uint8_t *buf, uint8_t len );
-void App_Mouse_Set_Light_Effect(uint8_t *buf, uint8_t len );
+
+void App_Mouse_Set_Light_Data(uint8_t *buf, uint8_t len );
+void App_Mouse_Get_Light_Data(mLight_mode_t lightMode,  mLight_data_t *lightData);
+
 void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, color_t *color );
-void App_Mouse_Get_Key(uint8_t keyIndex, mKey_t *mKey );
-void App_Mouse_Set_Key_Mode_Buf(mKey_mode_t keyMode );
+
+void App_Mouse_Get_Key_Data(uint8_t keyIndex, mKey_t *mKey );
+
+void App_Mouse_Set_Key_Mode_Data(mKey_mode_t keyMode );
+
 void App_Mouse_Set_Light_Mode(mLight_mode_t lightMode );
+mLight_mode_t App_Mouse_Get_Light_Mode(void );
+
 uint8_t App_Mouse_Get_Dpi_Val(uint8_t dpiIndex );
 uint8_t App_Mouse_Get_Dpi_Total_Num(void );
 uint8_t App_Mouse_Get_Dpi_Index(void );
 void App_Mouse_Set_Dpi_Index(uint8_t dpiIndex );
 void App_Mouse_Get_Dpi_Color(uint8_t dpiIndex, color_t *dpiColor );
+
+mKey_mode_t App_Mouse_Get_Cur_Key_Mode(void );
+void App_Mouse_Set_Cur_Key_Mode(mKey_mode_t keyMode );
+
+mRate_t App_Mouse_Get_Rate(void );
+void App_Mouse_Set_Rate(mRate_t rate );
 
 
 #endif 

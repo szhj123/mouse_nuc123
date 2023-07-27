@@ -27,12 +27,14 @@ typedef struct _usb_para_t
 
 
 void App_Usb_Init(void );
-void App_Usb_Mouse_Press_Handler(mKey_t mKey );
-void App_Usb_Mouse_Relase_Handler(mKey_t mKey );
+void App_Usb_Mouse_Press_Handler(uint8_t mKeyVal );
+void App_Usb_Mouse_Relase_Handler(uint8_t mKeyVal );
 void App_Usb_Mouse_Wheel_Handler(mouse_wheel_direction mWheelDirection );
 void App_Usb_Mouse_Motion_Handler(int16_t x, int16_t y );
 void App_Usb_Mouse_Input(uint8_t *buf, uint8_t len );
-void App_Usb_Mouse_Dpi_Input(uint8_t evtID, uint8_t evtVal );
+void App_Usb_Mouse_Evt_Input(uint8_t evtID, uint8_t evtVal );
+void App_Usb_Keyboard_Press_Handler(uint8_t rptID, uint8_t *buf, uint8_t len );
+void App_Usb_Keyboard_Release_Handler(uint8_t rptID );
 
 #endif 
 

@@ -152,18 +152,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>330</LineNumber>
+          <LineNumber>229</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>1888</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\User\App\app_mouse_protocol.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\User\App\app_key.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\application\../User/App/app_key.c\229</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -185,7 +185,7 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mKeyPack</ItemText>
+          <ItemText>keyModeBuf</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
