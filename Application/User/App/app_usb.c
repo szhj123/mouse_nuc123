@@ -64,6 +64,10 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
             App_Mouse_Set_Light_Data(buf, len);
             break;
         }
+        case RPT_ID_MACRO:
+        {
+            App_Mouse_Set_Macro_Data(buf, len);
+        }
         default: break;
     }
 }
@@ -218,6 +222,16 @@ void App_Usb_Mouse_Evt_Input(uint8_t evtID, uint8_t evtVal )
 
     usbPara.kDataLen = 3;
     usbPara.kDataUpdateFlag = 1;
+}
+
+void App_Usb_Clr_Mouse_Key_Send_Flag(void )
+{
+    Drv_Usb_Clr_Ep_In_Flag(EP2);
+}
+
+uint8_t App_Usb_Get_Mouse_Key_Send_Flag(void )
+{
+    return Drv_Usb_Get_Ep_In_Flag(EP2);
 }
 
 static void App_Usb_Handler(void *arg )

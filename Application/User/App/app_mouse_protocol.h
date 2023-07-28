@@ -168,12 +168,12 @@ typedef struct _mLight_pack_t
     uint8_t reserve[36];
 }mLight_pack_t;
 
-typedef struct _mMacro_Val_t
+typedef struct _mMacro_data_t
 {
     uint8_t delayTime_h;
     uint8_t delayTime_l;
     uint8_t hidVal;
-}mMacro_Val_t;
+}mMacro_data_t;
 
 typedef struct _mMacro_pack_t
 {
@@ -181,7 +181,7 @@ typedef struct _mMacro_pack_t
     uint8_t macroID;
     uint8_t macroOffsetAddr;
     uint8_t macroDataLen;
-    mMacro_Val_t macroValBuf[20];
+    mMacro_data_t macroValBuf[20];
 }mMacro_pack_t;
 
 typedef struct _pic_pack_t
@@ -247,6 +247,9 @@ void App_Mouse_Set_Cur_Key_Mode(mKey_mode_t keyMode );
 
 mRate_t App_Mouse_Get_Rate(void );
 void App_Mouse_Set_Rate(mRate_t rate );
+
+void App_Mouse_Set_Macro_Data(uint8_t *buf, uint8_t len );
+
 
 
 #endif 

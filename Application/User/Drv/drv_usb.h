@@ -44,6 +44,8 @@ typedef struct _usb_ctrl_block_t
 
              uint8_t *dataPtr;
              uint16_t dataLen;
+
+             uint8_t epInDoneFlag;
              
              uint8_t suspendFlag;
              uint8_t resumeFlag;
@@ -70,6 +72,9 @@ void Drv_Usb_Ep_In(uint8_t ep, uint8_t *buf, uint8_t len );
 void Drv_Usb_Set_Address(void );
 void Drv_Usb_Get_Descriptor(void );
 void Drv_Usb_Set_Config(void );
+
+void Drv_Usb_Clr_Ep_In_Flag(uint8_t ep );
+uint8_t Drv_Usb_Get_Ep_In_Flag(uint8_t ep );
 
 void Drv_Usb_Data_InReady(uint8_t *epPtr, uint8_t *descPtr );
 

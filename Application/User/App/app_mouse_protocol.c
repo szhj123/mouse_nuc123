@@ -405,6 +405,35 @@ void App_Mouse_Set_Light_Data(uint8_t *buf, uint8_t len )
     mousePara.mLightData[lightPack->lightMode] = lightPack->lightData;
 }
 
+void App_Mouse_Set_Macro_Data(uint8_t *buf, uint8_t len )
+{
+    uint32_t flashStartAddr;
+    mMacro_pack_t *macroPack = (mMacro_pack_t *)buf;
+
+    if(macroPack->macroID > 6)
+    {
+        macroPack->macroID = 6;
+    }
+
+    if(macroPack->macroID > 0)
+    {
+        macroPack->macroID -= 1;
+    }
+
+    flashStartAddr = MOUSE_MACRO1_START_ADDR + (uint32_t)macroPack->macroID * 512;
+
+    if(macroPack->macroOffsetAddr == 0)
+    {
+        Drv_Flash_Erase(flashStartAddr, MOUSE_MACRO1_SIZE);
+
+        Drv_Flash_Write(flashStartAddr, (uint8_t *)&macroPack->macroValBuf[0], macroPack->macroDataLen);
+    }
+    else
+    {
+        Drv_Flash_Write(flashStartAddr+macroPack->macroOffsetAddr, (uint8_t *)&macroPack->macroValBuf[0], macroPack->macroDataLen);
+    }
+}
+
 void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, color_t *color )
 {
     color->red = mousePara.mLightData[(uint8_t )lightMode].lightColorBuf[colorIndex].red;

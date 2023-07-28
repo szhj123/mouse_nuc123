@@ -36,5 +36,8 @@ void App_Usb_Mouse_Evt_Input(uint8_t evtID, uint8_t evtVal );
 void App_Usb_Keyboard_Press_Handler(uint8_t rptID, uint8_t *buf, uint8_t len );
 void App_Usb_Keyboard_Release_Handler(uint8_t rptID );
 
+void App_Usb_Clr_Mouse_Key_Send_Flag(void );
+uint8_t App_Usb_Get_Mouse_Key_Send_Flag(void );
+
 #endif 
 

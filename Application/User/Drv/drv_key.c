@@ -123,6 +123,28 @@ static void Drv_Key_Handler(void *arg )
     Drv_Wheel_Detect(&wheel);
 }
 
+void Drv_Key_Get_Port_Pin(uint16_t keyName, port_t *port, pin_t *pin )
+{
+    switch(keyName)
+    {
+        case KEY_1: *port = PORTC; *pin = PIN13; break;
+        case KEY_2: *port = PORTC; *pin = PIN12; break;
+        case KEY_3: *port = PORTC; *pin = PIN11; break;
+        case KEY_4: *port = PORTC; *pin = PIN10; break;
+        case KEY_5: *port = PORTC; *pin =  PIN9; break;
+        case KEY_6: *port = PORTC; *pin =  PIN8; break;
+        case KEY_7: *port = PORTA; *pin = PIN15; break;
+        case KEY_8: *port = PORTB; *pin =  PIN9; break;
+        case KEY_9: *port = PORTC; *pin =  PIN4; break;
+        default: break;
+    }
+}
+
+uint8_t Drv_Key_Get_Gpio(port_t port, pin_t pin )
+{
+    return Hal_Key_Get_Gpio(port, pin);
+}
+
 uint16_t Drv_Key_Get_Name(key_t *key )
 {
     uint16_t retName = KEY_NULL;

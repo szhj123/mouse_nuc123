@@ -17,6 +17,32 @@
 #include "app_mouse_sensor.h"
 #include "app_mouse_protocol.h"
 /* Private typedef --------------------------------------*/
+typedef struct _key_fire_t
+{
+    mKey_t  mKey;
+    uint8_t timer;
+    uint8_t delayCnt;
+    uint8_t delayTime;
+    uint8_t fireCnt;
+    uint8_t fireTotalNum;
+    uint8_t fireStep;
+}key_fire_t;
+
+typedef struct _key_macro_t
+{
+    port_t   port;
+    pin_t    pin;
+    uint8_t  timer;
+    uint16_t delayCnt;
+    uint16_t delayTime;
+    uint8_t  loopMode;
+    uint8_t  loopCnt;
+    uint8_t  loopTotalNum;
+    uint8_t  hidVal;
+    uint8_t  anyKeyPressCnt;
+    uint8_t  macroDataIndex;
+    mMacro_data_t macroDataBuf[128];
+}key_macro_t;
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
@@ -32,14 +58,28 @@ static void App_Key_Macro_Press_Handler(mKey_t mKey );
 static void App_Key_Other_Press_Handler(mKey_t mKey );
 
 static void App_Key_Mouse_Release_Handler(mKey_t mKey );
-static void App_Key_Keyboard_Release_Handler(mKey_t mKey );
-static void App_Key_Multimedia_Release_Handler(mKey_t mKey );
+static void App_Key_Keyboard_Release_Handler(void );
+static void App_Key_Multimedia_Release_Handler(void );
 static void App_Key_Dpi_Release_Handler(mKey_t mKey );
 static void App_Key_Macro_Release_Handler(mKey_t mKey );
 static void App_Key_Other_Release_Handler(mKey_t mKey );
 
+static void App_Key_Triple_Shot_Send(void *arg );
+static void App_Key_Macro_Data_Send(void *arg );
+
+
 /* Private variables ------------------------------------*/
 static u8Data_t mKeyVal;
+static key_fire_t keyFire = 
+{
+    .timer = TIMER_NULL,
+};
+
+static key_macro_t keyMacro = 
+{
+    .timer = TIMER_NULL,
+    .anyKeyPressCnt = 0,
+};
 
 void App_Key_Init(void )
 {
@@ -74,6 +114,31 @@ void App_Key_Handler(uint8_t *buf, uint8_t len )
             case KEY_8 | KEY_DOWN: App_Mouse_Get_Key_Data(7, &mKey);break;
             case KEY_9 | KEY_DOWN: App_Mouse_Get_Key_Data(8, &mKey);break;
             default: break;
+        }
+   
+        if(keyMacro.anyKeyPressCnt == 0)
+        {
+            if(mKey.name == KEY_NAME_MACRO)
+            {
+                keyMacro.anyKeyPressCnt = 1;
+                
+                Drv_Key_Get_Port_Pin(keyVal & 0x0fff,&keyMacro.port, &keyMacro.pin);
+            }
+        }
+        else
+        {
+            if(keyMacro.loopMode == 3)
+            {
+                App_Key_Keyboard_Release_Handler();
+                
+                Drv_Timer_Delete(keyMacro.timer);
+
+                keyMacro.timer = TIMER_NULL;
+                
+                keyMacro.anyKeyPressCnt = 0;
+
+                return ;
+            }
         }
 
         App_Key_Press_Handler(mKey);
@@ -126,8 +191,8 @@ static void App_Key_Relase_Handler(mKey_t mKey )
     switch(mKey.name)
     {
         case KEY_NAME_MOUSE: App_Key_Mouse_Release_Handler(mKey);break;
-        case KEY_NAME_KEYBOARD: App_Key_Keyboard_Release_Handler(mKey);break;
-        case KEY_NAME_MULTIMEDIA: App_Key_Multimedia_Release_Handler(mKey);break;
+        case KEY_NAME_KEYBOARD: App_Key_Keyboard_Release_Handler();break;
+        case KEY_NAME_MULTIMEDIA: App_Key_Multimedia_Release_Handler();break;
         case KEY_NAME_DPI: App_Key_Dpi_Release_Handler(mKey);break;
         case KEY_NAME_MACRO: App_Key_Macro_Release_Handler(mKey);break;
         case KEY_NAME_OTHER: App_Key_Other_Release_Handler(mKey);break;
@@ -270,8 +335,146 @@ static void App_Key_Multimedia_Press_Handler(mKey_t mKey )
 
 
 static void App_Key_Macro_Press_Handler(mKey_t mKey )
-{
+{    
+    if(mKey.func > 0)
+    {
+        mKey.func -= 1;
+    }
+
+    keyMacro.loopMode = mKey.val_l;
+    keyMacro.loopTotalNum = mKey.val_h;
+    keyMacro.loopCnt = 0;
+    keyMacro.delayCnt = 0;
+    keyMacro.delayTime = 0;
+    keyMacro.macroDataIndex = 0;
+
+    Drv_Flash_Read(MOUSE_MACRO1_START_ADDR+(uint32_t)mKey.func*512, (uint8_t *)keyMacro.macroDataBuf, sizeof(keyMacro.macroDataBuf));
+
+    Drv_Timer_Delete(keyMacro.timer);
+
+    keyMacro.timer = Drv_Timer_Regist_Period(App_Key_Macro_Data_Send, 0, 1, NULL);
+}
+
+static void App_Key_Macro_Data_Send(void *arg )
+{    
+    mMacro_data_t macroData;
+    mKey_t mKey;
     
+    if(++keyMacro.delayCnt >= keyMacro.delayTime)
+    {
+        macroData = keyMacro.macroDataBuf[keyMacro.macroDataIndex++];
+        
+        keyMacro.delayTime = (uint16_t )(macroData.delayTime_h & 0x7f) | macroData.delayTime_l;
+        keyMacro.hidVal = macroData.hidVal;
+
+        if(keyMacro.hidVal != 0x0)
+        {
+            if(macroData.delayTime_h & 0x80)
+            {
+                switch(keyMacro.hidVal)
+                {
+                    case 0xf0: case 0xf1: case 0xf2: case 0xf3: case 0xf4:
+                    {
+                        mKey.name = KEY_NAME_MOUSE;
+                        mKey.func = keyMacro.hidVal;
+                        mKey.val_l = 0x0;
+                        mKey.val_h = 0x0;
+                        App_Key_Mouse_Press_Handler(mKey);
+                        break;
+                    }
+                    case 0xe0: case 0xe1: case 0xe2: case 0xe3: case 0xe4: case 0xe5: case 0xe6: case 0xe7:
+                    {
+                        mKey.name = KEY_NAME_KEYBOARD;
+                        mKey.func = 1 << (keyMacro.hidVal & 0x07);
+                        mKey.val_l = 0x0;
+                        mKey.val_h = 0x0;
+                        App_Key_Keyboard_Press_Handler(mKey);
+                        break;
+                    }
+                    default: 
+                    {
+                        mKey.name = KEY_NAME_KEYBOARD;
+                        mKey.func = 0x0;
+                        mKey.val_l = keyMacro.hidVal;
+                        mKey.val_h = 0x0;
+                        App_Key_Keyboard_Press_Handler(mKey);
+                        break;
+                    }
+                }
+            }
+            else 
+            {
+                switch(keyMacro.hidVal)
+                {
+                    case 0xf0: case 0xf1: case 0xf2: case 0xf3: case 0xf4:
+                    {
+                        mKey.name = KEY_NAME_MOUSE;
+                        mKey.func = keyMacro.hidVal;
+                        mKey.val_l = 0x0;
+                        mKey.val_h = 0x0;
+                        App_Key_Mouse_Release_Handler(mKey);
+                        break;
+                    }
+                    default: 
+                    {
+                        App_Key_Keyboard_Release_Handler();
+                        
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            switch(keyMacro.loopMode)
+            {
+                case 1:
+                {
+                    keyMacro.delayCnt = 0;
+                    keyMacro.delayTime = 0;
+                    keyMacro.macroDataIndex = 0;
+
+                    if(++keyMacro.loopCnt >= keyMacro.loopTotalNum)
+                    {
+                        keyMacro.loopCnt = 0;
+
+                        App_Key_Keyboard_Release_Handler();
+
+                        Drv_Timer_Delete(keyMacro.timer);
+                        
+                        keyMacro.timer = TIMER_NULL;
+                    }
+                    
+                    break;
+                }
+                case 2:
+                {
+                    keyMacro.delayCnt = 0;
+                    keyMacro.delayTime = 0;
+                    keyMacro.macroDataIndex = 0;
+                    
+                    if(Drv_Key_Get_Gpio(keyMacro.port, keyMacro.pin))
+                    {
+                        App_Key_Keyboard_Release_Handler();
+                        
+                        Drv_Timer_Delete(keyMacro.timer);
+                        
+                        keyMacro.timer = TIMER_NULL;
+                    }
+                    break;
+                }
+                case 3:
+                {
+                    keyMacro.delayCnt = 0;
+                    keyMacro.delayTime = 0;
+                    keyMacro.macroDataIndex = 0;
+                    break;
+                }
+                default: break;
+            }
+        }
+        keyMacro.delayCnt = 0;
+    }
 }
 
 static void App_Key_Other_Press_Handler(mKey_t mKey )
@@ -331,7 +534,19 @@ static void App_Key_Other_Press_Handler(mKey_t mKey )
     }
     else if(mKey.func == (uint8_t )FUNC_KEY_FIRE)
     {
+        keyFire.mKey.name = KEY_NAME_MOUSE;
+        keyFire.mKey.func = FUNC_MOUSE_LEFT;
+        keyFire.mKey.val_l = 0x0;
+        keyFire.mKey.val_h = 0x0;
+
+        keyFire.fireCnt = 0;
+        keyFire.fireTotalNum = mKey.val_l;
+        keyFire.delayTime = mKey.val_h;
+        keyFire.delayCnt = 0;
+
+        Drv_Timer_Delete(keyFire.timer);
         
+        keyFire.timer = Drv_Timer_Regist_Period(App_Key_Triple_Shot_Send, 0, 1, NULL);
     }
     else if(mKey.func == (uint8_t )FUNC_RATE_SWITCH)
     {
@@ -352,6 +567,57 @@ static void App_Key_Other_Press_Handler(mKey_t mKey )
     }
 }
 
+static void App_Key_Triple_Shot_Send(void *arg )
+{
+    switch(keyFire.fireStep)
+    {
+        case 0:
+        {
+            App_Usb_Clr_Mouse_Key_Send_Flag();
+
+            App_Key_Mouse_Press_Handler(keyFire.mKey);
+
+            keyFire.fireStep = 1;
+            break;
+        }
+        case 1: 
+        {
+            if(App_Usb_Get_Mouse_Key_Send_Flag())
+            {
+                App_Usb_Clr_Mouse_Key_Send_Flag();
+    
+                App_Key_Mouse_Release_Handler(keyFire.mKey);
+                
+                keyFire.delayCnt = 0;
+
+                keyFire.fireStep = 2;
+                break;
+            }
+        }
+        case 2:
+        {
+            if(++keyFire.delayCnt >= keyFire.delayTime)
+            {
+                keyFire.delayCnt = 0;
+                keyFire.fireStep = 0;
+
+                if(++keyFire.fireCnt >= keyFire.fireTotalNum)
+                {
+                    keyFire.fireCnt = 0;
+
+                    keyFire.fireStep = 0;
+
+                    Drv_Timer_Delete(keyFire.timer);
+
+                    keyFire.timer = TIMER_NULL;
+                }
+            }
+            break;
+        }
+        default: break;
+    }    
+}
+
 static void App_Key_Mouse_Release_Handler(mKey_t mKey )
 {    
     switch(mKey.func)
@@ -367,12 +633,12 @@ static void App_Key_Mouse_Release_Handler(mKey_t mKey )
     App_Usb_Mouse_Relase_Handler(mKeyVal.u8Data);
 }
 
-static void App_Key_Keyboard_Release_Handler(mKey_t mKey )
+static void App_Key_Keyboard_Release_Handler(void )
 {
     App_Usb_Keyboard_Release_Handler(RPT_ID_KEYBOARD);
 }
 
-static void App_Key_Multimedia_Release_Handler(mKey_t mKey )
+static void App_Key_Multimedia_Release_Handler(void )
 {
     App_Usb_Keyboard_Release_Handler(RPT_ID_CONSUMER);
 }

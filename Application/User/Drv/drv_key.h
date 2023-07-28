@@ -52,6 +52,8 @@ typedef struct _key_t
 
 void Drv_Key_Init(void );
 void Drv_Key_Regist_MsgPut_Callback(key_msg_put_callabck_t callback );
+void Drv_Key_Get_Port_Pin(uint16_t keyName, port_t *port, pin_t *pin );
+uint8_t Drv_Key_Get_Gpio(port_t port, pin_t pin );
 
 #endif 
 

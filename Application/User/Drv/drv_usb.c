@@ -188,12 +188,12 @@ void Drv_Usb_Ep1_Handler(void )
 
 void Drv_Usb_Ep2_Handler(void )
 {
-    
+    usbCtrl.epInDoneFlag = 1;
 }
 
 void Drv_Usb_Ep3_Handler(void )
 {
-    
+    usbCtrl.epInDoneFlag = 1;
 }
 
 void Drv_Usb_Req_Standard(void )
@@ -418,6 +418,26 @@ void Drv_Usb_Set_Config(void )
     Hal_Usb_Set_Dsq_Sync(EP0, 1);
 
     Hal_Usb_InOut_Ready(EP0, 0);
+}
+
+void Drv_Usb_Clr_Ep_In_Flag(uint8_t ep )
+{
+    if(ep == EP2 || ep == EP3)
+    {
+        usbCtrl.epInDoneFlag = 0;
+    }
+}
+
+uint8_t Drv_Usb_Get_Ep_In_Flag(uint8_t ep )
+{
+    uint8_t retFlag = 0;
+	
+    if(ep == EP2 || ep == EP3)
+    {
+        retFlag = usbCtrl.epInDoneFlag;
+    }
+		
+    return retFlag;
 }
 
 void Drv_Usb_Ep_In(uint8_t ep, uint8_t *buf, uint8_t len )
