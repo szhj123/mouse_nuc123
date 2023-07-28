@@ -446,8 +446,6 @@ void Drv_Usb_Ep_In(uint8_t ep, uint8_t *buf, uint8_t len )
 
     Drv_Usb_Memcpy(u8EpPtr, buf, len);
 
-    Hal_Usb_Set_Dsq_Sync(ep, 1);
-
     Hal_Usb_InOut_Ready(ep, len);
 }
 

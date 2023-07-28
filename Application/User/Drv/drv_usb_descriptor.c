@@ -216,6 +216,7 @@ const uint8_t HID_KeyboardReportDescriptor[] =
 	0x95, 0x02,			// REPORT COUNT(2)
 	0x81, 0x02,			// Input (Data) => Modifier byte
 	0xC0,
+    
 };
 
 uint16_t HID_MOUSE_RPT_LEN = sizeof(HID_MouseReportDescriptor)/sizeof(uint8_t ) ;

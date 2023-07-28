@@ -86,12 +86,14 @@ static void App_Sensor_Handler(void *arg )
             {
                 mSensorCtrl.deltaX = (int16_t )burstMotionBuf[3] << 8 | burstMotionBuf[2];
                 mSensorCtrl.deltaY = (int16_t )burstMotionBuf[5] << 8 | burstMotionBuf[4];
-                
+
+                #if 1
                 if(mSensorCtrl.deltaXYDoubleFlag)
                 {
                     mSensorCtrl.deltaX *= 2;
                     mSensorCtrl.deltaY *= 2;
                 }
+                #endif 
 
                 #if 1
                 if(mSensorCtrl.deltaX == 0x8000)
