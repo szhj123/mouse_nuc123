@@ -33,7 +33,7 @@ static mouse_para_t mousePara;
 static mKey_t KeyModeData[15];
 
 void App_Mouse_Para_Init(void )
-{       
+{    
     Drv_Flash_Read(MOUSE_PARA_START_ADDR, (uint8_t *)&mousePara, sizeof(mouse_para_t));
 
     if(mousePara.keyMode == 0 || mousePara.keyMode > 3)
@@ -442,9 +442,14 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
 {
     static uint8_t lcdFlashEraseFlag;
     static uint8_t lcdPicID;
-    static uint32_t flashAddr;
+    static uint32_t lcdFlashAddr;
     
     pic_pack_t *picPack  = (pic_pack_t *)buf;
+
+    if(picPack->picID < 1)
+    {
+        return ;
+    }
     
     App_Lcd_Set_Rw_Stat(LCD_BUSY);
 
@@ -454,28 +459,28 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
         {
             lcdFlashEraseFlag = 1;
 
-            lcdPicID = picPack->picID -1;
+            lcdPicID = picPack->picID;
             
-            flashAddr = LCD_PIC_MAX_SIZE * (uint32_t )lcdPicID;
+            lcdFlashAddr = LCD_PIC_MAX_SIZE * (uint32_t )(picPack->picID-1);
 
-            //Drv_Spi_Flash_Erase_64k(flashAddr);
+            Drv_Spi_Flash_Erase_64k(lcdFlashAddr);
 
-            flashAddr += LCD_PIC_MAX_SIZE;
+            lcdFlashAddr += LCD_PIC_MAX_SIZE;
             
-            //Drv_Spi_Flash_Erase_64k(flashAddr);
+            Drv_Spi_Flash_Erase_64k(lcdFlashAddr);
 
-            flashAddr -=  LCD_PIC_MAX_SIZE;
+            lcdFlashAddr -=  LCD_PIC_MAX_SIZE;
         }
 
-        //Drv_Spi_Flash_Write(flashAddr, picPack->picDataBuf, picPack->picDataLen);
+        Drv_Spi_Flash_Write(lcdFlashAddr, picPack->picDataBuf, picPack->picDataLen);
 
-        flashAddr += picPack->picDataLen;
+        lcdFlashAddr += picPack->picDataLen;
     }
     else
     {
         lcdFlashEraseFlag = 0;
 
-        App_Mouse_Set_Pic_Show_Mask(lcdPicID);
+        App_Mouse_Set_Pic_Show_Mask(lcdPicID-5);
 
         App_Lcd_Updae_Show_Pic_ID();
 

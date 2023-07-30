@@ -53,15 +53,13 @@ void App_Lcd_Updae_Show_Pic_ID(void )
     j = 0;
     for(i=0;i<16;i++)
     {
-        if(lcdShowMask & (1 << i) == 0)
+        if((lcdShowMask & ((uint16_t )1 << i)) == 0)
         {
-            lcdCtrl.lcdPicIdBuf[j++] = i;
+            lcdCtrl.lcdPicIdBuf[j++] = i+5;
         }
     }
 
-    if(j != 0)
-    {
-        lcdCtrl.lcdPicIdBufLen = j -1;
-    }
+    lcdCtrl.lcdPicIdBufLen = j;
+    
 }
 
