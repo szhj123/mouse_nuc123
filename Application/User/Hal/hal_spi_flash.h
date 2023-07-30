@@ -4,6 +4,7 @@
 #include "hal_nuc123.h"
 
 void Hal_Spi_Flash_Init(void );
+void Hal_Spi_Pin_Reuse(void );
 void Hal_Spi_Flash_Cs_Enable(void );
 void Hal_Spi_Flash_Cs_Disable(void );
 void Hal_Spi_Flash_Single_Tx(uint8_t dat );

@@ -13,6 +13,7 @@
 #include "app_event.h"
 #include "app_mouse_protocol.h"
 #include "app_key.h"
+
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -21,7 +22,7 @@ static void App_Event_Handler(void *arg );
 /* Private variables ------------------------------------*/
 
 void App_Event_Init(void )
-{
+{    
     Drv_Task_Regist_Period(App_Event_Handler, 0, 1, NULL);    
 }
 

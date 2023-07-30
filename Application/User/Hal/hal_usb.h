@@ -30,7 +30,8 @@ typedef struct _usb_isr_callback_t
     void (*usb_ep0_callback)(void );
     void (*usb_ep1_callback)(void );
     void (*usb_ep2_callback)(void );
-    void (*usb_ep3_callbacK)(void );
+    void (*usb_ep3_callback)(void );
+    void (*usb_ep4_callback)(void );
 }usb_isr_callback_t;
 
 

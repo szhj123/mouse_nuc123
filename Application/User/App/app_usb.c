@@ -67,6 +67,12 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
         case RPT_ID_MACRO:
         {
             App_Mouse_Set_Macro_Data(buf, len);
+            break;
+        }
+        case RPT_ID_PIC:
+        {
+            App_Mouse_Set_Pic_Data(buf, len);
+            break;
         }
         default: break;
     }

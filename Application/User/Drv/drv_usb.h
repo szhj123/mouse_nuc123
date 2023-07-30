@@ -61,6 +61,7 @@ void Drv_Usb_Ep0_Handler(void );
 void Drv_Usb_Ep1_Handler(void );
 void Drv_Usb_Ep2_Handler(void );
 void Drv_Usb_Ep3_Handler(void );
+void Drv_Usb_Ep4_Handler(void );
 
 void Drv_Usb_Req_Standard(void );
 void Drv_Usb_Req_Class(void );

@@ -171,7 +171,14 @@ void Hal_Usb_Isr_Handler(void )
         {
             USBD->INTSTS |= USBD_INTSTS_EPEVT3_Msk;
 
-            usb_callback->usb_ep3_callbacK();
+            usb_callback->usb_ep3_callback();
+        }
+
+        if(u32IntSts & USBD_INTSTS_EPEVT4_Msk)
+        {
+            USBD->INTSTS |= USBD_INTSTS_EPEVT4_Msk;
+
+            usb_callback->usb_ep4_callback();
         }
     }
 }

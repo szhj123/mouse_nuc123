@@ -12,6 +12,7 @@
 /* Includes ---------------------------------------------*/
 #include "app_mouse_sensor.h"
 #include "app_usb.h"
+#include "app_lcd.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -74,6 +75,11 @@ static void App_Sensor_Handler(void *arg )
     
     if(++mSensorCtrl.delayCnt >= mSensorCtrl.delayTime)
     {
+        if(App_Lcd_Get_Rw_Stat() != LCD_IDLE)
+        {
+            return ;
+        }
+        
         Drv_Sensor_Get_Burst_Motion(burstMotionBuf, sizeof(burstMotionBuf));
 
         if(burstMotionBuf[0] & 0x80)

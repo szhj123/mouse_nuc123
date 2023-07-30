@@ -95,6 +95,7 @@ static void App_Key_MsgPut(uint8_t *msgBuf, uint8_t msgLen )
 
 void App_Key_Handler(uint8_t *buf, uint8_t len )
 {
+    static uint16_t preKeyName;
     uint16_t keyVal = KEY_NULL;
     mKey_t mKey;
 
@@ -120,6 +121,8 @@ void App_Key_Handler(uint8_t *buf, uint8_t len )
         {
             if(mKey.name == KEY_NAME_MACRO)
             {
+                preKeyName = keyVal & 0x0fff;
+                
                 keyMacro.anyKeyPressCnt = 1;
                 
                 Drv_Key_Get_Port_Pin(keyVal & 0x0fff,&keyMacro.port, &keyMacro.pin);
@@ -127,17 +130,24 @@ void App_Key_Handler(uint8_t *buf, uint8_t len )
         }
         else
         {
-            if(keyMacro.loopMode == 3)
+            if(preKeyName != (keyVal & 0x0fff) && mKey.name == KEY_NAME_MACRO)
             {
-                App_Key_Keyboard_Release_Handler();
-                
-                Drv_Timer_Delete(keyMacro.timer);
+                Drv_Key_Get_Port_Pin(keyVal & 0x0fff,&keyMacro.port, &keyMacro.pin);
+            }
+            else
+            {
+                if(keyMacro.loopMode == 3)
+                {
+                    App_Key_Keyboard_Release_Handler();
+                    
+                    Drv_Timer_Delete(keyMacro.timer);
 
-                keyMacro.timer = TIMER_NULL;
-                
-                keyMacro.anyKeyPressCnt = 0;
+                    keyMacro.timer = TIMER_NULL;
+                    
+                    keyMacro.anyKeyPressCnt = 0;
 
-                return ;
+                    return ;
+                }
             }
         }
 

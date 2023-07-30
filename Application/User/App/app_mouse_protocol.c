@@ -15,6 +15,10 @@
 #include "app_usb.h"
 #include "app_mouse_sensor.h"
 #include "app_light.h"
+#include "app_lcd.h"
+
+#include "hal_spi_flash.h"
+
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -29,7 +33,7 @@ static mouse_para_t mousePara;
 static mKey_t KeyModeData[15];
 
 void App_Mouse_Para_Init(void )
-{   
+{       
     Drv_Flash_Read(MOUSE_PARA_START_ADDR, (uint8_t *)&mousePara, sizeof(mouse_para_t));
 
     if(mousePara.keyMode == 0 || mousePara.keyMode > 3)
@@ -434,6 +438,51 @@ void App_Mouse_Set_Macro_Data(uint8_t *buf, uint8_t len )
     }
 }
 
+void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
+{
+    static uint8_t lcdFlashEraseFlag;
+    static uint8_t lcdPicID;
+    static uint32_t flashAddr;
+    
+    pic_pack_t *picPack  = (pic_pack_t *)buf;
+    
+    App_Lcd_Set_Rw_Stat(LCD_BUSY);
+
+    if(picPack->picID != 0xff)
+    {
+        if(!lcdFlashEraseFlag)
+        {
+            lcdFlashEraseFlag = 1;
+
+            lcdPicID = picPack->picID -1;
+            
+            flashAddr = LCD_PIC_MAX_SIZE * (uint32_t )lcdPicID;
+
+            //Drv_Spi_Flash_Erase_64k(flashAddr);
+
+            flashAddr += LCD_PIC_MAX_SIZE;
+            
+            //Drv_Spi_Flash_Erase_64k(flashAddr);
+
+            flashAddr -=  LCD_PIC_MAX_SIZE;
+        }
+
+        //Drv_Spi_Flash_Write(flashAddr, picPack->picDataBuf, picPack->picDataLen);
+
+        flashAddr += picPack->picDataLen;
+    }
+    else
+    {
+        lcdFlashEraseFlag = 0;
+
+        App_Mouse_Set_Pic_Show_Mask(lcdPicID);
+
+        App_Lcd_Updae_Show_Pic_ID();
+
+        App_Lcd_Set_Rw_Stat(LCD_IDLE);
+    }
+}
+
 void App_Mouse_Get_Light_Color(mLight_mode_t lightMode, uint8_t colorIndex, color_t *color )
 {
     color->red = mousePara.mLightData[(uint8_t )lightMode].lightColorBuf[colorIndex].red;
@@ -496,6 +545,24 @@ mRate_t App_Mouse_Get_Rate(void )
 void App_Mouse_Set_Rate(mRate_t rate )
 {
     mousePara.mRate = rate;
+
+    App_Mouse_Para_Save();
+}
+
+uint16_t App_Mouse_Get_Pic_Show_Mask(void )
+{
+    return ((uint16_t )mousePara.picShowMask_h << 8 | mousePara.picShowMask_l);
+}
+
+void App_Mouse_Set_Pic_Show_Mask(uint8_t picID )
+{
+    uint16_t mask = 0xffff;
+
+    mask &= ~((uint16_t )1 << picID);
+
+    mousePara.picShowMask_l = (uint8_t )mask;
+
+    mousePara.picShowMask_h = (uint8_t )(mask >>8 );
 
     App_Mouse_Para_Save();
 }

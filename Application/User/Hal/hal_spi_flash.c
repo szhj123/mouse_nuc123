@@ -26,6 +26,15 @@ void Hal_Spi_Flash_Init(void )
     Spi0_Init();
 }
 
+void Hal_Spi_Pin_Reuse(void )
+{
+    SYS->GPB_MFP = SYS_GPB_MFP_PB10_GPIO;
+    SYS->ALT_MFP = SYS_ALT_MFP_PB10_GPIO;
+    /* Setup SPI0 multi-function pins */
+    SYS->GPC_MFP = SYS_GPC_MFP_PC1_SPI0_CLK | SYS_GPC_MFP_PC2_SPI0_MISO0 | SYS_GPC_MFP_PC3_SPI0_MOSI0;
+    SYS->ALT_MFP = SYS_ALT_MFP_PC1_SPI0_CLK | SYS_ALT_MFP_PC2_SPI0_MISO0 | SYS_ALT_MFP_PC3_SPI0_MOSI0;
+}
+
 inline void Hal_Spi_Flash_Cs_Enable(void )
 {
     PB->DOUT &= ~(1 << 10);

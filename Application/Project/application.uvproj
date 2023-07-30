@@ -523,11 +523,6 @@
               <FilePath>..\User\Drv\drv_timer.c</FilePath>
             </File>
             <File>
-              <FileName>drv_spi_flash.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\Drv\drv_spi_flash.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_lcd.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Drv\drv_lcd.c</FilePath>
@@ -571,6 +566,11 @@
               <FileName>drv_key.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\Drv\drv_key.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_spi_flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\User\Drv\drv_spi_flash.c</FilePath>
             </File>
           </Files>
         </Group>

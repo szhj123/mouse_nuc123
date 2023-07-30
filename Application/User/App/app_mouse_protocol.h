@@ -2,6 +2,7 @@
 #define _APP_MOUSE_PROTOCOL_H
 
 #include "drv_flash.h"
+#include "drv_spi_flash.h"
 #include "hal_nuc123.h"
 
 typedef struct _color_t
@@ -247,6 +248,10 @@ void App_Mouse_Set_Cur_Key_Mode(mKey_mode_t keyMode );
 
 mRate_t App_Mouse_Get_Rate(void );
 void App_Mouse_Set_Rate(mRate_t rate );
+
+void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len );
+uint16_t App_Mouse_Get_Pic_Show_Mask(void );
+void App_Mouse_Set_Pic_Show_Mask(uint8_t picID );
 
 void App_Mouse_Set_Macro_Data(uint8_t *buf, uint8_t len );
 
