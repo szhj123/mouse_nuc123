@@ -30,6 +30,8 @@ void Drv_Spi_Flash_Init(void )
 
     Drv_Spi_Flash_Erase_64k(0x20000*4);
 
+    Drv_Spi_Flash_Erase_64k(0x20000*4+ 0x10000);
+
     for(uint16_t i=0;i<sizeof(txBuf);i++)
     {
         txBuf[i] = i+1;
@@ -192,7 +194,7 @@ void Drv_Spi_Flash_Write(uint32_t addr, uint8_t *buf, uint32_t length )
 
     if(startPageRemainSize)
     {
-        #if 0
+        #if 1
         Drv_Spi_Flash_Dma_Write(addr, buf, startPageRemainSize);   
         #else
         Drv_Spi_Flash_Loop_Write(addr, buf, startPageRemainSize);
@@ -205,7 +207,7 @@ void Drv_Spi_Flash_Write(uint32_t addr, uint8_t *buf, uint32_t length )
 
     for(i=0;i<pageSize;i++)
     {
-        #if 0
+        #if 1
         Drv_Spi_Flash_Dma_Write(addr, buf, SPI_FLASH_PAGE_SIZE);    
         #else        
         Drv_Spi_Flash_Loop_Write(addr, buf, SPI_FLASH_PAGE_SIZE);
@@ -217,7 +219,7 @@ void Drv_Spi_Flash_Write(uint32_t addr, uint8_t *buf, uint32_t length )
 
     if(lastPageRemainSize)
     {
-        #if 0
+        #if 1
         Drv_Spi_Flash_Dma_Write(addr, buf, lastPageRemainSize);
         #else
         Drv_Spi_Flash_Loop_Write(addr, buf, lastPageRemainSize);

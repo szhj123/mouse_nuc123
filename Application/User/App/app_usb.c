@@ -71,7 +71,9 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
         }
         case RPT_ID_PIC:
         {
-            App_Mouse_Set_Pic_Data(buf, len);
+            //App_Mouse_Set_Pic_Data(buf, len);
+            
+            Drv_Msg_Put(APP_EVENT_PIC_WRITE, (uint8_t *)buf, len);
             break;
         }
         default: break;
@@ -238,6 +240,11 @@ void App_Usb_Clr_Mouse_Key_Send_Flag(void )
 uint8_t App_Usb_Get_Mouse_Key_Send_Flag(void )
 {
     return Drv_Usb_Get_Ep_In_Flag(EP2);
+}
+
+void App_Usb_Pic_Out_Enable(void )
+{
+    Drv_Usb_Ep4_Out_Enable();
 }
 
 static void App_Usb_Handler(void *arg )

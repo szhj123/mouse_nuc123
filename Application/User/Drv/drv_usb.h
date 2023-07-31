@@ -77,6 +77,8 @@ void Drv_Usb_Set_Config(void );
 void Drv_Usb_Clr_Ep_In_Flag(uint8_t ep );
 uint8_t Drv_Usb_Get_Ep_In_Flag(uint8_t ep );
 
+void Drv_Usb_Ep4_Out_Enable(void );
+
 void Drv_Usb_Data_InReady(uint8_t *epPtr, uint8_t *descPtr );
 
 void Drv_Usb_Memcpy(uint8_t *pDst, uint8_t *pSrc, uint16_t length );

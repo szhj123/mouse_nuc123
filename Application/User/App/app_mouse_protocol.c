@@ -11,11 +11,13 @@
 
 /* Includes ---------------------------------------------*/
 #include "app_mouse_protocol.h"
+#include "app_mouse_sensor.h"
+#include "app_event.h"
 #include "app_calendar.h"
 #include "app_usb.h"
-#include "app_mouse_sensor.h"
 #include "app_light.h"
 #include "app_lcd.h"
+
 
 #include "hal_spi_flash.h"
 
@@ -79,6 +81,8 @@ void App_Mouse_Para_Init(void )
     App_Mouse_Set_Key_Mode_Data(mousePara.keyMode);
 
     App_Light_Set_Light_Effect(mousePara.mLightMode);
+
+    App_Lcd_Updae_Show_Pic_ID();
 }
 
 static void App_Mouse_Mode_Office_init(void )
@@ -465,11 +469,11 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
 
             Drv_Spi_Flash_Erase_64k(lcdFlashAddr);
 
-            lcdFlashAddr += LCD_PIC_MAX_SIZE;
+            lcdFlashAddr += 0x10000;
             
             Drv_Spi_Flash_Erase_64k(lcdFlashAddr);
 
-            lcdFlashAddr -=  LCD_PIC_MAX_SIZE;
+            lcdFlashAddr -=  0x10000;
         }
 
         Drv_Spi_Flash_Write(lcdFlashAddr, picPack->picDataBuf, picPack->picDataLen);

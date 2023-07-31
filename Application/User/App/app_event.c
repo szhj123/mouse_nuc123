@@ -12,8 +12,9 @@
 /* Includes ---------------------------------------------*/
 #include "app_event.h"
 #include "app_mouse_protocol.h"
+#include "app_usb.h"
 #include "app_key.h"
-
+#include "app_lcd.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -41,6 +42,17 @@ static void App_Event_Handler(void *arg )
         {
             App_Key_Handler(msg.msgBuf, msg.msgLen);
             
+            break;
+        }
+        case APP_EVENT_PIC_WRITE:
+        {
+            App_Lcd_Pic_Show_Disable();
+            
+            App_Mouse_Set_Pic_Data(msg.msgBuf, msg.msgLen);
+            
+            App_Usb_Pic_Out_Enable();
+
+            App_Lcd_Show_Pic();
             break;
         }
         default: break;

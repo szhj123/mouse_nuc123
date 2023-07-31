@@ -131,7 +131,9 @@ void App_Key_Handler(uint8_t *buf, uint8_t len )
         else
         {
             if(preKeyName != (keyVal & 0x0fff) && mKey.name == KEY_NAME_MACRO)
-            {
+            {                
+                preKeyName = keyVal & 0x0fff;
+                
                 Drv_Key_Get_Port_Pin(keyVal & 0x0fff,&keyMacro.port, &keyMacro.pin);
             }
             else

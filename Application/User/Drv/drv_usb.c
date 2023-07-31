@@ -209,10 +209,7 @@ void Drv_Usb_Ep4_Handler(void )
         ep4OutSize = USB_EP4_BUF_LEN;
     }
 
-    usbReportCallback->usb_set_report_callback(u8Ep4Ptr, ep4OutSize);
-    
-    Hal_Usb_InOut_Ready(EP4, USB_EP4_BUF_LEN);
-    
+    usbReportCallback->usb_set_report_callback(u8Ep4Ptr, ep4OutSize);       
 }
 
 void Drv_Usb_Req_Standard(void )
@@ -459,6 +456,11 @@ uint8_t Drv_Usb_Get_Ep_In_Flag(uint8_t ep )
     }
 		
     return retFlag;
+}
+
+void Drv_Usb_Ep4_Out_Enable(void )
+{    
+    Hal_Usb_InOut_Ready(EP4, USB_EP4_BUF_LEN);
 }
 
 void Drv_Usb_Ep_In(uint8_t ep, uint8_t *buf, uint8_t len )

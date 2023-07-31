@@ -7,7 +7,7 @@
 #define LCD_H                 240
 
 void Drv_Lcd_Init(void );
-void Drv_Lcd_Clear(uint16_t color );
+void Drv_Lcd_Write_Pic_Data(uint8_t *buf, uint16_t len );
 
 void Drv_Lcd_Set_Address(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2 );
 

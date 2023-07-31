@@ -14,12 +14,10 @@
 
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
-#define LCD_COLOR_BUF_MAX_SIZE                 4800
 /* Private macro ----------------------------------------*/
 /* Private function -------------------------------------*/
 static void Drv_Lcd_Spi_Tx_Callback(void );
 /* Private variables ------------------------------------*/
-static uint8_t lcdColorBuf[LCD_COLOR_BUF_MAX_SIZE];
 
 static uint8_t lcdSpiTxDoneFlag;
 
@@ -152,36 +150,18 @@ void Drv_Lcd_Init(void )
     Drv_Lcd_Wr_Cmd(0x2C);
 }
 
-void Drv_Lcd_Clear(uint16_t color )
+void Drv_Lcd_Write_Pic_Data(uint8_t *buf, uint16_t len )
 {
-    uint32_t i;
-    uint32_t totalLength = LCD_W * LCD_H * 2;
-    
-    
-    Drv_Lcd_Set_Address(0, 0, 239, 239);
-    
     LCD_DC_SET;
     
     Hal_Lcd_Spi_Cs_Enable();
 
-    while(totalLength)
-    {
-        for(i=0;i<LCD_COLOR_BUF_MAX_SIZE/2;i++)
-        {
-            lcdColorBuf[i*2] = (uint8_t )(color>>8);
-            lcdColorBuf[i*2+1] = (uint8_t )color;
-        }
+    Hal_Lcd_Spi_Dma_Tx(buf, len, Drv_Lcd_Spi_Tx_Callback);
         
-        Hal_Lcd_Spi_Dma_Tx(lcdColorBuf, LCD_COLOR_BUF_MAX_SIZE, Drv_Lcd_Spi_Tx_Callback);
-        
-        while(lcdSpiTxDoneFlag == 0);
-        lcdSpiTxDoneFlag = 0;
-
-        totalLength -= LCD_COLOR_BUF_MAX_SIZE;
-    }
+    while(lcdSpiTxDoneFlag == 0);
+    lcdSpiTxDoneFlag = 0;
     
     Hal_Lcd_Spi_Cs_Disable();
-
 }
 
 static void Drv_Lcd_Spi_Tx_Callback(void )
