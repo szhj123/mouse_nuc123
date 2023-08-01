@@ -25,6 +25,8 @@ void Drv_Spi_Flash_Dma_Write(uint32_t addr, uint8_t *buf, uint32_t length );
 void Drv_Spi_Flash_Write(uint32_t addr, uint8_t *buf, uint32_t length );
 void Drv_Spi_Flash_Read(uint32_t addr, uint8_t *buf, uint32_t length );
 
+void Drv_Spi_Flash_Clr_Rx_Flag(void );
+uint8_t Drv_Spi_Flash_Get_Rx_Flag(void );
 
 #endif 
 

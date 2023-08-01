@@ -46,13 +46,10 @@ static void App_Event_Handler(void *arg )
         }
         case APP_EVENT_PIC_WRITE:
         {
-            App_Lcd_Pic_Show_Disable();
-            
             App_Mouse_Set_Pic_Data(msg.msgBuf, msg.msgLen);
             
             App_Usb_Pic_Out_Enable();
 
-            App_Lcd_Show_Pic();
             break;
         }
         default: break;

@@ -14,6 +14,7 @@
 #include "app_event.h"
 #include "app_usb.h"
 #include "app_light.h"
+#include "app_lcd.h"
 #include "app_mouse_sensor.h"
 #include "app_mouse_protocol.h"
 /* Private typedef --------------------------------------*/
@@ -576,6 +577,35 @@ static void App_Key_Other_Press_Handler(mKey_t mKey )
         App_Sensor_Set_Detect_Time(rate);
 
         App_Usb_Mouse_Evt_Input(0x02, rate);
+    }
+    else if(mKey.func == (uint8_t )FUNC_PIC_SWITCH)
+    {
+        uint8_t picIndex = App_Mouse_Get_Pic_Index();
+        
+        uint16_t picMask = App_Mouse_Get_Pic_Show_Mask();
+
+        if(picMask != 0xffff)
+        {
+            while(1)
+            {
+                picIndex++;
+
+                if(picIndex > LCD_PIC_MAX_NUM)
+                {
+                    picIndex = 5;
+                }
+            
+                if((picMask & (1 << (picIndex - 5))) == 0)
+                {
+                    break;
+                }
+            }
+
+            App_Mouse_Set_Pic_Index(picIndex);
+
+            App_Lcd_Show_Pic(picIndex);
+        }
+        
     }
 }
 

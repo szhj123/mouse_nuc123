@@ -13,6 +13,7 @@
 #include "app_usb.h"
 #include "app_event.h"
 #include "app_mouse_protocol.h"
+#include "app_lcd.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -71,9 +72,13 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
         }
         case RPT_ID_PIC:
         {
-            //App_Mouse_Set_Pic_Data(buf, len);
+            App_Lcd_Pic_Show_Disable();
             
-            Drv_Msg_Put(APP_EVENT_PIC_WRITE, (uint8_t *)buf, len);
+            App_Mouse_Set_Pic_Data(buf, len);
+            
+            App_Usb_Pic_Out_Enable();
+            
+            //Drv_Msg_Put(APP_EVENT_PIC_WRITE, (uint8_t *)buf, len);
             break;
         }
         default: break;

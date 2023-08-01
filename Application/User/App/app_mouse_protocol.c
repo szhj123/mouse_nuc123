@@ -17,10 +17,6 @@
 #include "app_usb.h"
 #include "app_light.h"
 #include "app_lcd.h"
-
-
-#include "hal_spi_flash.h"
-
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -32,7 +28,7 @@ static void App_Mouse_Dpi_Color_Init(void );
 static void App_Mouse_Light_Init(void );
 /* Private variables ------------------------------------*/
 static mouse_para_t mousePara;
-static mKey_t KeyModeData[15];
+static mKey_t KeyModeData[MOUSE_KEY_NUM];
 
 void App_Mouse_Para_Init(void )
 {    
@@ -59,7 +55,9 @@ void App_Mouse_Para_Init(void )
         mousePara.dpiValBuf[4] = 0x50 | 0x80; //7000
         mousePara.dpiValBuf[5] = 0x73 | 0x80; //10000
 
-        mousePara.picIndex = 0;
+        mousePara.picIndex = 5;
+
+        mousePara.picAutoSwitchTime = 5000;   //5S
 
         App_Mouse_Dpi_Color_Init();
 
@@ -81,8 +79,6 @@ void App_Mouse_Para_Init(void )
     App_Mouse_Set_Key_Mode_Data(mousePara.keyMode);
 
     App_Light_Set_Light_Effect(mousePara.mLightMode);
-
-    App_Lcd_Updae_Show_Pic_ID();
 }
 
 static void App_Mouse_Mode_Office_init(void )
@@ -123,12 +119,12 @@ static void App_Mouse_Mode_Office_init(void )
     mousePara.keyModeOffice[6].val_h = 0;
 
     mousePara.keyModeOffice[7].name = KEY_NAME_OTHER;
-    mousePara.keyModeOffice[7].func = 0x04;
+    mousePara.keyModeOffice[7].func = 0x06;
     mousePara.keyModeOffice[7].val_l = 0;
     mousePara.keyModeOffice[7].val_h = 50;
 
     mousePara.keyModeOffice[8].name = KEY_NAME_OTHER;
-    mousePara.keyModeOffice[8].func = 0x05;
+    mousePara.keyModeOffice[8].func = 0x03;
     mousePara.keyModeOffice[8].val_l = 0;
     mousePara.keyModeOffice[8].val_h = 0;
 }
@@ -170,10 +166,15 @@ static void App_Mouse_Mode_Multimedia_init(void )
     mousePara.keyModeMultimedia[6].val_l = 0xea;
     mousePara.keyModeMultimedia[6].val_h = 0x00;
 
-    mousePara.keyModeMultimedia[7].name = KEY_NAME_MULTIMEDIA;
-    mousePara.keyModeMultimedia[7].func = 0x00;
-    mousePara.keyModeMultimedia[7].val_l = 0xcd;
+    mousePara.keyModeMultimedia[7].name = KEY_NAME_OTHER;
+    mousePara.keyModeMultimedia[7].func = 0x06;
+    mousePara.keyModeMultimedia[7].val_l = 0x00;
     mousePara.keyModeMultimedia[7].val_h = 0x00;
+
+    mousePara.keyModeMultimedia[8].name = KEY_NAME_OTHER;
+    mousePara.keyModeMultimedia[8].func = 0x03;
+    mousePara.keyModeMultimedia[8].val_l = 0x00;
+    mousePara.keyModeMultimedia[8].val_h = 0x00;
 }
 
 static void App_Mouse_Mode_Game_init(void )
@@ -214,9 +215,14 @@ static void App_Mouse_Mode_Game_init(void )
     mousePara.keyModeGame[6].val_h = 0;
 
     mousePara.keyModeGame[7].name = KEY_NAME_OTHER;
-    mousePara.keyModeGame[7].func = 0x04;
+    mousePara.keyModeGame[7].func = 0x06;
     mousePara.keyModeGame[7].val_l = 0;
     mousePara.keyModeGame[7].val_h = 0;
+
+    mousePara.keyModeGame[8].name = KEY_NAME_OTHER;
+    mousePara.keyModeGame[8].func = 0x03;
+    mousePara.keyModeGame[8].val_l = 0;
+    mousePara.keyModeGame[8].val_h = 0;
 }
 
 void App_Mouse_Set_Default_Color(uint8_t index, color_t *mColor )
@@ -289,7 +295,7 @@ void App_Mouse_Set_Key_Mode_Data(mKey_mode_t keyMode )
 {
     uint8_t i;
     
-    for(i=0;i<15;i++)
+    for(i=0;i<MOUSE_KEY_NUM;i++)
     {
         if(keyMode == KEY_MODE_OFFICE)
         {
@@ -320,7 +326,7 @@ void App_Mouse_Set_Key_Reuse(uint8_t *buf, uint8_t len )
     uint8_t i;
     mKey_pack_t *mKeyPack = (mKey_pack_t *)buf;
 
-    for(i=0;i<15;i++)
+    for(i=0;i<MOUSE_KEY_NUM;i++)
     {
         if((mKeyPack->keyMode+1) == KEY_MODE_OFFICE)
         {
@@ -361,10 +367,13 @@ void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
     mousePara.picShowMask_l = ldrPack->picShowMask_l;
     mousePara.picShowMask_h = ldrPack->picShowMask_h;
     mousePara.picIndex = ldrPack->picIndex;
+    mousePara.picAutoSwitchTime = ldrPack->picAutoSwitchTime;
 
     App_Mouse_Para_Save();
 
     App_Sensor_Set_Detect_Time(mousePara.mRate);
+
+    App_Lcd_Set_Pic_Index(mousePara.picIndex);
 
     App_Light_Set_Light_Effect(mousePara.mLightMode);
 }
@@ -447,6 +456,7 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
     static uint8_t lcdFlashEraseFlag;
     static uint8_t lcdPicID;
     static uint32_t lcdFlashAddr;
+    static uint32_t lcdFlashOffset;
     
     pic_pack_t *picPack  = (pic_pack_t *)buf;
 
@@ -455,7 +465,7 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
         return ;
     }
     
-    App_Lcd_Set_Rw_Stat(LCD_BUSY);
+    App_Lcd_Set_RW_Flash_Stat(LCD_FLASH_BUSY);
 
     if(picPack->picID != 0xff)
     {
@@ -464,6 +474,8 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
             lcdFlashEraseFlag = 1;
 
             lcdPicID = picPack->picID;
+
+            lcdFlashOffset = 0;
             
             lcdFlashAddr = LCD_PIC_MAX_SIZE * (uint32_t )(picPack->picID-1);
 
@@ -476,19 +488,29 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
             lcdFlashAddr -=  0x10000;
         }
 
-        Drv_Spi_Flash_Write(lcdFlashAddr, picPack->picDataBuf, picPack->picDataLen);
+        Drv_Spi_Flash_Write(lcdFlashAddr+lcdFlashOffset, picPack->picDataBuf, picPack->picDataLen);
 
-        lcdFlashAddr += picPack->picDataLen;
+        lcdFlashOffset += picPack->picDataLen;
+
+        if(lcdFlashOffset >= LCD_W * LCD_H * 2)
+        {
+            lcdFlashEraseFlag = 0;
+        }
     }
     else
     {
         lcdFlashEraseFlag = 0;
 
-        App_Mouse_Set_Pic_Show_Mask(lcdPicID-5);
+        if(lcdPicID >= 5)
+        {
+            App_Mouse_Set_Pic_Show_Mask(lcdPicID-5);
 
-        App_Lcd_Updae_Show_Pic_ID();
+            App_Mouse_Set_Pic_Index(lcdPicID);
 
-        App_Lcd_Set_Rw_Stat(LCD_IDLE);
+            App_Lcd_Show_Pic(lcdPicID);
+        }
+        
+        App_Lcd_Set_RW_Flash_Stat(LCD_FLASH_IDLE);        
     }
 }
 
@@ -569,11 +591,26 @@ void App_Mouse_Set_Pic_Show_Mask(uint8_t picID )
 
     mask &= ~((uint16_t )1 << picID);
 
-    mousePara.picShowMask_l = (uint8_t )mask;
+    mousePara.picShowMask_l &= (uint8_t )mask;
 
-    mousePara.picShowMask_h = (uint8_t )(mask >>8 );
+    mousePara.picShowMask_h &= (uint8_t )(mask >>8 );
 
     App_Mouse_Para_Save();
+}
+
+uint8_t App_Mouse_Get_Pic_Index(void )
+{
+    return mousePara.picIndex;
+}
+
+void App_Mouse_Set_Pic_Index(uint8_t picIndex )
+{
+    mousePara.picIndex = picIndex;
+}
+
+uint32_t App_Mouse_Get_Pic_Auto_Switch_Time(void )
+{
+    return mousePara.picAutoSwitchTime * 1000;
 }
 
 void App_Mouse_Para_Save(void )

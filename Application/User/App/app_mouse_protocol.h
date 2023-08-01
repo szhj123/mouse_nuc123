@@ -5,6 +5,9 @@
 #include "drv_spi_flash.h"
 #include "hal_nuc123.h"
 
+#define MOUSE_KEY_NUM               9
+
+
 typedef struct _color_t
 {
     uint8_t red;
@@ -64,7 +67,8 @@ typedef enum _other_func_t
     FUNC_LIGHT_ON_OFF, 
     FUNC_KEY_MODE_SWITCH,
     FUNC_KEY_FIRE,
-    FUNC_RATE_SWITCH
+    FUNC_RATE_SWITCH,
+    FUNC_PIC_SWITCH
 }other_func_t;
 
 typedef enum _mSensor_t
@@ -127,7 +131,8 @@ typedef struct _mLdr_pack_t
     uint8_t picShowMask_l;
     uint8_t picShowMask_h;
     uint8_t picIndex;
-    uint8_t reserve2[6];
+    uint8_t picAutoSwitchTime;
+    uint8_t reserve2[5];
 }mLdr_pack_t;
 
 typedef struct _date_t
@@ -194,15 +199,17 @@ typedef struct _pic_pack_t
     uint8_t picDataBuf[60];
 }pic_pack_t;
 
+#pragma pack(1)
 typedef struct _mouse_para_t
 {
     mKey_mode_t keyMode;
-    mKey_t keyModeOffice[15];
-    mKey_t keyModeMultimedia[15];
-    mKey_t keyModeGame[15];
+    mKey_t keyModeOffice[MOUSE_KEY_NUM];
+    mKey_t keyModeMultimedia[MOUSE_KEY_NUM];
+    mKey_t keyModeGame[MOUSE_KEY_NUM];
+    mLight_mode_t mLightMode;
+    mLight_data_t mLightData[10];
     mRate_t mRate;
     mSensor_t mSensor;
-    mLight_mode_t mLightMode;
     uint8_t dpiIndex;
     uint8_t dpiTotalNum;
     uint8_t dpiValBuf[16];
@@ -210,8 +217,10 @@ typedef struct _mouse_para_t
     uint8_t picShowMask_l;
     uint8_t picShowMask_h;
     uint8_t picIndex;
-    mLight_data_t mLightData[10];
+    uint32_t picAutoSwitchTime;
 }mouse_para_t;
+#pragma pack()
+
 
 void App_Mouse_Para_Init(void );
 void App_Mouse_Para_Save(void );
@@ -252,6 +261,10 @@ void App_Mouse_Set_Rate(mRate_t rate );
 void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len );
 uint16_t App_Mouse_Get_Pic_Show_Mask(void );
 void App_Mouse_Set_Pic_Show_Mask(uint8_t picID );
+uint8_t App_Mouse_Get_Pic_Index(void );
+void App_Mouse_Set_Pic_Index(uint8_t picIndex );
+uint32_t App_Mouse_Get_Pic_Auto_Switch_Time(void );
+
 
 void App_Mouse_Set_Macro_Data(uint8_t *buf, uint8_t len );
 

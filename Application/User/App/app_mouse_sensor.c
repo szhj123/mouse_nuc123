@@ -75,7 +75,7 @@ static void App_Sensor_Handler(void *arg )
     
     if(++mSensorCtrl.delayCnt >= mSensorCtrl.delayTime)
     {
-        if(App_Lcd_Get_Rw_Stat() != LCD_IDLE)
+        if(App_Lcd_Get_RW_Flash_Stat() != LCD_FLASH_IDLE)
         {
             return ;
         }

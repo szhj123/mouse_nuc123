@@ -16,6 +16,9 @@ void Drv_Lcd_Wr_Cmd(uint8_t cmd );
 void Drv_Lcd_Wr_Data(uint8_t dat );
 void Drv_Lcd_Delay_Us(uint32_t us );
 
+void Drv_Lcd_Spi_Clr_Tx_Done_Flag(void );
+uint8_t Drv_Lcd_Spi_Get_Tx_Done_Flag(void );
+
 void Drv_Lcd_Bg_Led_On(void );
 void Drv_Lcd_Bg_Led_Off(void );
 

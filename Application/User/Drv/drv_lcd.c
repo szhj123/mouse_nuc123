@@ -156,17 +156,26 @@ void Drv_Lcd_Write_Pic_Data(uint8_t *buf, uint16_t len )
     
     Hal_Lcd_Spi_Cs_Enable();
 
-    Hal_Lcd_Spi_Dma_Tx(buf, len, Drv_Lcd_Spi_Tx_Callback);
-        
-    while(lcdSpiTxDoneFlag == 0);
     lcdSpiTxDoneFlag = 0;
-    
-    Hal_Lcd_Spi_Cs_Disable();
+
+    Hal_Lcd_Spi_Dma_Tx(buf, len, Drv_Lcd_Spi_Tx_Callback);    
 }
 
 static void Drv_Lcd_Spi_Tx_Callback(void )
 {
     lcdSpiTxDoneFlag = 1;
+
+    Hal_Lcd_Spi_Cs_Disable();
+}
+
+void Drv_Lcd_Spi_Clr_Tx_Done_Flag(void )
+{
+    lcdSpiTxDoneFlag = 0;
+}
+
+uint8_t Drv_Lcd_Spi_Get_Tx_Done_Flag(void )
+{
+    return lcdSpiTxDoneFlag;
 }
 
 void Drv_Lcd_Set_Address(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2 )

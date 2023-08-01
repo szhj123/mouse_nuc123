@@ -116,6 +116,8 @@ static void Drv_Spi_Flash_Tx_Callback(void )
 static void Drv_Spi_Flash_Rx_Callback(void )
 {
     spiFlashRxDoneFlag = 1;
+    
+    Hal_Spi_Flash_Cs_Disable();
 }
 
 void Drv_Spi_Flash_Loop_Write(uint32_t addr, uint8_t *buf, uint32_t length )
@@ -194,7 +196,7 @@ void Drv_Spi_Flash_Write(uint32_t addr, uint8_t *buf, uint32_t length )
 
     if(startPageRemainSize)
     {
-        #if 1
+        #if 0
         Drv_Spi_Flash_Dma_Write(addr, buf, startPageRemainSize);   
         #else
         Drv_Spi_Flash_Loop_Write(addr, buf, startPageRemainSize);
@@ -207,7 +209,7 @@ void Drv_Spi_Flash_Write(uint32_t addr, uint8_t *buf, uint32_t length )
 
     for(i=0;i<pageSize;i++)
     {
-        #if 1
+        #if 0
         Drv_Spi_Flash_Dma_Write(addr, buf, SPI_FLASH_PAGE_SIZE);    
         #else        
         Drv_Spi_Flash_Loop_Write(addr, buf, SPI_FLASH_PAGE_SIZE);
@@ -219,7 +221,7 @@ void Drv_Spi_Flash_Write(uint32_t addr, uint8_t *buf, uint32_t length )
 
     if(lastPageRemainSize)
     {
-        #if 1
+        #if 0
         Drv_Spi_Flash_Dma_Write(addr, buf, lastPageRemainSize);
         #else
         Drv_Spi_Flash_Loop_Write(addr, buf, lastPageRemainSize);
@@ -241,15 +243,23 @@ void Drv_Spi_Flash_Read(uint32_t addr, uint8_t *buf, uint32_t length )
     Hal_Spi_Flash_Single_Tx((uint8_t )(addr>>8));
     Hal_Spi_Flash_Single_Tx((uint8_t )addr);
 
-    Hal_Spi_Flash_Dma_Rx(buf, 2, Drv_Spi_Flash_Rx_Callback);
-    while(spiFlashRxDoneFlag == 0);
+    //Hal_Spi_Flash_Dma_Rx(buf, 2, Drv_Spi_Flash_Rx_Callback);
+    //while(spiFlashRxDoneFlag == 0);
+    //spiFlashRxDoneFlag = 0;
+    
     spiFlashRxDoneFlag = 0;
     
-    Hal_Spi_Flash_Dma_Rx(&buf[2], length-2, Drv_Spi_Flash_Rx_Callback);
-    while(spiFlashRxDoneFlag == 0);
+    Hal_Spi_Flash_Dma_Rx(buf, length, Drv_Spi_Flash_Rx_Callback);
+
+}
+
+void Drv_Spi_Flash_Clr_Rx_Flag(void )
+{
     spiFlashRxDoneFlag = 0;
+}
 
-
-    Hal_Spi_Flash_Cs_Disable();
+uint8_t Drv_Spi_Flash_Get_Rx_Flag(void )
+{
+    return spiFlashRxDoneFlag;
 }
 
