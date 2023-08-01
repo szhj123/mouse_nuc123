@@ -19,7 +19,6 @@ static void Hal_Usb_Ep_Config(void );
 /* Private variables ------------------------------------*/
 usb_isr_callback_t *usb_callback = NULL;
 
-
 void Hal_Usb_Init(void )
 {
     CLK->APBCLK |= CLK_APBCLK_USBD_EN_Msk;
@@ -183,6 +182,11 @@ void Hal_Usb_Isr_Handler(void )
     }
 }
 
+void Hal_Usb_Wakeup_Isr_Handler(void )
+{
+    usb_callback->usb_wakeup_callabck();
+}
+
 void Hal_Usb_Set_Dev_Addr(uint8_t devAddr )
 {
     USBD->FADDR = devAddr;
@@ -229,5 +233,22 @@ void Hal_Usb_InOut_Ready(uint8_t epNum, uint16_t length )
 uint8_t Hal_Usb_Get_Ep_InOut_Size(uint8_t epNum )
 {
     return USBD->EP[epNum].MXPLD;
+}
+
+void Hal_Usb_Wakeup(void )
+{
+    uint32_t waitCnt;
+    /* Enable PHY before sending Resume('K') state */
+    USBD->ATTR |= USBD_ATTR_PHY_EN_Msk;
+
+    /* Keep remote wakeup for 1 ms */
+    USBD->ATTR |= USBD_ATTR_RWAKEUP_Msk;
+    
+    for(waitCnt=0;waitCnt<100000;waitCnt++)
+    {
+        __NOP();
+    }
+    
+    USBD->ATTR ^= USBD_ATTR_RWAKEUP_Msk;
 }
 

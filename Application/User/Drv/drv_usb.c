@@ -19,7 +19,7 @@
 /* Private variables ------------------------------------*/
 static usb_ctrl_block_t usbCtrl;
 
-static usb_report_callback_t *usbReportCallback;
+static usb_report_callback_t *appUsbCallback;
 
 static usb_isr_callback_t usbIsrCallback = 
 {
@@ -33,14 +33,14 @@ static usb_isr_callback_t usbIsrCallback =
     .usb_ep2_callback = Drv_Usb_Ep2_Handler,
     .usb_ep3_callback = Drv_Usb_Ep3_Handler,
     .usb_ep4_callback = Drv_Usb_Ep4_Handler,
+    .usb_wakeup_callabck = Drv_Usb_Wakeup_Handler,
 };
 
 static uint8_t usbEpBuf[USB_EP1_BUF_LEN] = {0};
 
-
 void Drv_Usb_Init(usb_report_callback_t *callback )
 {
-    usbReportCallback = callback;
+    appUsbCallback = callback;
     
     Hal_Usb_Init();
 
@@ -68,6 +68,22 @@ void Drv_Usb_Resume_Handler(void )
     usbCtrl.suspendFlag = 0;
     usbCtrl.resumeFlag = 1;
 }
+
+uint8_t Drv_Usb_Get_Suspend_Flag(void )
+{
+    return usbCtrl.suspendFlag;
+}
+
+uint8_t Drv_Usb_Get_Config_Val(void )
+{
+    return usbCtrl.configVal;
+}
+
+uint8_t Drv_Usb_Get_Resume_Flag(void )
+{
+    return usbCtrl.resumeFlag;
+}
+
 
 void Drv_Usb_Fldet_Handler(void )
 {
@@ -174,7 +190,7 @@ void Drv_Usb_Ep1_Handler(void )
 
         if(usbCtrl.dataLen == 0)
         {
-            usbReportCallback->usb_set_report_callback(usbEpBuf, sizeof(usbEpBuf));
+            appUsbCallback->usb_set_report_callback(usbEpBuf, sizeof(usbEpBuf));
             
             Hal_Usb_Set_Dsq_Sync(EP0, 1);
 
@@ -197,7 +213,6 @@ void Drv_Usb_Ep3_Handler(void )
     usbCtrl.epInDoneFlag = 1;
 }
 
-
 void Drv_Usb_Ep4_Handler(void )
 {
     uint8_t *u8Ep4Ptr = (uint8_t *)Hal_Usb_Get_Ep_Buf_Addr(EP4);
@@ -209,7 +224,15 @@ void Drv_Usb_Ep4_Handler(void )
         ep4OutSize = USB_EP4_BUF_LEN;
     }
 
-    usbReportCallback->usb_set_report_callback(u8Ep4Ptr, ep4OutSize);       
+    appUsbCallback->usb_set_report_callback(u8Ep4Ptr, ep4OutSize);       
+}
+
+void Drv_Usb_Wakeup_Handler(void )
+{
+    if(usbCtrl.suspendFlag)
+    {
+        Hal_Usb_Wakeup();
+    }
 }
 
 void Drv_Usb_Req_Standard(void )
@@ -270,7 +293,7 @@ void Drv_Usb_Req_Class(void )
 
             usbEpBuf[0] = usbCtrl.wValue_l;
 
-            usbReportCallback->usb_get_report_callback(usbCtrl.dataPtr, usbCtrl.dataLen);
+            appUsbCallback->usb_get_report_callback(usbCtrl.dataPtr, usbCtrl.dataLen);
 
             usbCtrl.dsqSync = 1;
 

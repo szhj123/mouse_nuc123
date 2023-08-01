@@ -123,3 +123,21 @@ static void App_Sensor_Handler(void *arg )
     }
 }
 
+void App_Sensor_Sleep(void )
+{
+    Drv_Sensor_Write(P3325_SHUTDOWN,0xB6);
+}
+
+void App_Sensor_Wakeup(void )
+{
+    Drv_Sensor_Write(P3325_POWER_UP_RESET, 0x5a);		//Reset sensor
+
+    Drv_Sensor_Delay(10000);
+    
+	Drv_Sensor_Write(0x18, 0x39);
+    
+	Drv_Sensor_Delay(50000);
+    
+    App_Sensor_Init();
+}
+

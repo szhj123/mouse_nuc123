@@ -81,4 +81,22 @@ void USBD_IRQHandler(void )
     Hal_Usb_Isr_Handler();
 }
 
+void GPCDF_IRQHandler(void)
+{
+    /* To check if PD.3 interrupt occurred */
+    if(PC->ISRC & ((1 << 13) | (1 << 12) | (1 << 11)))
+    {
+        PC->ISRC |= (1 << 13) | (1 << 12) | (1 << 11);
+
+        Hal_Usb_Wakeup_Isr_Handler();
+    }
+    else
+    {
+        /* Un-expected interrupt. Just clear all PC, PD and PF interrupts */
+        PC->ISRC = PC->ISRC;
+        PD->ISRC = PD->ISRC;
+        PF->ISRC = PF->ISRC;
+    }
+}
+
 

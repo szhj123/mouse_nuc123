@@ -81,6 +81,7 @@ void Timer2_Init(void );
 void Pwm_Init(void );
 void Spi0_Init(void );
 void Spi2_Init(void );
+void Power_Down(void );
 
 void Hardware_Init(void );
 

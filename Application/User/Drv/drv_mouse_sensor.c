@@ -257,7 +257,8 @@ void Drv_Sensor_Multiple_Read(uint8_t addr, uint8_t *buf, uint8_t len )
     Hal_Sensor_Cs_Disable();
 }
 
-void Drv_Sensor_Delay(uint16_t delayCnt )
+
+void Drv_Sensor_Delay(uint32_t delayCnt )
 {
     while(delayCnt--);
 }

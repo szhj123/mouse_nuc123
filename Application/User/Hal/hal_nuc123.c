@@ -24,6 +24,8 @@ void Hardware_Init(void )
     Systick_Init();
 
     Gpio_Init();
+
+    Gpio_Intp_Init();
 }
 
 void Clk_Init(void )
@@ -154,8 +156,8 @@ void Gpio_Intp_Init(void )
     NVIC_EnableIRQ(GPCDF_IRQn);
 
     /* Enable interrupt de-bounce function and select de-bounce sampling cycle time is 1024 clocks of LIRC clock */
-    GPIO->DBNCECON = (GPIO_DBNCECON_ICLK_ON_Msk | GPIO_DBCLKSRC_LIRC | GPIO_DBCLKSEL_1024);
-    PC->DBEN |= (1 << 13) | (1 << 12) | (1 << 11);
+    //GPIO->DBNCECON = (GPIO_DBNCECON_ICLK_ON_Msk | GPIO_DBCLKSRC_LIRC | GPIO_DBCLKSEL_1024);
+    //PC->DBEN |= (1 << 13) | (1 << 12) | (1 << 11);
 }
 
 void Timer0_Init(void )
@@ -330,6 +332,16 @@ void Pwm_Init(void )
     PWMA->PCR |= PWM_PCR_CH0EN_Msk | PWM_PCR_CH1EN_Msk | PWM_PCR_CH2EN_Msk;
 }
 
+void Power_Down(void )
+{
+    SCB->SCR = 4;
+
+    CLK->PWRCON = (CLK->PWRCON & ~(CLK_PWRCON_PWR_DOWN_EN_Msk | CLK_PWRCON_PD_WAIT_CPU_Msk)) | CLK_PWRCON_PD_WAIT_CPU_Msk;
+
+    CLK->PWRCON |= CLK_PWRCON_PWR_DOWN_EN_Msk;
+
+    __WFI();
+}
 
 
 

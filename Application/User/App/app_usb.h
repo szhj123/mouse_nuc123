@@ -41,5 +41,8 @@ void App_Usb_Pic_Out_Enable(void );
 void App_Usb_Clr_Mouse_Key_Send_Flag(void );
 uint8_t App_Usb_Get_Mouse_Key_Send_Flag(void );
 
+void App_Usb_Suspend_Handler(void );
+void App_Usb_Resume_Handler(void );
+
 #endif 
 

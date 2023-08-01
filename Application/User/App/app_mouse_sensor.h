@@ -21,6 +21,8 @@ typedef struct _mSensor_ctrl_block_t
 void App_Sensor_Init(void );
 void App_Sensor_Set_Detect_Time(mRate_t mRate );
 void App_Sensor_Set_Dpi(uint8_t dpiVal );
+void App_Sensor_Sleep(void );
+void App_Sensor_Wakeup(void );
 
 #endif 
 

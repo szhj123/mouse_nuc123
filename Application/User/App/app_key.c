@@ -542,6 +542,8 @@ static void App_Key_Other_Press_Handler(mKey_t mKey )
         
         App_Mouse_Set_Cur_Key_Mode(curKeyMode);
 
+        App_Lcd_Show_Pic((uint8_t )curKeyMode);
+
         App_Usb_Mouse_Evt_Input(0x03, curKeyMode);
         
     }

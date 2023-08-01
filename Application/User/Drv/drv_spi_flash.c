@@ -242,10 +242,6 @@ void Drv_Spi_Flash_Read(uint32_t addr, uint8_t *buf, uint32_t length )
     Hal_Spi_Flash_Single_Tx((uint8_t )(addr>>16));
     Hal_Spi_Flash_Single_Tx((uint8_t )(addr>>8));
     Hal_Spi_Flash_Single_Tx((uint8_t )addr);
-
-    //Hal_Spi_Flash_Dma_Rx(buf, 2, Drv_Spi_Flash_Rx_Callback);
-    //while(spiFlashRxDoneFlag == 0);
-    //spiFlashRxDoneFlag = 0;
     
     spiFlashRxDoneFlag = 0;
     

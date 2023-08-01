@@ -375,6 +375,8 @@ void App_Mouse_Set_Light_Dpi_Report(uint8_t *buf, uint8_t len )
 
     App_Lcd_Set_Pic_Index(mousePara.picIndex);
 
+    App_Lcd_Show_Pic(mousePara.picIndex);
+
     App_Light_Set_Light_Effect(mousePara.mLightMode);
 }
 

@@ -43,7 +43,9 @@ typedef enum _pic_stat_t
     PIC_STAT_READ_WAIT,
     PIC_STAT_WRITE_DATA,
     PIC_STAT_WRITE_WAIT,
-    PIC_STAT_IDLE
+    PIC_STAT_SHOW_LOOP,
+    PIC_STAT_SHOW_STATIC,
+    PIC_STAT_WAIT_LOG_SHOW_DONE
 }pic_stat_t;
 
 typedef struct _lcd_ctrl_block_t
@@ -52,6 +54,7 @@ typedef struct _lcd_ctrl_block_t
     pic_stat_t picStat;
     uint8_t picUpdateEn;
     uint8_t picIndex;
+    uint8_t picShowTotalNum;
     uint32_t picFlashAddr;
     uint32_t picOffset;
     uint32_t delayCnt;
@@ -72,6 +75,9 @@ void App_Lcd_Set_Pic_Index(uint8_t picIndex );
 uint8_t App_Lcd_Get_Pic_Index(void );
 
 void App_Lcd_Show_Pic(uint8_t picIndex );
+
+void App_Lcd_Sleep(void );
+void App_Lcd_Wakeup(void );
 
 #endif 
 

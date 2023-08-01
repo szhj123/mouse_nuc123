@@ -32,6 +32,7 @@ typedef struct _usb_isr_callback_t
     void (*usb_ep2_callback)(void );
     void (*usb_ep3_callback)(void );
     void (*usb_ep4_callback)(void );
+    void (*usb_wakeup_callabck)(void );
 }usb_isr_callback_t;
 
 
@@ -47,6 +48,9 @@ void Hal_Usb_ClrRdy(uint8_t epNum );
 void Hal_Usb_ClrStall(uint8_t epNum );
 void Hal_Usb_InOut_Ready(uint8_t epNum, uint16_t length );
 uint8_t Hal_Usb_Get_Ep_InOut_Size(uint8_t epNum );
+
+void Hal_Usb_Wakeup_Isr_Handler(void );
+void Hal_Usb_Wakeup(void );
 
 #endif 
 

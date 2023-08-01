@@ -30,15 +30,8 @@ void App_Lcd_Init(void )
     Drv_Lcd_Init();    
 
     App_Lcd_Set_RW_Flash_Stat(LCD_FLASH_IDLE);
-
-    lcdCtrl.picIndex = App_Mouse_Get_Pic_Index();
-
-    if(lcdCtrl.picIndex < 5 || lcdCtrl.picIndex > 16)
-    {
-        lcdCtrl.picIndex = 5;
-    }
     
-    App_Lcd_Show_Pic(lcdCtrl.picIndex);
+    App_Lcd_Show_Pic(0);
 
     Drv_Task_Regist_Period(App_Lcd_Handler, 0, 1, NULL);
 }
@@ -89,21 +82,6 @@ void App_Lcd_Pic_Show_Disable(void )
     lcdCtrl.picUpdateEn = 0;
 }
 
-void App_Lcd_Show_Pic(uint8_t picIndex )
-{
-    lcdCtrl.picIndex = picIndex;
-
-    lcdCtrl.picFlashAddr = (picIndex - 1) * LCD_PIC_MAX_SIZE;
-
-    lcdCtrl.picOffset = 0;
-    
-    lcdCtrl.picUpdateEn = 1;
-
-    lcdCtrl.picStat = PIC_STAT_INIT;
-
-    lcd_show_callback = App_Lcd_Show_Pic_Callback;
-}
-
 pic_stat_t App_Lcd_Get_Pic_Show_Stat(void )
 {
     return lcdCtrl.picStat;
@@ -118,6 +96,49 @@ uint8_t App_Lcd_Get_Pic_Index(void )
 {
     return lcdCtrl.picIndex;
 }
+
+uint8_t App_Lcd_Get_Pic_Show_Total_Num(void )
+{
+    uint8_t i;
+    uint8_t picTotalNum = 0;
+    
+    uint16_t picMask = App_Mouse_Get_Pic_Show_Mask();
+    
+    for(i=0;i<LCD_PIC_MAX_NUM;i++)
+    {
+        if((picMask & (1 << i)) == 0)
+        {
+            picTotalNum++;
+        }
+    }
+
+    return picTotalNum;
+}
+
+void App_Lcd_Show_Pic(uint8_t picIndex )
+{
+    lcdCtrl.picIndex = picIndex;
+    
+    if(picIndex > 4)
+    {
+        lcdCtrl.picFlashAddr = (picIndex - 1) * LCD_PIC_MAX_SIZE;
+    }
+    else
+    {
+        lcdCtrl.picFlashAddr = picIndex * LCD_PIC_MAX_SIZE;
+    }
+
+    lcdCtrl.picOffset = 0;
+
+    lcdCtrl.picUpdateEn = 1;
+    
+    lcdCtrl.delayCnt = 0;
+
+    lcdCtrl.picStat = PIC_STAT_INIT;
+
+    lcd_show_callback = App_Lcd_Show_Pic_Callback;
+}
+
 
 static void App_Lcd_Show_Pic_Callback(void )
 {
@@ -180,17 +201,35 @@ static void App_Lcd_Show_Pic_Callback(void )
                     
                     lcdCtrl.picOffset = 0 ;
 
-                    if(App_Mouse_Get_Pic_Auto_Switch_Time() != 0)
+                    if(lcdCtrl.picIndex < 5 )
                     {
-                        lcdCtrl.picIndex++;
+                        lcdCtrl.delayCnt = 0;
 
-                        if(lcdCtrl.picIndex > LCD_PIC_MAX_NUM)
+                        lcdCtrl.picStat = PIC_STAT_WAIT_LOG_SHOW_DONE;
+                    }
+                    else
+                    {
+                        lcdCtrl.picShowTotalNum = App_Lcd_Get_Pic_Show_Total_Num();
+
+                        if(lcdCtrl.picShowTotalNum > 1)
                         {
-                            lcdCtrl.picIndex = 5;
+                            if(App_Mouse_Get_Pic_Auto_Switch_Time() != 0)
+                            {
+                                lcdCtrl.picIndex++;
+
+                                if(lcdCtrl.picIndex > LCD_PIC_MAX_NUM)
+                                {
+                                    lcdCtrl.picIndex = 5;
+                                }
+                            }
+                            
+                            lcdCtrl.picStat = PIC_STAT_SHOW_LOOP;
+                        }
+                        else
+                        {
+                            lcdCtrl.picStat = PIC_STAT_SHOW_STATIC;
                         }
                     }
-                    
-                    lcdCtrl.picStat = PIC_STAT_IDLE;
                 }
                 else
                 {
@@ -199,7 +238,7 @@ static void App_Lcd_Show_Pic_Callback(void )
             }
             break;
         }
-        case PIC_STAT_IDLE:
+        case PIC_STAT_SHOW_LOOP:
         {
             if(App_Mouse_Get_Pic_Auto_Switch_Time() != 0)
             {
@@ -226,7 +265,37 @@ static void App_Lcd_Show_Pic_Callback(void )
             }
             break;
         }
+        case PIC_STAT_SHOW_STATIC:
+        {
+            break;
+        }
+        case PIC_STAT_WAIT_LOG_SHOW_DONE:
+        {
+            if(++lcdCtrl.delayCnt > 5000)
+            {
+                lcdCtrl.delayCnt = 0;
+
+                lcdCtrl.picIndex = App_Mouse_Get_Pic_Index();
+
+                App_Lcd_Show_Pic(lcdCtrl.picIndex);
+            }
+            break;
+        }
         default: break;
     }
+}
+
+void App_Lcd_Sleep(void )
+{
+    Drv_Lcd_Wr_Cmd(0x28);
+
+    Drv_Lcd_Bg_Led_Off(); //turen off background led
+}
+
+void App_Lcd_Wakeup(void )
+{
+    Drv_Lcd_Wr_Cmd(0x29);
+
+    Drv_Lcd_Bg_Led_On(); //turen off background led
 }
 

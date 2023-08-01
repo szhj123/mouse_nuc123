@@ -13,7 +13,9 @@
 #include "app_usb.h"
 #include "app_event.h"
 #include "app_mouse_protocol.h"
+#include "app_mouse_sensor.h"
 #include "app_lcd.h"
+#include "app_light.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -22,19 +24,17 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len );
 static void App_Usb_Get_Report(uint8_t *buf, uint8_t len );
 static void App_Usb_Handler(void *arg );
 /* Private variables ------------------------------------*/
-static usb_report_callback_t usbReportCallback = 
+static usb_report_callback_t appUsbCallback = 
 {
     .usb_set_report_callback = App_Usb_Set_Report,
-    .usb_get_report_callback = App_Usb_Get_Report
+    .usb_get_report_callback = App_Usb_Get_Report,
 };
-
-
+    
 usb_para_t usbPara;
-
 
 void App_Usb_Init(void )
 {
-    Drv_Usb_Init(&usbReportCallback);
+    Drv_Usb_Init(&appUsbCallback);
 
     Drv_Task_Regist_Period(App_Usb_Handler, 0, 1, NULL);
 }
@@ -104,6 +104,8 @@ static void App_Usb_Get_Report(uint8_t *buf, uint8_t len )
         default: break;
     }
 }
+
+
 
 void App_Usb_Mouse_Press_Handler(uint8_t mKeyVal )
 {
@@ -267,5 +269,38 @@ static void App_Usb_Handler(void *arg )
         
         usbPara.kDataUpdateFlag = 0;
     }
+
+    if(Drv_Usb_Get_Config_Val())
+    {
+        if(Drv_Usb_Get_Suspend_Flag())
+        {
+            App_Usb_Suspend_Handler();       
+        }
+        else if(Drv_Usb_Get_Resume_Flag())
+        {
+            App_Usb_Resume_Handler();
+        }
+    }
 }
+
+void App_Usb_Suspend_Handler(void )
+{
+    App_Light_Set_Light_Effect(LIGHT_MODE_OFF);
+
+    App_Lcd_Sleep();
+
+    App_Sensor_Sleep();
+
+    Power_Down();
+}
+
+void App_Usb_Resume_Handler(void )
+{
+    App_Sensor_Wakeup();
+    
+    App_Light_Set_Light_Effect(App_Mouse_Get_Light_Mode());
+    
+    App_Lcd_Wakeup();
+}
+
 
