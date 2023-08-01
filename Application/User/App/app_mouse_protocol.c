@@ -459,11 +459,6 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
     static uint32_t lcdFlashOffset;
     
     pic_pack_t *picPack  = (pic_pack_t *)buf;
-
-    if(picPack->picID < 1)
-    {
-        return ;
-    }
     
     App_Lcd_Set_RW_Flash_Stat(LCD_FLASH_BUSY);
 
@@ -476,8 +471,15 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
             lcdPicID = picPack->picID;
 
             lcdFlashOffset = 0;
-            
-            lcdFlashAddr = LCD_PIC_MAX_SIZE * (uint32_t )(picPack->picID-1);
+
+            if(picPack->picID >= 5)
+            {
+                lcdFlashAddr = LCD_PIC_MAX_SIZE * (uint32_t )(picPack->picID-1);
+            }
+            else
+            {
+                lcdFlashAddr = LCD_PIC_MAX_SIZE * (uint32_t )picPack->picID;
+            }
 
             Drv_Spi_Flash_Erase_64k(lcdFlashAddr);
 
