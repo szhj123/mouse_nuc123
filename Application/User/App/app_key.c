@@ -154,6 +154,8 @@ void App_Key_Handler(uint8_t *buf, uint8_t len )
             }
         }
 
+        //App_Usb_Wakeup_Host();
+        
         App_Key_Press_Handler(mKey);
     }
     else if(keyVal & KEY_UP)

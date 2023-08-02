@@ -294,8 +294,10 @@ void App_Lcd_Sleep(void )
 
 void App_Lcd_Wakeup(void )
 {
-    Drv_Lcd_Wr_Cmd(0x29);
-
+    Drv_Lcd_Init();
+    
     Drv_Lcd_Bg_Led_On(); //turen off background led
+
+    App_Lcd_Show_Pic(App_Mouse_Get_Pic_Index());
 }
 

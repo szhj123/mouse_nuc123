@@ -33,7 +33,6 @@ static usb_isr_callback_t usbIsrCallback =
     .usb_ep2_callback = Drv_Usb_Ep2_Handler,
     .usb_ep3_callback = Drv_Usb_Ep3_Handler,
     .usb_ep4_callback = Drv_Usb_Ep4_Handler,
-    .usb_wakeup_callabck = Drv_Usb_Wakeup_Handler,
 };
 
 static uint8_t usbEpBuf[USB_EP1_BUF_LEN] = {0};
@@ -74,6 +73,11 @@ uint8_t Drv_Usb_Get_Suspend_Flag(void )
     return usbCtrl.suspendFlag;
 }
 
+void Drv_Usb_Clr_Suspend_Flag(void )
+{
+    usbCtrl.suspendFlag = 0;
+}
+
 uint8_t Drv_Usb_Get_Config_Val(void )
 {
     return usbCtrl.configVal;
@@ -84,6 +88,10 @@ uint8_t Drv_Usb_Get_Resume_Flag(void )
     return usbCtrl.resumeFlag;
 }
 
+void Drv_Usb_Clr_Resume_Flag(void )
+{
+    usbCtrl.resumeFlag = 0;
+}
 
 void Drv_Usb_Fldet_Handler(void )
 {
@@ -227,7 +235,7 @@ void Drv_Usb_Ep4_Handler(void )
     appUsbCallback->usb_set_report_callback(u8Ep4Ptr, ep4OutSize);       
 }
 
-void Drv_Usb_Wakeup_Handler(void )
+void Drv_Usb_Wakeup(void )
 {
     if(usbCtrl.suspendFlag)
     {

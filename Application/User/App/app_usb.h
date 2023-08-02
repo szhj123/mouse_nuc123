@@ -44,5 +44,8 @@ uint8_t App_Usb_Get_Mouse_Key_Send_Flag(void );
 void App_Usb_Suspend_Handler(void );
 void App_Usb_Resume_Handler(void );
 
+void App_Usb_Wakeup_Host(void );
+
+
 #endif 
 

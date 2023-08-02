@@ -62,7 +62,7 @@ void Drv_Usb_Ep1_Handler(void );
 void Drv_Usb_Ep2_Handler(void );
 void Drv_Usb_Ep3_Handler(void );
 void Drv_Usb_Ep4_Handler(void );
-void Drv_Usb_Wakeup_Handler(void );
+void Drv_Usb_Wakeup(void );
 
 void Drv_Usb_Req_Standard(void );
 void Drv_Usb_Req_Class(void );
@@ -86,7 +86,9 @@ void Drv_Usb_Memcpy(uint8_t *pDst, uint8_t *pSrc, uint16_t length );
 
 
 uint8_t Drv_Usb_Get_Suspend_Flag(void );
+void Drv_Usb_Clr_Suspend_Flag(void );
 uint8_t Drv_Usb_Get_Resume_Flag(void );
+void Drv_Usb_Clr_Resume_Flag(void );
 uint8_t Drv_Usb_Get_Config_Val(void );
 
 #endif 

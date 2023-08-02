@@ -273,14 +273,21 @@ static void App_Usb_Handler(void *arg )
     if(Drv_Usb_Get_Config_Val())
     {
         if(Drv_Usb_Get_Suspend_Flag())
-        {
-            App_Usb_Suspend_Handler();       
+        {            
+		    App_Usb_Suspend_Handler();       		
         }
         else if(Drv_Usb_Get_Resume_Flag())
         {
+            Drv_Usb_Clr_Resume_Flag();
+            
             App_Usb_Resume_Handler();
         }
     }
+}
+
+void App_Usb_Wakeup_Host(void )
+{
+    Drv_Usb_Wakeup();
 }
 
 void App_Usb_Suspend_Handler(void )

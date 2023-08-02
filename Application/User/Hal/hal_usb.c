@@ -17,7 +17,8 @@
 /* Private function -------------------------------------*/
 static void Hal_Usb_Ep_Config(void );
 /* Private variables ------------------------------------*/
-usb_isr_callback_t *usb_callback = NULL;
+static usb_isr_callback_t *usb_callback = NULL;
+static uint8_t usbSuspendFlag;
 
 void Hal_Usb_Init(void )
 {
@@ -82,17 +83,10 @@ void Hal_Usb_Ep_Config(void )
 void Hal_Usb_Bus_Handler(uint32_t u32BusSts )
 {
     if(u32BusSts  & USBD_ATTR_USBRST_Msk)
-    {
-        USBD->ATTR |= USBD_ATTR_BYTEM_Msk | USBD_ATTR_PWRDN_Msk  | USBD_ATTR_DPPU_EN_Msk |\
-                      USBD_ATTR_PHY_EN_Msk;
+    {        
+        Hal_Usb_Init();
 
-        USBD->INTEN |= USBD_INTEN_WAKEUP_EN_Msk;
-
-        USBD->ATTR |= USBD_ATTR_USB_EN_Msk;
-
-        USBD->FADDR = 0x00;
-
-        USBD->STBUFSEG = 0x00;
+        usbSuspendFlag = 0;
 
         usb_callback->usb_rst_callback();
     }
@@ -101,6 +95,8 @@ void Hal_Usb_Bus_Handler(uint32_t u32BusSts )
     {
         USBD->ATTR &= ~USBD_ATTR_PHY_EN_Msk;
 
+        usbSuspendFlag = 1;
+
         usb_callback->usb_suspend_callback();
     }
 
@@ -108,6 +104,8 @@ void Hal_Usb_Bus_Handler(uint32_t u32BusSts )
     {
         USBD->ATTR |= USBD_ATTR_PHY_EN_Msk;
         USBD->ATTR |= USBD_ATTR_USB_EN_Msk;
+        
+        usbSuspendFlag = 0;
 
         usb_callback->usb_resume_callback();
     }
@@ -182,11 +180,6 @@ void Hal_Usb_Isr_Handler(void )
     }
 }
 
-void Hal_Usb_Wakeup_Isr_Handler(void )
-{
-    usb_callback->usb_wakeup_callabck();
-}
-
 void Hal_Usb_Set_Dev_Addr(uint8_t devAddr )
 {
     USBD->FADDR = devAddr;
@@ -238,17 +231,21 @@ uint8_t Hal_Usb_Get_Ep_InOut_Size(uint8_t epNum )
 void Hal_Usb_Wakeup(void )
 {
     uint32_t waitCnt;
-    /* Enable PHY before sending Resume('K') state */
-    USBD->ATTR |= USBD_ATTR_PHY_EN_Msk;
 
-    /* Keep remote wakeup for 1 ms */
-    USBD->ATTR |= USBD_ATTR_RWAKEUP_Msk;
-    
-    for(waitCnt=0;waitCnt<100000;waitCnt++)
+    if(usbSuspendFlag)
     {
-        __NOP();
+        /* Enable PHY before sending Resume('K') state */
+        USBD->ATTR |= USBD_ATTR_PHY_EN_Msk;
+
+        /* Keep remote wakeup for 1 ms */
+        USBD->ATTR |= USBD_ATTR_RWAKEUP_Msk;
+        
+        for(waitCnt=0;waitCnt<500000;waitCnt++)
+        {
+            __NOP();
+        }
+        
+        USBD->ATTR &= ~USBD_ATTR_RWAKEUP_Msk;
     }
-    
-    USBD->ATTR ^= USBD_ATTR_RWAKEUP_Msk;
 }
 
