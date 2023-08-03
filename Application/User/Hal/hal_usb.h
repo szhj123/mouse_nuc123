@@ -50,5 +50,9 @@ uint8_t Hal_Usb_Get_Ep_InOut_Size(uint8_t epNum );
 
 void Hal_Usb_Wakeup(void );
 
+void Hal_Usb_Gpio_Isr_Handler(void );
+uint8_t Hal_Usb_Get_Gpio_Wakeup_Flag(void );
+void Hal_Usb_Clr_Gpio_Wakeup_Flag(void );
+
 #endif 
 

@@ -289,6 +289,8 @@ void App_Lcd_Sleep(void )
 {
     Drv_Lcd_Wr_Cmd(0x28);
 
+    lcd_show_callback = NULL;
+
     Drv_Lcd_Bg_Led_Off(); //turen off background led
 }
 

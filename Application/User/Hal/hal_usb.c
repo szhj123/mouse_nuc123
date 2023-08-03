@@ -18,7 +18,7 @@
 static void Hal_Usb_Ep_Config(void );
 /* Private variables ------------------------------------*/
 static usb_isr_callback_t *usb_callback = NULL;
-static uint8_t usbSuspendFlag;
+static uint8_t usbGpioWakeup;
 
 void Hal_Usb_Init(void )
 {
@@ -86,16 +86,12 @@ void Hal_Usb_Bus_Handler(uint32_t u32BusSts )
     {        
         Hal_Usb_Init();
 
-        usbSuspendFlag = 0;
-
         usb_callback->usb_rst_callback();
     }
 
     if(u32BusSts  & USBD_ATTR_SUSPEND_Msk)
     {
         USBD->ATTR &= ~USBD_ATTR_PHY_EN_Msk;
-
-        usbSuspendFlag = 1;
 
         usb_callback->usb_suspend_callback();
     }
@@ -105,8 +101,6 @@ void Hal_Usb_Bus_Handler(uint32_t u32BusSts )
         USBD->ATTR |= USBD_ATTR_PHY_EN_Msk;
         USBD->ATTR |= USBD_ATTR_USB_EN_Msk;
         
-        usbSuspendFlag = 0;
-
         usb_callback->usb_resume_callback();
     }
 }
@@ -232,20 +226,33 @@ void Hal_Usb_Wakeup(void )
 {
     uint32_t waitCnt;
 
-    if(usbSuspendFlag)
-    {
-        /* Enable PHY before sending Resume('K') state */
-        USBD->ATTR |= USBD_ATTR_PHY_EN_Msk;
+    /* Enable PHY before sending Resume('K') state */
+    USBD->ATTR |= USBD_ATTR_PHY_EN_Msk;
 
-        /* Keep remote wakeup for 1 ms */
-        USBD->ATTR |= USBD_ATTR_RWAKEUP_Msk;
-        
-        for(waitCnt=0;waitCnt<500000;waitCnt++)
-        {
-            __NOP();
-        }
-        
-        USBD->ATTR &= ~USBD_ATTR_RWAKEUP_Msk;
+    /* Keep remote wakeup for 1 ms */
+    USBD->ATTR |= USBD_ATTR_RWAKEUP_Msk;
+    
+    for(waitCnt=0;waitCnt<500000;waitCnt++)
+    {
+        __NOP();
     }
+    
+    USBD->ATTR &= ~USBD_ATTR_RWAKEUP_Msk;
+}
+
+
+void Hal_Usb_Gpio_Isr_Handler(void )
+{
+    usbGpioWakeup = 1;
+}
+
+uint8_t Hal_Usb_Get_Gpio_Wakeup_Flag(void )
+{
+    return usbGpioWakeup;
+}
+
+void Hal_Usb_Clr_Gpio_Wakeup_Flag(void )
+{
+    usbGpioWakeup = 0;
 }
 

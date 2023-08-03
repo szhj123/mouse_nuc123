@@ -88,7 +88,7 @@ void GPCDF_IRQHandler(void)
     {
         PC->ISRC |= (1 << 13) | (1 << 12) | (1 << 11);
 
-        Hal_Usb_Wakeup();
+        Hal_Usb_Gpio_Isr_Handler();
     }
     else
     {

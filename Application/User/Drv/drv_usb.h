@@ -91,5 +91,8 @@ uint8_t Drv_Usb_Get_Resume_Flag(void );
 void Drv_Usb_Clr_Resume_Flag(void );
 uint8_t Drv_Usb_Get_Config_Val(void );
 
+uint8_t Drv_Usb_Get_Gpio_Wakeup_Flag(void );
+void Drv_Usb_Clr_Gpio_Wakeup_Flag(void );
+
 #endif 
 

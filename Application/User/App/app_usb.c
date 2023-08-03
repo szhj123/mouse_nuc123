@@ -255,32 +255,81 @@ void App_Usb_Pic_Out_Enable(void )
 }
 
 static void App_Usb_Handler(void *arg )
-{
-    if(usbPara.mDataUpdateFlag)
-    {
-        Drv_Usb_Ep_In(EP2, (uint8_t *)usbPara.mDataBuf, usbPara.mDataLen);
-
-        usbPara.mDataUpdateFlag = 0;
-    }
-
-    if(usbPara.kDataUpdateFlag)
-    {
-        Drv_Usb_Ep_In(EP3, (uint8_t *)usbPara.kDataBuf, usbPara.kDataLen);
-        
-        usbPara.kDataUpdateFlag = 0;
-    }
-
+{    
     if(Drv_Usb_Get_Config_Val())
     {
-        if(Drv_Usb_Get_Suspend_Flag())
-        {            
-		    App_Usb_Suspend_Handler();       		
-        }
-        else if(Drv_Usb_Get_Resume_Flag())
+        if(usbPara.mDataUpdateFlag)
         {
-            Drv_Usb_Clr_Resume_Flag();
+            Drv_Usb_Ep_In(EP2, (uint8_t *)usbPara.mDataBuf, usbPara.mDataLen);
+
+            usbPara.mDataUpdateFlag = 0;
+        }
+
+        if(usbPara.kDataUpdateFlag)
+        {
+            Drv_Usb_Ep_In(EP3, (uint8_t *)usbPara.kDataBuf, usbPara.kDataLen);
             
-            App_Usb_Resume_Handler();
+            usbPara.kDataUpdateFlag = 0;
+        }
+        
+        switch(usbPara.mSleepStat)
+        {
+            case MOUSE_SLEEP_IN:
+            {
+                if(Drv_Usb_Get_Suspend_Flag())
+                {            
+                    Drv_Usb_Clr_Gpio_Wakeup_Flag();
+                    
+        		    App_Usb_Suspend_Handler();    
+
+                    usbPara.mSleepStat = MOUSE_WAKEUP;
+                }
+                break;
+            }
+            case MOUSE_WAKEUP:
+            {
+                if(Drv_Usb_Get_Gpio_Wakeup_Flag())
+                {
+                    Drv_Usb_Wakeup();
+
+                    usbPara.delayCnt = 0;
+                    
+                    usbPara.mSleepStat = MOUSE_SLEEP_OUT;
+                }
+                else if(Drv_Usb_Get_Resume_Flag())
+                {
+                    Drv_Usb_Wakeup();
+
+                    usbPara.delayCnt = 0;
+                    
+                    usbPara.mSleepStat = MOUSE_SLEEP_OUT;
+                }
+                break;
+            }
+            case MOUSE_SLEEP_OUT:
+            {
+                if(++usbPara.delayCnt > 100)
+                {
+                    usbPara.delayCnt = 0;
+                    
+                    if(Drv_Usb_Get_Resume_Flag())
+                    {
+                        Drv_Usb_Clr_Resume_Flag();
+
+                        App_Usb_Resume_Handler();
+
+                        Drv_Usb_Clr_Gpio_Wakeup_Flag();
+                        
+                        usbPara.mSleepStat = MOUSE_SLEEP_IN;
+                    }
+                    else
+                    {
+                        usbPara.mSleepStat = MOUSE_WAKEUP;
+                    }
+                }
+                break;
+            }
+            default: break;
         }
     }
 }
@@ -298,7 +347,7 @@ void App_Usb_Suspend_Handler(void )
 
     App_Sensor_Sleep();
 
-    Power_Down();
+    //Power_Down();
 }
 
 void App_Usb_Resume_Handler(void )

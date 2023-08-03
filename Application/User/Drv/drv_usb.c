@@ -18,7 +18,6 @@
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
 static usb_ctrl_block_t usbCtrl;
-
 static usb_report_callback_t *appUsbCallback;
 
 static usb_isr_callback_t usbIsrCallback = 
@@ -237,10 +236,7 @@ void Drv_Usb_Ep4_Handler(void )
 
 void Drv_Usb_Wakeup(void )
 {
-    if(usbCtrl.suspendFlag)
-    {
-        Hal_Usb_Wakeup();
-    }
+    Hal_Usb_Wakeup();
 }
 
 void Drv_Usb_Req_Standard(void )
@@ -534,5 +530,15 @@ void Drv_Usb_Memcpy(uint8_t *pDst, uint8_t *pSrc, uint16_t length )
     {
         *pDst++ = *pSrc++;
     }
+}
+
+uint8_t Drv_Usb_Get_Gpio_Wakeup_Flag(void )
+{
+    return Hal_Usb_Get_Gpio_Wakeup_Flag();
+}
+
+void Drv_Usb_Clr_Gpio_Wakeup_Flag(void )
+{
+    Hal_Usb_Clr_Gpio_Wakeup_Flag();
 }
 

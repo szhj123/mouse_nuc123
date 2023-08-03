@@ -13,6 +13,13 @@ typedef enum _mouse_wheel_direction
     MOUSE_WHEEL_DOWM
 }mouse_wheel_direction;
 
+typedef enum _mSleep_stat_t
+{
+    MOUSE_SLEEP_IN = 0,
+    MOUSE_WAKEUP,
+    MOUSE_SLEEP_OUT
+}mSleep_stat_t;
+
 typedef struct _usb_para_t
 {
     u8Data_t mDataBuf[7];
@@ -23,6 +30,9 @@ typedef struct _usb_para_t
     uint8_t  mDataUpdateFlag;
     uint8_t  kDataUpdateFlag;
     uint8_t  wheelFlag;
+
+    uint16_t delayCnt;
+    mSleep_stat_t mSleepStat;
 }usb_para_t;
 
 

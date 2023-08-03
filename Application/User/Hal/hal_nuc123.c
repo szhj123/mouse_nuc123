@@ -334,9 +334,14 @@ void Pwm_Init(void )
 
 void Power_Down(void )
 {
-    /* Deep sleep */
-    SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-    CLK->PWRCON |= CLK_PWRCON_PD_WAIT_CPU_Msk | CLK_PWRCON_PWR_DOWN_EN_Msk;
+    SYS_UnlockReg();
+     
+    SCB->SCR = 4;
+
+    /* To program PWRCON register, it needs to disable register protection first. */
+    CLK->PWRCON = (CLK->PWRCON & ~(CLK_PWRCON_PWR_DOWN_EN_Msk | CLK_PWRCON_PD_WAIT_CPU_Msk));
+
+    __WFI();
 }
 
 

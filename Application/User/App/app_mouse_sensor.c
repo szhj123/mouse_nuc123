@@ -73,6 +73,11 @@ static void App_Sensor_Handler(void *arg )
 {
     uint8_t burstMotionBuf[6] = {0};
     
+    if(Drv_Usb_Get_Suspend_Flag())
+    {
+        return ;
+    }
+    
     if(++mSensorCtrl.delayCnt >= mSensorCtrl.delayTime)
     {
         if(App_Lcd_Get_RW_Flash_Stat() != LCD_FLASH_IDLE)
