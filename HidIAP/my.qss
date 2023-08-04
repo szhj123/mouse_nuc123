@@ -1,0 +1,26 @@
+/*背景颜色*/
+#MainWindow {
+    border-style: solid;
+    border-radius: 3;
+    background-image:url(:/picture/background.png);
+}
+
+QWidget#widgetLogo
+{
+    border-bottom: 3px solid rgb(50,254,255)
+}
+
+QLabel#labelLogoPic
+{
+    border-image:url(:/picture/cms.png);
+}
+
+QPushButton#btnMin
+{
+    border-image:url(:/picture/minimize.png);
+}
+
+QPushButton#btnClose
+{
+    border-image:url(:/picture/close.png);
+}

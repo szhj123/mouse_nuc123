@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>picture/firmware.jpg</file>
+        <file>my.qss</file>
+        <file>picture/background.png</file>
+        <file>picture/close.png</file>
+        <file>picture/minimize.png</file>
+        <file>picture/cms.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,1 @@
+HIDAPI是一个多平台库，它允许应用程序与Windows、Linux、FreeBSD和macOS上的USB和蓝牙HID类设备连接。HIDAPI既可以作为一个共享库（.so、.dll或.dylib）构建，也可以通过添加一个源文件（每个平台）和一个头文件直接嵌入到目标应用程序中。
