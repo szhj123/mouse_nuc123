@@ -15,7 +15,12 @@ QLabel#labelLogoPic
     border-image:url(:/picture/cms.png);
 }
 
-QPushButton#btnMin
+QLabel#labelLogoLine
+{
+    border-image:url(:/picture/logo_line.png);
+}
+
+QPushButton#btnMinimize
 {
     border-image:url(:/picture/minimize.png);
 }
@@ -23,4 +28,32 @@ QPushButton#btnMin
 QPushButton#btnClose
 {
     border-image:url(:/picture/close.png);
+}
+
+/*QTabWidget 的样式*/
+QTabWidget::pane
+{
+    top:5px;
+    border: 1px solid rgb(128,128,128);
+}
+/*个性推荐*/
+QTabBar::tab
+{
+    background-color:rgb(128,128,128);
+    border-bottom: 3px solid rgb(128,128,128);
+    font-family:"微软雅黑";
+    font-size:12px;
+    padding-left:5px;
+    padding-right:5px;
+    min-width: 55px;
+    min-height:20px;
+}
+
+QTabBar::tab:selected
+{
+    border-bottom: 3px solid rgb(236,65,65);
+    color: rgb(55,55,55);
+    background-color:rgb(255,255,255);
+    font-size:12px;
+    font-weight: bold;
 }

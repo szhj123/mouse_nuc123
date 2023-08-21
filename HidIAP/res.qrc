@@ -6,5 +6,6 @@
         <file>picture/close.png</file>
         <file>picture/minimize.png</file>
         <file>picture/cms.png</file>
+        <file>picture/logo_line.png</file>
     </qresource>
 </RCC>

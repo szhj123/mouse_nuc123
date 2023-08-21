@@ -42,13 +42,31 @@
       <height>45</height>
      </rect>
     </property>
+    <widget class="QLabel" name="labelLogoLine">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>641</width>
+       <height>45</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>MV Boli</family>
+      </font>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
     <widget class="QLabel" name="labelLogoPic">
      <property name="geometry">
       <rect>
-       <x>3</x>
-       <y>2</y>
-       <width>55</width>
-       <height>40</height>
+       <x>5</x>
+       <y>5</y>
+       <width>35</width>
+       <height>35</height>
       </rect>
      </property>
      <property name="text">
@@ -58,16 +76,16 @@
     <widget class="QLabel" name="labelLogoText">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>0</y>
+       <x>40</x>
+       <y>9</y>
        <width>101</width>
-       <height>40</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="font">
       <font>
        <family>MV Boli</family>
-       <pointsize>14</pointsize>
+       <pointsize>10</pointsize>
        <weight>50</weight>
        <bold>false</bold>
       </font>
@@ -79,7 +97,29 @@
       <string>Cmsemicon</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btnMin">
+    <widget class="QLabel" name="labelLogoTitle">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>5</y>
+       <width>231</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>MV Boli</family>
+       <pointsize>13</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(50,254,255)</string>
+     </property>
+     <property name="text">
+      <string>Usb Hid Upgrade Tool</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnMinimize">
      <property name="geometry">
       <rect>
        <x>580</x>
@@ -104,6 +144,295 @@
      <property name="text">
       <string/>
      </property>
+    </widget>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>50</y>
+      <width>641</width>
+      <height>331</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="tabFwUpgrade">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+     <widget class="QLabel" name="labelFwInfo">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>10</y>
+        <width>80</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>12</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>固件信息</string>
+      </property>
+     </widget>
+     <widget class="Line" name="lineFw">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>40</y>
+        <width>640</width>
+        <height>3</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(218, 218, 218);</string>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelFwVer">
+      <property name="geometry">
+       <rect>
+        <x>75</x>
+        <y>60</y>
+        <width>81</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(200, 200, 200);</string>
+      </property>
+      <property name="text">
+       <string>固件版本</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelFwVerVal">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>60</y>
+        <width>470</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>75</x>
+        <y>120</y>
+        <width>81</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(200, 200, 200);</string>
+      </property>
+      <property name="text">
+       <string>固件升级</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEditFwPath">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>125</y>
+        <width>351</width>
+        <height>21</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnFwFile">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>125</y>
+        <width>70</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(85, 0, 255);</string>
+      </property>
+      <property name="text">
+       <string>选择文件</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="progressBarFwUpg">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>170</y>
+        <width>351</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft YaHei UI</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="btnFwUpg">
+      <property name="geometry">
+       <rect>
+        <x>530</x>
+        <y>170</y>
+        <width>70</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(85, 0, 255);</string>
+      </property>
+      <property name="text">
+       <string>固件更新</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelHwInfo">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>210</y>
+        <width>80</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string>硬件信息</string>
+      </property>
+     </widget>
+     <widget class="Line" name="lineHw">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>240</y>
+        <width>640</width>
+        <height>3</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(218, 218, 218);</string>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelHw">
+      <property name="geometry">
+       <rect>
+        <x>75</x>
+        <y>260</y>
+        <width>81</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Microsoft JhengHei UI</family>
+        <pointsize>12</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(200, 200, 200);</string>
+      </property>
+      <property name="text">
+       <string>硬件版本</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelHwVerVal">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>260</y>
+        <width>470</width>
+        <height>30</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 255, 255);</string>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
