@@ -152,18 +152,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>109</LineNumber>
+          <LineNumber>225</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>21896</Address>
+          <Address>18022</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\User\Hal\hal_usb.c</Filename>
+          <Filename>..\User\Drv\drv_usb.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\application\../User/Hal/hal_usb.c\109</Expression>
+          <Expression>\\application\../User/Drv/drv_usb.c\225</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

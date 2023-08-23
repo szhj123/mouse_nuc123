@@ -184,7 +184,7 @@ const uint8_t HID_KeyboardReportDescriptor[] =
     0x06,0x06,0xff,     // usage page(�Զ���)
     0x09,0x01,          // usage(1)
     0xa1,0x01,          // Collection(Application)
-    0x85,RPT_ID_MACRO,     // REPORT_ID (5)
+    0x85,RPT_ID_MACRO,  // REPORT_ID (0x64)
     0x15,0x00,          // Logical Minimum (0)
     0x26,0xff,0x00,     // Logical Maximum (255)
     0x09,0x00,
@@ -196,19 +196,19 @@ const uint8_t HID_KeyboardReportDescriptor[] =
     0x06,0x01,0xff,     /* Usage page(vendor custom define) */
     0x09,0x01,          /* Consumer Control */
     0xa1,0x01,          /* Collection(Application) */
-    0x85,RPT_ID_PIC,/* REPORT ID 0x08 */
+    0x85,RPT_ID_PIC,    /* REPORT ID 0x65 */
     0x15,0x00,          /* Logical Minimum(0x0) */
     0x26,0xff,0x00,     /* Logical Maximum(0xff) */
     0x09,0x20,
     0x95,0x3f,          /* Report Count(63) */
     0x75,0x08,          /* Report Size(0x08) */
-    0x91,0x02,          /* Feature (Data) */
+    0x91,0x02,          /* Output (Data) */
     0xc0,
 
     0x06, 0x07, 0xFF, 	// usage page(�Զ���)
 	0x09, 0x01,			// usage(1)
 	0xA1, 0x01,			// Collection(Application)
-	0x85, RPT_ID_DPI,		// REPORT_ID (6)
+	0x85, RPT_ID_DPI,	// REPORT_ID (0x66)
 	0x15, 0x00,			// Logical Minimum (0)
 	0x26, 0xFF, 0x00,	// Logical Maximum (255)
 	0x09, 0x00,
@@ -216,6 +216,54 @@ const uint8_t HID_KeyboardReportDescriptor[] =
 	0x95, 0x02,			// REPORT COUNT(2)
 	0x81, 0x02,			// Input (Data) => Modifier byte
 	0xC0,
+    
+    0x06, 0x08, 0xFF,   // usage page(�Զ���)
+    0x09, 0x01,         // usage(1)
+    0xA1, 0x01,         // Collection(Application)
+    0x85, RPT_ID_UPG_FW_SIZE,// REPORT_ID (0x70)
+    0x15, 0x00,         // Logical Minimum (0)
+    0x26, 0xFF, 0x00,   // Logical Maximum (255)
+    0x09, 0x00,
+    0x75, 0x08,         // REPORT SIZE (8)
+    0x95, 0x02,         // REPORT COUNT(2)
+    0xB1, 0x02,         // Output(DATA,VARIABLE,ABSOLUTE)
+    0xC0,
+
+    0x06, 0x09, 0xFF,   // usage page(�Զ���)
+    0x09, 0x01,         // usage(1)
+    0xA1, 0x01,         // Collection(Application)
+    0x85, RPT_ID_UPG_FW_DATA,// REPORT_ID (0x71)
+    0x15, 0x00,         // Logical Minimum (0)
+    0x26, 0xFF, 0x00,   // Logical Maximum (255)
+    0x09, 0x00,
+    0x75, 0x08,         // REPORT SIZE (8)
+    0x95, 0x3F,         // REPORT COUNT(63)
+    0xB1, 0x02,         // Output(DATA,VARIABLE,ABSOLUTE)
+    0xC0,
+
+    0x06, 0x0a, 0xFF,   // usage page(�Զ���)
+    0x09, 0x01,         // usage(1)
+    0xA1, 0x01,         // Collection(Application)
+    0x85, RPT_ID_UPG_FW_CHECKSUM,// REPORT_ID (0x72)
+    0x15, 0x00,         // Logical Minimum (0)
+    0x26, 0xFF, 0x00,   // Logical Maximum (255)
+    0x09, 0x00,
+    0x75, 0x08,         // REPORT SIZE (8)
+    0x95, 0x02,         // REPORT COUNT(2)
+    0xB1, 0x02,         // Output(DATA,VARIABLE,ABSOLUTE)
+    0xC0,
+
+    0x06, 0x0b, 0xFF,   // usage page(�Զ���)
+    0x09, 0x01,         // usage(1)
+    0xA1, 0x01,         // Collection(Application)
+    0x85, RPT_ID_UPG_FW_ACK,// REPORT_ID (0x73)
+    0x15, 0x00,         // Logical Minimum (0)
+    0x26, 0xFF, 0x00,   // Logical Maximum (255)
+    0x09, 0x00,
+    0x75, 0x08,         // REPORT SIZE (8)
+    0x95, 0x01,         // REPORT COUNT(1)
+    0x81, 0x02,         // Input(DATA,VARIABLE,ABSOLUTE)
+    0xC0,
     
 };
 

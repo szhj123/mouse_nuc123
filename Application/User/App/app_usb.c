@@ -81,6 +81,10 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
             //Drv_Msg_Put(APP_EVENT_PIC_WRITE, (uint8_t *)buf, len);
             break;
         }
+        case RPT_ID_UPG_FW_SIZE:
+        {
+            break;
+        }
         default: break;
     }
 }

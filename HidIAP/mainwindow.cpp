@@ -1,7 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "myupgrade.h"
+#include "myusb.h"
 
-#include "hidapi-win/include/hidapi.h"
+MyUsb *myUsb = nullptr;
+MyUpgrade *myUpgrade = nullptr;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -12,6 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlag(Qt::FramelessWindowHint);
 
     setFixedSize(this->width(),this->height());
+
+    myUsb = new MyUsb(this);
+
+    myUpgrade = new MyUpgrade(this, ui, myUsb);
 
     ui->tabWidget->setTabText(0, "固件更新");
 

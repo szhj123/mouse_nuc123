@@ -17,11 +17,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    myupgrade.cpp \
+    myusb.cpp
 
 HEADERS += \
     hidapi-win/include/hidapi.h \
-    mainwindow.h
+    mainwindow.h \
+    myupgrade.h \
+    myusb.h
 
 FORMS += \
     mainwindow.ui

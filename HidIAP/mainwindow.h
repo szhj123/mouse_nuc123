@@ -25,7 +25,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event );
 private:
     QPoint lastPoint;
-
 private:
     Ui::MainWindow *ui;
 private slots:
