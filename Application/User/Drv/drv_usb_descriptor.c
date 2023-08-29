@@ -58,6 +58,19 @@ const uint8_t HID_MouseReportDescriptor[] =
 	0x95, 0x01,			// Report Count (1)
 	0x81, 0x06,			// Input (Data, Variable, Relative)
 	0xC0,				// End Collection
+
+    0x06, 0x08, 0xFF,   // usage page(�Զ���)
+    0x09, 0x01,         // usage(1)
+    0xA1, 0x01,         // Collection(Application)
+    0x85, RPT_ID_UPG_FW_SIZE,// REPORT_ID (0x70)
+    0x15, 0x00,         // Logical Minimum (0)
+    0x26, 0xFF, 0x00,   // Logical Maximum (255)
+    0x09, 0x00,
+    0x75, 0x08,         // REPORT SIZE (8)
+    0x95, 0x02,         // REPORT COUNT(2)
+    0xB1, 0x02,         // Output(DATA,VARIABLE,ABSOLUTE)
+    0xC0,
+    
 	0xC0				// End Collection
 };
 
@@ -216,7 +229,8 @@ const uint8_t HID_KeyboardReportDescriptor[] =
 	0x95, 0x02,			// REPORT COUNT(2)
 	0x81, 0x02,			// Input (Data) => Modifier byte
 	0xC0,
-    
+
+    #if 0
     0x06, 0x08, 0xFF,   // usage page(�Զ���)
     0x09, 0x01,         // usage(1)
     0xA1, 0x01,         // Collection(Application)
@@ -228,6 +242,7 @@ const uint8_t HID_KeyboardReportDescriptor[] =
     0x95, 0x02,         // REPORT COUNT(2)
     0xB1, 0x02,         // Output(DATA,VARIABLE,ABSOLUTE)
     0xC0,
+    #endif 
 
     0x06, 0x09, 0xFF,   // usage page(�Զ���)
     0x09, 0x01,         // usage(1)
