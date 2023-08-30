@@ -6,6 +6,7 @@
 #include "drv_task.h"
 #include "drv_usb.h"
 #include "drv_usb_descriptor.h"
+#include "drv_flash.h"
 
 typedef enum _mouse_wheel_direction
 {
@@ -31,6 +32,7 @@ typedef struct _usb_para_t
     uint8_t  kDataUpdateFlag;
     uint8_t  wheelFlag;
 
+    uint8_t  fwAck;
     uint16_t delayCnt;
     mSleep_stat_t mSleepStat;
 }usb_para_t;
@@ -55,6 +57,9 @@ void App_Usb_Suspend_Handler(void );
 void App_Usb_Resume_Handler(void );
 
 void App_Usb_Wakeup_Host(void );
+
+void App_Usb_Get_Fw_Ack(uint8_t *buf, uint8_t len );
+
 
 
 #endif 

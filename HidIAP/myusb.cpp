@@ -46,7 +46,7 @@ bool MyUsb::Usb_Open()
     {
         retVal = true;
 
-        hid_set_nonblocking(handle, 0);
+        hid_set_nonblocking(handle, 1);
     }
 
     return retVal;
@@ -72,7 +72,7 @@ int16_t MyUsb::Usb_Read(uint8_t *buf, uint16_t length)
 {
     int16_t retVal = 0;
 
-    retVal = hid_read(handle, buf, length);
+    retVal = hid_get_feature_report(handle, buf, length);
 
     return retVal;
 }

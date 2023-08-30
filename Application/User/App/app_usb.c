@@ -16,6 +16,7 @@
 #include "app_mouse_sensor.h"
 #include "app_lcd.h"
 #include "app_light.h"
+#include "app_flash.h"
 /* Private typedef --------------------------------------*/
 /* Private define ---------------------------------------*/
 /* Private macro ----------------------------------------*/
@@ -83,6 +84,15 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
         }
         case RPT_ID_UPG_FW_SIZE:
         {
+            uint16_t fwSize = (uint16_t )buf[2] << 8 | buf[1];
+            
+            usbPara.fwAck = 0;
+
+            App_Flash_Set_Fw_Size(fwSize);
+            
+            App_Flash_Fw_Erase(fwSize);
+            
+            usbPara.fwAck = 1;
             break;
         }
         default: break;
@@ -103,6 +113,11 @@ static void App_Usb_Get_Report(uint8_t *buf, uint8_t len )
         case RPT_ID_KEY_MODE:
         {
             App_Mouse_Get_Key_Mode(buf, len);
+            break;
+        }
+        case RPT_ID_UPG_FW_ACK:
+        {
+            App_Usb_Get_Fw_Ack(buf, len);
             break;
         }
         default: break;
@@ -362,5 +377,13 @@ void App_Usb_Resume_Handler(void )
     
     App_Lcd_Wakeup();
 }
+
+void App_Usb_Get_Fw_Ack(uint8_t *buf, uint8_t len )
+{
+    buf[0] = RPT_ID_UPG_FW_ACK;
+
+    buf[1] = usbPara.fwAck;
+}
+
 
 

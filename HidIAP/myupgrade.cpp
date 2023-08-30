@@ -27,6 +27,7 @@ void MyUpgrade::on_btnFwFile_Clicked()
     ui->lineEditFwPath->setText(filePath);
 
     ui->lineEditFwPath->setReadOnly(true);
+
 }
 
 void MyUpgrade::on_btnFwUpg_Clicked()
@@ -58,7 +59,7 @@ void MyUpgrade::on_btnFwUpg_Clicked()
 
     ui->progressBarFwUpg->setValue(0);
 
-    ui->btnFwUpg->setEnabled(false);
+    //ui->btnFwUpg->setEnabled(false);
 
     if(!myUsb->Usb_Find())
     {
@@ -98,22 +99,24 @@ void MyUpgrade::Upg_Handle()
         }
         case UPG_STAT_FW_SIZE_ACK:
         {
-            if(++fwInfo.fwTxTimeOutCnt > 500)
+            rBuf[0] = RPT_ID_UPG_FW_ACK;
+            rBuf[1] = 0x0;
+
+            if(myUsb->Usb_Read(rBuf, 2) > 0)
             {
                 fwInfo.fwTxTimeOutCnt = 0;
 
-                uint8_t retVal = 0;
-
-                retVal = myUsb->Usb_Read(rBuf, 2);
-
-                if(retVal == 0)
-                {
-                    upgStat = UPG_STAT_FW_SIZE_ACK;
-                }
-                else
+                if(rBuf[1] == UPG_FW_ACK)
                 {
                     upgStat = UPG_STAT_FW_DATA;
                 }
+            }
+
+            if(++fwInfo.fwTxTimeOutCnt > 1000)
+            {
+                fwInfo.fwTxTimeOutCnt = 0;
+
+                upgStat = UPG_STAT_FW_SIZE_ACK;
             }
             break;
         }

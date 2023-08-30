@@ -16,6 +16,8 @@
 #define RPT_ID_UPG_FW_CHECKSUM                0x72
 #define RPT_ID_UPG_FW_ACK                     0x73
 
+#define UPG_FW_NAK                            0x00
+#define UPG_FW_ACK                            0x01
 typedef enum
 {
     UPG_STAT_FW_SIZE = 0,
