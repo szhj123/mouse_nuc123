@@ -3,6 +3,14 @@
 MyUsb::MyUsb(QWidget *parent) : QWidget(parent)
 {
     hid_init();
+
+    Usb_Find();
+
+    Usb_Open();
+
+    static uint8_t buf[3] = {0x70, 0x01, 0x02};
+
+    Usb_Write(buf, 3);
 }
 
 bool MyUsb::Usb_Find(void )
