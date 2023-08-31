@@ -71,7 +71,9 @@ int16_t MyUsb::Usb_Write(uint8_t *buf, uint16_t length)
 {
     int16_t retVal = 0;
 
-    retVal = hid_send_feature_report(handle, buf, length);
+
+
+    retVal = hid_send_feature_report(handle, buf, length+1);
 
     return retVal;
 }

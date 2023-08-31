@@ -10,8 +10,10 @@ typedef struct _user_para_t
 }user_para_t;
 
 void App_Flash_Set_Fw_Size(uint16_t fwSize );
+uint16_t App_Flash_Get_Fw_Size(void );
 void App_Flash_Fw_Erase(uint16_t fwSize );
-void App_FlasH_Write_Fw_Data(uint16_t offset, uint8_t *buf, uint16_t length );
+void App_Flash_Write_Fw_Data(uint16_t offset, uint8_t *buf, uint16_t length );
+uint16_t App_Flash_Get_Fw_Checksum(uint16_t length );
 
 #endif 
 

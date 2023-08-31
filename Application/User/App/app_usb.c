@@ -86,13 +86,37 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
         {
             uint16_t fwSize = (uint16_t )buf[2] << 8 | buf[1];
             
-            usbPara.fwAck = 0;
-
             App_Flash_Set_Fw_Size(fwSize);
             
             App_Flash_Fw_Erase(fwSize);
             
             usbPara.fwAck = 1;
+            
+            break;
+        }
+        case RPT_ID_UPG_FW_DATA:
+        {
+            uint16_t offset = (uint16_t )buf[2] << 8 | buf[1];
+            uint8_t length = buf[3];
+
+            App_Flash_Write_Fw_Data(offset, &buf[4], length);
+            
+            usbPara.fwAck = 1;
+            
+            break;
+        }
+        case RPT_ID_UPG_FW_CHECKSUM:
+        {
+            uint16_t recvCrc = (uint16_t )buf[2] << 8 | buf[1];
+            uint16_t calCrc = App_Flash_Get_Fw_Checksum(App_Flash_Get_Fw_Size());
+            
+            if(recvCrc == calCrc)
+            {
+                
+            }
+            
+            usbPara.fwAck = 1;
+            
             break;
         }
         default: break;
@@ -381,8 +405,17 @@ void App_Usb_Resume_Handler(void )
 void App_Usb_Get_Fw_Ack(uint8_t *buf, uint8_t len )
 {
     buf[0] = RPT_ID_UPG_FW_ACK;
+    
+    if(usbPara.fwAck)
+    {
+        buf[1] = 0x01;
+    }
+    else
+    {
+        buf[1] = 0x0;
+    }
 
-    buf[1] = usbPara.fwAck;
+    usbPara.fwAck = 0;
 }
 
 
