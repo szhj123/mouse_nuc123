@@ -95,30 +95,30 @@ void App_Light_Color_Streamer(mLight_data_t lightData )
         lightBuf[0].blue = 0;
         lightBuf[0].colorState = COLOR_STATE_RED;
 
-        lightBuf[1].red = 128;
+        lightBuf[1].red = 85;
         lightBuf[1].green = 0;
         lightBuf[1].blue = 0;
         lightBuf[1].colorState = COLOR_STATE_RED;
 
-        lightBuf[2].red = 255;
+        lightBuf[2].red = 170;
         lightBuf[2].green = 0;
         lightBuf[2].blue = 0;
-        lightBuf[2].colorState = COLOR_STATE_BLUE;
+        lightBuf[2].colorState = COLOR_STATE_RED;
 
-        lightBuf[3].red = 255;
+        lightBuf[3].red = 0;
         lightBuf[3].green = 0;
-        lightBuf[3].blue = 128;
+        lightBuf[3].blue = 0;
         lightBuf[3].colorState = COLOR_STATE_BLUE;
 
         lightBuf[4].red = 0;
         lightBuf[4].green = 0;
-        lightBuf[4].blue = 255;
-        lightBuf[4].colorState = COLOR_STATE_GREEN;
+        lightBuf[4].blue = 85;
+        lightBuf[4].colorState = COLOR_STATE_BLUE;
 
         lightBuf[5].red = 0;
-        lightBuf[5].green = 128;
-        lightBuf[5].blue = 255;
-        lightBuf[5].colorState = COLOR_STATE_GREEN;
+        lightBuf[5].green = 0;
+        lightBuf[5].blue = 170;
+        lightBuf[5].colorState = COLOR_STATE_BLUE;
     }
     else
     {
@@ -127,30 +127,30 @@ void App_Light_Color_Streamer(mLight_data_t lightData )
         lightBuf[5].blue = 0;
         lightBuf[5].colorState = COLOR_STATE_RED;
 
-        lightBuf[4].red = 128;
+        lightBuf[4].red = 85;
         lightBuf[4].green = 0;
         lightBuf[4].blue = 0;
         lightBuf[4].colorState = COLOR_STATE_RED;
 
-        lightBuf[3].red = 255;
+        lightBuf[3].red = 170;
         lightBuf[3].green = 0;
         lightBuf[3].blue = 0;
-        lightBuf[3].colorState = COLOR_STATE_BLUE;
+        lightBuf[3].colorState = COLOR_STATE_RED;
 
-        lightBuf[2].red = 255;
+        lightBuf[2].red = 0;
         lightBuf[2].green = 0;
-        lightBuf[2].blue = 128;
+        lightBuf[2].blue = 0;
         lightBuf[2].colorState = COLOR_STATE_BLUE;
 
         lightBuf[1].red = 0;
         lightBuf[1].green = 0;
-        lightBuf[1].blue = 255;
-        lightBuf[1].colorState = COLOR_STATE_GREEN;
+        lightBuf[1].blue = 85;
+        lightBuf[1].colorState = COLOR_STATE_BLUE;
 
         lightBuf[0].red = 0;
-        lightBuf[0].green = 128;
-        lightBuf[0].blue = 255;
-        lightBuf[0].colorState = COLOR_STATE_GREEN;
+        lightBuf[0].green = 0;
+        lightBuf[0].blue = 170;
+        lightBuf[0].colorState = COLOR_STATE_BLUE;
     }
     
     lightCtrl.delayCnt = 0;

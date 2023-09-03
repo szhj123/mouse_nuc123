@@ -40,6 +40,7 @@ typedef struct _usb_ctrl_block_t
     ep0_intp_state_t ep0IntpState;
              uint8_t devAddr;
              uint8_t configVal;
+             uint8_t altInterface;
              uint8_t dsqSync;
 
              uint8_t *dataPtr;

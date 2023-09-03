@@ -107,6 +107,18 @@ const uint8_t HID_MouseReportDescriptor[] =
     0x95, 0x01,         // REPORT COUNT(1)
     0xB1, 0x02,         // Input(DATA,VARIABLE,ABSOLUTE)
     0xC0,
+
+    0x06, 0x0b, 0xFF,   // usage page(�Զ���)
+    0x09, 0x01,         // usage(1)
+    0xA1, 0x01,         // Collection(Application)
+    0x85, RPT_ID_UPG_FW_VER,// REPORT_ID (0x74)
+    0x15, 0x00,         // Logical Minimum (0)
+    0x26, 0xFF, 0x00,   // Logical Maximum (255)
+    0x09, 0x00,
+    0x75, 0x08,         // REPORT SIZE (8)
+    0x95, 0x03,         // REPORT COUNT(3)
+    0xB1, 0x02,         // Input(DATA,VARIABLE,ABSOLUTE)
+    0xC0,
     
 	0xC0				// End Collection
 };

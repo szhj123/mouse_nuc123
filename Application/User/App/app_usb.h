@@ -59,6 +59,7 @@ void App_Usb_Resume_Handler(void );
 void App_Usb_Wakeup_Host(void );
 
 void App_Usb_Get_Fw_Ack(uint8_t *buf, uint8_t len );
+void App_Usb_Set_Fw_Ver(uint8_t *buf, uint8_t len );
 
 
 

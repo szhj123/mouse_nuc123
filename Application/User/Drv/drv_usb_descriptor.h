@@ -22,6 +22,7 @@
 #define RPT_ID_UPG_FW_DATA                    0x71
 #define RPT_ID_UPG_FW_CHECKSUM                0x72
 #define RPT_ID_UPG_FW_ACK                     0x73
+#define RPT_ID_UPG_FW_VER                     0x74
 
 
 #define USB_CFG_LEN                           (LEN_CONFIG+LEN_INTERFACE*2+LEN_HID*2+LEN_ENDPOINT*3)

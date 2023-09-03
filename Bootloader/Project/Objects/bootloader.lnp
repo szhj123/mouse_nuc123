@@ -1,0 +1,11 @@
+--cpu Cortex-M0
+".\objects\startup_nuc123.o"
+".\objects\system_nuc123.o"
+".\objects\fmc.o"
+".\objects\clk.o"
+".\objects\main.o"
+".\objects\drv_flash.o"
+--strict --scatter ".\Objects\bootloader.sct"
+--entry Reset_Handler --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\bootloader.map" -o .\Objects\bootloader.axf

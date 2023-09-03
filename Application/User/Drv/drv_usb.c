@@ -258,6 +258,39 @@ void Drv_Usb_Req_Standard(void )
             Drv_Usb_Set_Config();
             break;
         }
+        case SET_FEATURE:
+        {
+            if(usbCtrl.wValue_l == 0x00) //feature endpoint halt
+             {
+                 uint8_t epNum;
+
+                 epNum = usbCtrl.wIndex_l;
+
+                 Hal_Usb_ClrStall(EP0);
+                 
+                 Hal_Usb_ClrStall(EP1);
+             }
+             else if(usbCtrl.wValue_l == 0x01) //feature device remote wakeup
+             {
+                
+             }
+             
+             Hal_Usb_Set_Dsq_Sync(EP0, 1);
+
+             Hal_Usb_InOut_Ready(EP0, 0);
+             
+            break;
+        }
+        case SET_INTERFACE:
+        {
+             usbCtrl.altInterface = usbCtrl.wValue_l;
+             
+             Hal_Usb_Set_Dsq_Sync(EP0, 1);
+
+             Hal_Usb_InOut_Ready(EP0, 0);
+             
+             break;
+        }
         default: 
         {
             Hal_Usb_ClrStall(EP0);

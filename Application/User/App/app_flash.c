@@ -17,18 +17,29 @@
 /* Private function -------------------------------------*/
 /* Private variables ------------------------------------*/
 static uint16_t wCRCin = 0x0000;
-static uint16_t wCPoly = 0x8005;
 
-static user_para_t userPara;
+static fw_info_t fwInfo;
 
 void App_Flash_Set_Fw_Size(uint16_t fwSize )
 {
-    userPara.fwSize = fwSize;
+    fwInfo.fwSize = fwSize;
 }
 
 uint16_t App_Flash_Get_Fw_Size(void )
 {
-    return userPara.fwSize;
+    return fwInfo.fwSize;
+}
+
+void App_Flash_Fw_Upg_Enable(void )
+{
+    fwInfo.fwUpgFlag = FW_UPG_ENABLE;
+}
+
+void App_Flash_Fw_Info_Save(void )
+{
+    Drv_Flash_Erase(FW_UPG_INFO_ADDR, FW_UPG_INFO_SIZE);
+
+    Drv_Flash_Write(FW_UPG_INFO_ADDR, (uint8_t *)&fwInfo, sizeof(fw_info_t));
 }
 
 void App_Flash_Fw_Erase(uint16_t fwSize )
@@ -58,12 +69,13 @@ void InvertUint16(uint16_t *poly )
 void Cal_Checksum(uint8_t *data, uint32_t length)
 {
     uint8_t i;
+    uint16_t wCPoly = 0x8005;
 
     InvertUint16(&wCPoly);
 
     while(length--)
     {
-        wCRCin ^= *(data++);
+        wCRCin ^= *data++;
         for(i=0;i<8;i++)
         {
 
@@ -98,4 +110,17 @@ uint16_t App_Flash_Get_Fw_Checksum(uint16_t length )
     return wCRCin;
 }
 
+void Aprom_To_Ldrom(void )
+{
+    /* Mask all interrupt before changing VECMAP to avoid wrong interrupt handler fetched */
+    __set_PRIMASK(1);
+
+    FMC_SetBootSource(1);
+
+    /* Set VECMAP to LDROM for booting from LDROM */
+    FMC_SetVectorPageAddr(FMC_LDROM_BASE);
+
+    /* Software reset to boot to LDROM */
+    NVIC_SystemReset();
+}
 
