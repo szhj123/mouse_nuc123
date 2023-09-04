@@ -124,6 +124,17 @@ void MyUpgrade::on_btnFwUpg_Clicked()
     timer->start();
 }
 
+void MyUpgrade::Upg_Set_Ver(char fwBuildVer, char fwMinorVer, char fwMajorVer)
+{
+    QString str = "0.0.0";
+
+    str[0] = fwBuildVer + 0x30;
+    str[2] = fwMinorVer + 0x30;
+    str[4] = fwMajorVer + 0x30;
+
+    ui->labelFwVerVal->setText(str);
+}
+
 void MyUpgrade::Upg_Handle()
 {
     switch(upgStat)
@@ -310,24 +321,20 @@ void MyUpgrade::Upg_Handle()
         }
         case UPG_STAT_FW_GET_VER:
         {
-            rBuf[0] = RPT_ID_UPG_FW_ACK;
-            rBuf[1] = 0x0;
-            rBuf[2] = 0x0;
-            rBuf[3] = 0x0;
-
-            if(myUsb->Usb_Read(rBuf, 4) > 0)
+            if(++fwInfo.fwTxTimeOutCnt > 100)
             {
-                if(rBuf[1] == UPG_FW_ACK)
+                fwInfo.fwTxTimeOutCnt = 0;
+
+                hid_init();
+
+                myUsb->Usb_Find();
+
+                if(myUsb->Usb_Open())
                 {
                     upgStat = UPG_STAT_FW_SUCCESS;
 
                     return ;
                 }
-            }
-
-            if(++fwInfo.fwTxTimeOutCnt > 50)
-            {
-                fwInfo.fwTxTimeOutCnt = 0;
 
                 if(++fwInfo.fwTxErrCnt >= 10)
                 {
@@ -340,11 +347,38 @@ void MyUpgrade::Upg_Handle()
         }
         case UPG_STAT_FW_SUCCESS:
         {
-            ui->progressBarFwUpg->setValue(100);
+            rBuf[0] = RPT_ID_UPG_FW_VER;
+            rBuf[1] = 0x0;
+            rBuf[2] = 0x0;
+            rBuf[3] = 0x0;
 
-            timer->stop();
+            if(myUsb->Usb_Read(rBuf, 4) > 0)
+            {
+                fwInfo.fwVerBuild = rBuf[1];
+                fwInfo.fwVerMinor = rBuf[2];
+                fwInfo.fwVerMajor = rBuf[3];
 
-            QMessageBox::warning(this, tr("Usb设备"), tr("USB升级成功！！！"));
+                Upg_Set_Ver(fwInfo.fwVerBuild, fwInfo.fwVerMinor, fwInfo.fwVerMajor);
+
+                ui->progressBarFwUpg->setValue(100);
+
+                timer->stop();
+
+                QMessageBox::warning(this, tr("Usb设备"), tr("USB升级成功！！！"));
+            }
+
+            if(++fwInfo.fwTxTimeOutCnt > 500)
+            {
+                fwInfo.fwTxTimeOutCnt = 0;
+
+                if(++fwInfo.fwTxErrCnt >= 10)
+                {
+                    fwInfo.fwTxErrCnt = 0;
+
+                    upgStat = UPG_STAT_FW_ERROR;
+                }
+            }
+
             break;
         }
         case UPG_STAT_FW_ERROR:

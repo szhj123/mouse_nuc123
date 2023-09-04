@@ -112,15 +112,29 @@ uint16_t App_Flash_Get_Fw_Checksum(uint16_t length )
 
 void Aprom_To_Ldrom(void )
 {
-    /* Mask all interrupt before changing VECMAP to avoid wrong interrupt handler fetched */
-    __set_PRIMASK(1);
+    #if 0
+    uint32_t  au32Config[2];
 
-    FMC_SetBootSource(1);
+    FMC_Open();
 
-    /* Set VECMAP to LDROM for booting from LDROM */
-    FMC_SetVectorPageAddr(FMC_LDROM_BASE);
+    FMC_ReadConfig(au32Config, 2);
+    /*
+        CONFIG0[7:6]
+        00 = Boot from LDROM with IAP mode.
+        01 = Boot from LDROM without IAP mode.
+        10 = Boot from APROM with IAP mode.
+        11 = Boot from APROM without IAP mode.
+    */
+    au32Config[0] &= ~0xc0;
+
+    FMC_EnableConfigUpdate();
+
+    FMC_WriteConfig(au32Config, 2);
+    #endif
 
     /* Software reset to boot to LDROM */
     NVIC_SystemReset();
+
+    
 }
 

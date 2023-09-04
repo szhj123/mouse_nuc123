@@ -55,7 +55,7 @@ int main(void )
 				Fw_App1_Erase(APP1_START_ADDR, fwInfo.fwSize);
 			
 				Fw_Cpy_App2_To_App1(APP2_START_ADDR, APP1_START_ADDR ,fwInfo.fwSize);		
-
+			
 				app1FwChecksum = Fw_Cal_Checksum(APP1_START_ADDR, fwInfo.fwSize);
 			
 				app2FwChecksum = Fw_Cal_Checksum(APP2_START_ADDR, fwInfo.fwSize);
@@ -128,7 +128,7 @@ void Clk_Init(void )
 
 static void Fw_Get_Info(uint32_t flashAddr, uint8_t *buf, uint16_t length )
 {
-	  Drv_Flash_Read(flashAddr, (uint8_t *)&buf, length);
+	  Drv_Flash_Read(flashAddr, (uint8_t *)buf, length);
 }
 
 static void Fw_Set_Info(uint32_t flashAddr, uint8_t *buf, uint16_t length )
@@ -152,7 +152,7 @@ static void Fw_Cpy_App2_To_App1(uint32_t srcFlashAddr, uint32_t desFlashAddr, ui
 	  {
 		   tmpData = FMC_Read(srcFlashAddr + i* 4);
 			
-			 FMC_Write(tmpData+i*4, tmpData);
+			 FMC_Write(desFlashAddr+i*4, tmpData);
 		}
 }
 
@@ -195,6 +195,8 @@ static uint16_t Fw_Cal_Checksum(uint32_t flashAddr, uint16_t fwSize )
 {
 		uint32_t tmpData;
     uint16_t i;
+	
+		wCRCin = 0x0000;
 
     for(i=0;i<fwSize/4;i++)
     {

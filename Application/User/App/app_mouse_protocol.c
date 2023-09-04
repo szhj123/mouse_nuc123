@@ -482,6 +482,8 @@ void App_Mouse_Set_Pic_Data(uint8_t *buf, uint8_t len )
             {
                 lcdFlashAddr = LCD_PIC_MAX_SIZE * (uint32_t )picPack->picID;
             }
+            
+            Drv_Lcd_Wr_Cmd(0x29);
 
             Drv_Spi_Flash_Erase_64k(lcdFlashAddr);
 

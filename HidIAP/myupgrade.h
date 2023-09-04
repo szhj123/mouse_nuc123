@@ -60,6 +60,7 @@ class MyUpgrade : public QWidget
 public:
     explicit MyUpgrade(QWidget *parent = nullptr, Ui::MainWindow *ui = nullptr, MyUsb *myUsb = nullptr);
     uint16_t Cal_Fw_Checksum(uint8_t *buf, uint16_t length);
+    void Upg_Set_Ver(char fwBuildVer, char fwMinorVer, char fwMajorVer);
 private:
     Ui::MainWindow *ui;
     MyUsb *myUsb;

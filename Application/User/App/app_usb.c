@@ -115,6 +115,10 @@ static void App_Usb_Set_Report(uint8_t *buf, uint8_t len )
             
             if(recvCrc == calCrc)
             {
+                App_Flash_Fw_Upg_Enable();
+
+                App_Flash_Fw_Info_Save();
+                
                 Drv_Task_Regist_Oneshot(Bootloader_Run, 500, NULL);
             }
             
@@ -433,10 +437,6 @@ void App_Usb_Set_Fw_Ver(uint8_t *buf, uint8_t len )
 
 void Bootloader_Run(void *arg )
 {
-    App_Flash_Fw_Upg_Enable();
-
-    App_Flash_Fw_Info_Save();
-
     Aprom_To_Ldrom();
 }
 

@@ -5,7 +5,7 @@
 
 #define FW_VER_BUILD                  0
 #define FW_VER_MINOR                  0
-#define FW_VER_MAJOR                  1
+#define FW_VER_MAJOR                  2
 
 
 #define FW_UPG_DISABLE                0x0

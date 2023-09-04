@@ -5,13 +5,13 @@
 
 #define PAGE_SIZE                      512
 
-#define APP1_START_ADDR                0x00000000
+#define APP1_START_ADDR                0x00000200
 #define APP1_MAX_SIZE                  0x00007E00
 #define APP2_START_ADDR                (APP1_START_ADDR + APP1_MAX_SIZE)
 #define APP2_MAX_SIZE                  APP1_MAX_SIZE
 
 #define FW_UPG_INFO_ADDR               (APP2_START_ADDR + APP2_MAX_SIZE)
-#define FW_UPG_INFO_SIZE               0x00000400
+#define FW_UPG_INFO_SIZE               0x00000200
 
 #define MOUSE_PARA_START_ADDR          0x0001f000
 #define MOUSE_PARA_SIZE                0x00000400
