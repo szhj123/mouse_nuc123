@@ -358,7 +358,7 @@ static void App_Usb_Handler(void *arg )
         }
         case MOUSE_SLEEP_OUT:
         {
-            if(++usbPara.delayCnt > 100)
+            if(++usbPara.delayCnt > 1000)
             {
                 usbPara.delayCnt = 0;
                 
